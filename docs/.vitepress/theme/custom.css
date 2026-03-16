@@ -499,3 +499,52 @@ body {
     margin-left: 0;
   }
 }
+
+@media (max-width: 640px) {
+  .VPNavBar .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .VPNavBarTitle .title span {
+    display: none;
+  }
+
+  .VPNavBarTitle .title {
+    gap: 0;
+  }
+
+  .VPNavBar .content {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .VPNavBar .content-body {
+    gap: 6px;
+  }
+
+  .site-external-links {
+    gap: 6px;
+    margin-left: 6px;
+  }
+
+  .site-external-link {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .site-external-link svg {
+    padding: 0.35rem;
+  }
+
+  .vp-doc table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .vp-doc th,
+  .vp-doc td {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
