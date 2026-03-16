@@ -26,7 +26,7 @@
 1. 所有模型调用统一经过 `LiteLLM`
 2. 结构化与非结构化数据先进入统一数据治理层，再供给给 `RAG / 搜索 / 查询 / Agent`
 3. 所有知识接入和检索统一收敛到企业知识平面
-4. 主平台中枢采用 `Dify`、`RagFlow` 或 `Coze Studio` 三选一，不长期并行建设多套主底座
+4. 主平台中枢采用 `Dify`、`RAGFlow` 或 `Coze Studio` 三选一，不长期并行建设多套主底座
 5. `LangChain` 负责复杂定制场景与核心业务编排
 6. `LlamaIndex` 负责知识工程、检索编排与复杂 RAG 能力
 7. `Letta` 仅用于少量长期记忆型 Agent，不作为全平台默认运行时
@@ -68,7 +68,7 @@
 
 ### 2. 主平台路线
 
-- 主平台中枢：`Dify`、`RagFlow` 或 `Coze Studio`
+- 主平台中枢：`Dify`、`RAGFlow` 或 `Coze Studio`
 - 门户与交互：`AgentifUI`
 
 ### 3. 定制化与高级 Agent 能力
@@ -262,7 +262,7 @@
 
 ### 7. 知识与 RAG 层
 
-- `Dify`、`RagFlow` 或 `Coze Studio`
+- `Dify`、`RAGFlow` 或 `Coze Studio`
   职责：
   - 作为当前阶段主平台中枢，承载标准化场景应用、知识接入与检索主链路
   - 统一知识源生命周期管理、检索编排和应用发布主路径
@@ -293,7 +293,7 @@
   边界：
   - 不持有核心编排逻辑
   - 不直接耦合底层模型
-  - 通过统一 BFF / API 层对接 Dify、RagFlow、Coze Studio、自研服务以及协议层能力
+  - 通过统一 BFF / API 层对接 Dify、RAGFlow、Coze Studio、自研服务以及协议层能力
 
 这层如果后续发现能力不足，原则上也要继续沿“自建门户壳”方向演进。
 
@@ -464,7 +464,7 @@
 
 ### 6. 知识服务平面
 
-- `Dify`、`RagFlow` 或 `Coze Studio`
+- `Dify`、`RAGFlow` 或 `Coze Studio`
 - `Qwen/Qwen3-Embedding-8B`
 - `Qwen/Qwen3-Reranker-8B`
 - `Weaviate`
@@ -474,7 +474,7 @@
 
 ### 7. Agent 运行与编排平面
 
-- 标准化场景：`Dify`、`RagFlow` 或 `Coze Studio`
+- 标准化场景：`Dify`、`RAGFlow` 或 `Coze Studio`
 - 生产级 Agent Runtime：`LangGraph`
 - 通用定制编排：`LangChain`
 - 知识工程与复杂 RAG：`LlamaIndex`
@@ -561,7 +561,7 @@
 
 - `APISIX`
 - `LiteLLM`
-- `Dify`、`RagFlow` 或 `Coze Studio`
+- `Dify`、`RAGFlow` 或 `Coze Studio`
 - `OpenMetadata`
 - `SeaTunnel`
 - `dbt Core`
@@ -665,7 +665,7 @@
 
 ## 十四、现有组件的主要风险与取舍
 
-### 1. Dify / RagFlow / Coze Studio 职责可能重叠
+### 1. Dify / RAGFlow / Coze Studio 职责可能重叠
 
 解决方式：
 
@@ -736,14 +736,14 @@
 
 - 在方案中把它定义为兼容项，而不是默认主底座
 - 正式落地前结合企业法务和许可证口径再最终确认
-- 如果企业坚持更低法律风险路线，优先评估 `OpenSearch`
+- 如果企业对许可证边界更敏感，就继续把它限定为兼容项，并在正式落地前单独确认
 
 ## 十五、建议的实施路线
 
 ### 阶段一：PoC
 
 - 打通知识助手
-- 建立 `vLLM + LiteLLM + 主平台（Dify / RagFlow / Coze Studio） + MCP + LangFuse`
+- 建立 `vLLM + LiteLLM + 主平台（Dify / RAGFlow / Coze Studio） + MCP + LangFuse`
 - 接 1 到 2 个业务部门
 - 建基础权限和审计
 
@@ -779,7 +779,7 @@
 - `vLLM + Qwen` 构成推理底座
 - `APISIX` 构成统一入口网关与流量治理层
 - `LiteLLM` 构成统一模型网关
-- `Dify`、`RagFlow` 或 `Coze Studio` 构成主平台中枢
+- `Dify`、`RAGFlow` 或 `Coze Studio` 构成主平台中枢
 - `MCP + A2A` 构成互操作协议层
 - `OpenMetadata + SeaTunnel + dbt Core + Apache Tika` 构成企业 AI 数据治理底座
 - `Weaviate` 构成当前默认检索底座，`Milvus` 作为大规模演进，`Elasticsearch` 作为全文 / 混合检索兼容项

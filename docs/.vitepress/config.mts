@@ -59,12 +59,12 @@ export default defineConfig({
           { text: '协议与标准体系', link: '/protocol-standards' },
           { text: '数据治理层', link: '/data-governance' },
           { text: '总体架构', link: '/architecture' },
+          { text: '扩展能力与补齐方向', link: '/extension-capabilities' },
           { text: '技术选型', link: '/stack' },
           { text: '典型场景', link: '/scenarios' },
           { text: '安全与治理', link: '/governance' },
           { text: '部署与发布', link: '/deployment' },
-          { text: '实施路线图', link: '/roadmap' },
-          { text: '站点信息架构', link: '/site-information-architecture' }
+          { text: '实施路线图', link: '/roadmap' }
         ]
       },
       {
@@ -100,45 +100,41 @@ export default defineConfig({
         items: [
           { text: '组件总览', link: '/components' },
           {
-            text: '模型与推理',
-            link: '/components/model-inference',
+            text: '1. 用户与渠道层',
+            link: '/layers/user-channel',
             items: [
-              { text: 'vLLM', link: '/components/vllm' },
-              { text: 'LiteLLM', link: '/components/litellm' },
-              { text: 'Qwen 模型族', link: '/components/qwen-model-family' }
+              { text: '企业现有 Web / IM / 工单 / CRM / ERP 入口', link: '/components' }
             ]
           },
           {
-            text: '主平台路线',
-            link: '/components/platform-route',
+            text: '2. 统一接入与流量治理层',
+            link: '/layers/access-traffic-governance',
+            items: [
+              { text: 'APISIX', link: '/components/apisix' }
+            ]
+          },
+          {
+            text: '3. 门户与应用层',
+            link: '/layers/portal-application',
+            items: [
+              { text: 'AgentifUI', link: '/components/agentifui' }
+            ]
+          },
+          {
+            text: '4. Agent 编排层',
+            link: '/layers/agent-orchestration',
             items: [
               { text: 'Dify', link: '/components/dify' },
               { text: 'RAGFlow', link: '/components/ragflow' },
-              { text: 'Coze Studio', link: '/components/coze-studio' }
-            ]
-          },
-          {
-            text: '门户与 Agent 能力',
-            link: '/components/portal-agent',
-            items: [
-              { text: 'AgentifUI', link: '/components/agentifui' },
+              { text: 'Coze Studio', link: '/components/coze-studio' },
               { text: 'LangGraph', link: '/components/langgraph' },
               { text: 'LangChain', link: '/components/langchain' },
-              { text: 'LlamaIndex', link: '/components/llamaindex' },
               { text: 'Letta', link: '/components/letta' }
             ]
           },
           {
-            text: '协议与互操作',
-            link: '/components/protocol-interoperability',
-            items: [
-              { text: 'MCP 协议', link: '/protocols/mcp' },
-              { text: 'A2A 协议', link: '/protocols/a2a' }
-            ]
-          },
-          {
-            text: '数据治理与 AI 数据底座',
-            link: '/components/data-foundation',
+            text: '5. 数据治理层',
+            link: '/layers/data-governance-layer',
             items: [
               { text: 'OpenMetadata', link: '/components/openmetadata' },
               { text: 'SeaTunnel', link: '/components/seatunnel' },
@@ -147,48 +143,56 @@ export default defineConfig({
             ]
           },
           {
-            text: '接入治理、评测与授权',
-            link: '/components/access-governance',
+            text: '6. 知识与检索层',
+            link: '/layers/knowledge-retrieval',
             items: [
-              { text: 'APISIX', link: '/components/apisix' },
-              { text: 'LangFuse', link: '/components/langfuse' },
-              { text: 'k6', link: '/components/k6' },
-              { text: 'Casbin', link: '/components/casbin' }
+              { text: 'LlamaIndex', link: '/components/llamaindex' },
+              { text: 'Weaviate', link: '/components/weaviate' },
+              { text: 'Milvus', link: '/components/milvus' },
+              { text: 'Elasticsearch', link: '/components/elasticsearch' }
             ]
           },
           {
-            text: '基础设施',
-            link: '/components/infrastructure',
+            text: '7. 模型网关与推理层',
+            link: '/layers/model-gateway-inference',
             items: [
-              {
-                text: '数据与存储底座',
-                link: '/components/infrastructure-data-storage',
-                items: [
-                  { text: 'PostgreSQL', link: '/components/postgresql' },
-                  { text: 'Redis', link: '/components/redis' },
-                  { text: 'MinIO', link: '/components/minio' },
-                  { text: 'Weaviate', link: '/components/weaviate' },
-                  { text: 'Milvus', link: '/components/milvus' },
-                  { text: 'Elasticsearch', link: '/components/elasticsearch' }
-                ]
-              },
-              {
-                text: '容器平台与运行底座',
-                link: '/components/infrastructure-runtime',
-                items: [
-                  { text: 'K3s', link: '/components/k3s' }
-                ]
-              },
-              {
-                text: '可观测体系',
-                link: '/components/infrastructure-observability',
-                items: [
-                  { text: 'OpenTelemetry', link: '/standards/opentelemetry' },
-                  { text: 'Prometheus', link: '/components/prometheus' },
-                  { text: 'Grafana', link: '/components/grafana' },
-                  { text: 'Loki', link: '/components/loki' }
-                ]
-              }
+              { text: 'LiteLLM', link: '/components/litellm' },
+              { text: 'vLLM', link: '/components/vllm' },
+              { text: 'Qwen 模型族', link: '/components/qwen-model-family' }
+            ]
+          },
+          {
+            text: '8. 治理与观测层',
+            link: '/layers/governance-observability',
+            items: [
+              { text: 'Casbin', link: '/components/casbin' },
+              { text: 'LangFuse', link: '/components/langfuse' },
+              { text: 'k6', link: '/components/k6' },
+              { text: 'OpenTelemetry', link: '/standards/opentelemetry' },
+              { text: 'Prometheus', link: '/components/prometheus' },
+              { text: 'Grafana', link: '/components/grafana' },
+              { text: 'Loki', link: '/components/loki' }
+            ]
+          },
+          {
+            text: '9. 基础设施层',
+            link: '/layers/infrastructure-layer',
+            items: [
+              { text: 'K3s', link: '/components/k3s' },
+              { text: 'PostgreSQL', link: '/components/postgresql' },
+              { text: 'Redis', link: '/components/redis' },
+              { text: 'MinIO', link: '/components/minio' }
+            ]
+          },
+          {
+            text: '跨层协议与标准',
+            items: [
+              { text: 'MCP 协议', link: '/protocols/mcp' },
+              { text: 'A2A 协议', link: '/protocols/a2a' },
+              { text: 'OpenAPI', link: '/protocols/openapi' },
+              { text: 'JSON Schema', link: '/standards/json-schema' },
+              { text: 'OpenAI 兼容 API', link: '/standards/openai-compatible-api' },
+              { text: 'OpenTelemetry', link: '/standards/opentelemetry' }
             ]
           }
         ]

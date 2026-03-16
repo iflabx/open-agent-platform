@@ -1,60 +1,117 @@
 # 技术选型
 
-## 选型方法
+> 角色：当前公开方案的技术栈收敛页
+>
+> 说明：本文只讨论当前正式组件清单内的技术组合与取舍，不新增候选池，不把“未来也许会用到”的组件提前写进当前方案。
 
-智能体系统的技术栈不应追求“全都上”，而应围绕四个问题做裁剪：
+## 选型原则
 
-- 业务复杂度是否需要多 Agent 协作和长链路状态管理。
-- 数据规模是否已经超出单库向量检索的舒适区。
-- 企业合规要求是否需要完整的权限、审计和私有化部署。
-- 团队工程能力是否足以支撑自建平台的持续运维。
+当前方案的技术选型遵循四条原则：
 
-## 推荐技术栈
+1. 先保证长期边界清晰，再追求局部功能齐全。
+2. 能复用企业现有能力的，不重复建设。
+3. 一类职责优先只保留一套主方案，避免长期并行。
+4. 只有在现有组件边界明显不足时，才讨论演进，而不是预先堆更多组件。
 
-| 层级 | 备选开源软件 | 推荐组合 | 适用判断 |
+## 当前推荐技术栈
+
+| 能力域 | 当前主选 | 条件引入 / 演进 | 取舍判断 |
 | --- | --- | --- | --- |
-| 模型服务 | vLLM、Ollama、TGI | 生产优先 `vLLM`，开发和边缘节点可补充 `Ollama` | 有 GPU 资源且追求吞吐时优先 vLLM |
-| Agent 编排 | LangGraph、Dify、CrewAI | 核心流程优先 `LangGraph`，业务试点可结合 `Dify` | 需要状态机、回放和人工介入时优先 LangGraph |
-| API 服务 | FastAPI、NestJS、Go Fiber | `FastAPI` | Python 生态接入模型与 RAG 成本最低 |
-| 工作流集成 | n8n、Temporal、Airflow | `n8n` 处理事件集成，复杂异步流程可引入 `Temporal` | 跨 SaaS 连接器多时 n8n 很高效 |
-| 检索增强 | LlamaIndex、LangChain | `LlamaIndex` 负责索引与检索编排 | 文档型知识库落地速度快 |
-| 向量检索 | pgvector、Milvus、OpenSearch | 中小规模优先 `pgvector`，大规模检索选 `Milvus` | 先简单，量上来再拆库 |
-| 身份认证 | Keycloak、Authentik、Ory | `Keycloak` | 企业 SSO、角色权限和协议兼容性更成熟 |
-| 网关 | APISIX、Kong、Traefik | `APISIX` | 动态路由、插件能力和云原生配合较好 |
-| 压测与验证 | k6、Locust、JMeter | `k6` | 更适合 API 与关键链路脚本化压测 |
-| 可观测性 | OpenTelemetry、Prometheus、Grafana、Loki、Tempo | 全链路采用 `OpenTelemetry + Grafana` 体系 | 兼顾指标、日志和追踪 |
-| 策略治理 | OPA、Casbin、Presidio | `OPA + Casbin`，敏感信息处理可补充 `Presidio` | 权限和合规规则需要集中管理 |
+| 模型推理 | `vLLM` + `Qwen` 模型族 | 按业务负载扩充模型池 | 生产环境优先统一推理与模型版本治理 |
+| 模型网关 | `LiteLLM` | 无额外正式替代项 | 所有模型请求统一经过同一网关 |
+| 主平台路线 | `Dify`、`RAGFlow`、`Coze Studio` 三选一 | 不长期并行 | 标准场景需要一个统一主底座 |
+| 复杂 Agent 运行时 | `LangGraph` | 复杂流程或长链路场景启用 | 只有需要状态机、人工介入、回放时才进入默认路径 |
+| 通用工程编排 | `LangChain` | 与 `LangGraph` 组合使用 | 负责工程适配，不单独充当平台底座 |
+| 长期记忆 Agent | `Letta` | 仅在长期记忆场景启用 | 不是所有场景的默认组件 |
+| 知识工程 | `LlamaIndex` | 无 | 统一负责检索编排、切片和引用构建 |
+| 数据治理 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 无 | 把原始数据治理成 AI 可消费资产 |
+| 向量检索 | `Weaviate` | 数据规模和隔离要求显著上升时演进到 `Milvus` | 默认先用单一向量底座 |
+| 全文 / 混合检索 | `Elasticsearch` | 只在确有全文检索需求时启用 | 不作为默认长期三套并行的一部分 |
+| 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 无 | 入口认证、流量治理和细粒度授权分层负责 |
+| 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 无 | 平台级和 AI 级观测都要有 |
+| 发布验证 | `k6` | 无 | 所有关键链路发布前都要有容量基线 |
+| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展 |
 
-## 推荐的参考组合
+## 当前推荐组合
 
-### 方案 A：快速 PoC
+### 组合 A：首个试点
 
-- `Ollama + Dify + pgvector + PostgreSQL`
-- 适合 2 至 6 周内完成可演示版本
-- 优点是集成速度快、门槛低
-- 缺点是长期治理能力有限，复杂流程会很快碰到上限
+适合 4 到 8 周内完成知识问答或服务台试点：
 
-### 方案 B：生产化中台
+- `APISIX`
+- 一条主平台路线：`Dify`、`RAGFlow` 或 `Coze Studio`
+- `LlamaIndex`
+- `LiteLLM + vLLM + Qwen`
+- `PostgreSQL + Redis + MinIO + Weaviate`
+- `LangFuse`
 
-- `vLLM + FastAPI + LangGraph + LlamaIndex + PostgreSQL/Redis + Keycloak + APISIX + OpenTelemetry + k6`
-- 适合多业务线复用、需要审计和可观测的企业场景
-- 平衡了灵活性、治理能力和二次开发空间
+### 组合 B：生产化中台
 
-### 方案 C：大规模检索与异步任务
+适合多业务线复用、需要更强治理和复杂流程的团队：
 
-- 在方案 B 基础上增加 `Milvus + Kafka/Redpanda + Temporal`
-- 适合文档量大、任务链长、异步依赖多的场景
+- `APISIX + 企业现有 SSO / IAM + Casbin`
+- 一条主平台路线
+- `LangGraph + LangChain`
+- `LlamaIndex`
+- `LiteLLM + vLLM + Qwen`
+- `OpenMetadata + SeaTunnel + dbt Core + Apache Tika`
+- `OpenTelemetry + Prometheus + Grafana + Loki + LangFuse`
+- `k6`
 
 ## 关键取舍
 
-### Dify 还是 LangGraph
+### 1. `Dify`、`RAGFlow`、`Coze Studio` 怎么选
 
-如果目标是快速验证价值、给业务部门先看结果，Dify 能明显降低起步成本；如果目标是建设长期可维护平台，尤其需要复杂状态机、人工审批、错误恢复和精细化链路观测，LangGraph 更适合作为核心编排引擎。
+- 如果首要目标是快速验证通用场景，优先选更容易落地和被团队掌握的一条路线。
+- 如果场景以知识密集型问答为主，`RAGFlow` 的知识主链路会更贴近需求。
+- 如果更偏向通用工作流、应用配置和运营同学可参与配置，`Dify` 或 `Coze Studio` 更适合作为主平台路线。
+- 无论选哪一条，都只保留一条主底座，不长期并行。
 
-### pgvector 还是 Milvus
+### 2. 主平台路线和 `LangGraph` 的关系
 
-如果数据量仍处于中小规模，且团队希望减少系统复杂度，先上 `pgvector` 更实际；当检索规模、召回性能和隔离要求明显增加时，再引入 `Milvus` 拆分检索层。
+- 主平台路线负责标准场景、应用配置和知识平面。
+- `LangGraph` 负责复杂状态机、人工介入、长链路恢复和多步骤动作链路。
+- 两者是分层协作关系，不是二选一替代关系。
 
-### 单体平台还是模块化微服务
+### 3. `Weaviate`、`Milvus`、`Elasticsearch` 的关系
 
-平台早期不建议为了“架构高级感”过早拆成过多微服务。更合理的方式是先按模块边界设计，再根据瓶颈把模型服务、知识服务和治理服务独立扩容。
+- 默认向量底座是 `Weaviate`。
+- 当向量规模、隔离要求或性能要求明显提升时，再评估演进到 `Milvus`。
+- `Elasticsearch` 用于全文或混合检索兼容，不作为默认长期并行底座。
+
+### 4. `LangFuse` 和平台观测体系的关系
+
+- `LangFuse` 负责 LLM Trace、Prompt、评测样本和回放。
+- `OpenTelemetry + Prometheus + Grafana + Loki` 负责平台级指标、日志和追踪。
+- 两者都需要，不能互相替代。
+
+### 5. `APISIX`、企业 `SSO / IAM`、`Casbin` 的关系
+
+- 企业现有 `SSO / IAM` 负责身份源和账号生命周期。
+- `APISIX` 负责入口级认证接入、流量治理和审计前置。
+- `Casbin` 负责应用内细粒度授权裁决。
+
+## 不建议的做法
+
+- 同时长期维护多条主平台路线。
+- 默认同时维护三套检索底座。
+- 让 `APISIX` 兼任模型网关。
+- 把 `LangFuse` 当成整个平台观测体系的全部。
+- 为单个试点场景提前引入生产期才需要的复杂扩展。
+
+## 相关文档
+
+- [方案](/framework)
+- [总体架构](/architecture)
+- [组件](/components)
+- [安全与治理](/governance)
+- [部署与发布](/deployment)
+
+## 参考资料
+
+- [LiteLLM Docs](https://docs.litellm.ai/)
+- [LangGraph Overview](https://docs.langchain.com/oss/python/langgraph)
+- [LlamaIndex Docs](https://docs.llamaindex.ai/)
+- [Apache APISIX Architecture](https://apisix.apache.org/docs/apisix/3.14/architecture-design/apisix/)
+- [Casbin Docs](https://www.casbin.org/docs)
+- [Grafana k6 Overview](https://grafana.com/oss/k6/)
