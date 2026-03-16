@@ -66,6 +66,38 @@ body {
   background: rgba(16, 16, 16, 0.86);
 }
 
+.VPNavBar .search {
+  order: 10;
+}
+
+.VPNavBar .site-external-links {
+  order: 11;
+}
+
+.VPNavBar .menu {
+  order: 20;
+}
+
+.VPNavBar .translations {
+  order: 21;
+}
+
+.VPNavBar .appearance {
+  order: 22;
+}
+
+.VPNavBar .social-links {
+  order: 23;
+}
+
+.VPNavBar .extra {
+  order: 24;
+}
+
+.VPNavBar .hamburger {
+  order: 25;
+}
+
 .site-external-links {
   display: flex;
   align-items: center;
