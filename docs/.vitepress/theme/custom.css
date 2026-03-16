@@ -68,10 +68,15 @@ body {
 
 .VPNavBar .search {
   order: 10;
+  flex: 0 0 auto;
+  margin-right: 10px;
 }
 
 .VPNavBar .site-external-links {
   order: 11;
+  flex: 0 0 auto;
+  margin-left: 0;
+  margin-right: 18px;
 }
 
 .VPNavBar .menu {
@@ -102,7 +107,6 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 12px;
 }
 
 .site-external-link {
@@ -557,7 +561,7 @@ body {
 
   .site-external-links {
     gap: 6px;
-    margin-left: 6px;
+    margin-right: 8px;
   }
 
   .site-external-link {
