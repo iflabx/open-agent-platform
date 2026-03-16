@@ -2,6 +2,12 @@
 
 这是一个基于 `VitePress` 的中文文档站，主题聚焦于企业级智能体系统的架构设计、技术选型、安全治理和落地路线，适合直接发布到 GitHub Pages。
 
+## 在线访问
+
+```text
+https://iflabx.github.io/open-agent-platform/
+```
+
 ## 本地运行
 
 ```bash
@@ -32,3 +38,7 @@ npm run docs:build
 5. 推送代码后，仓库内置的工作流会自动构建并发布站点。
 
 站点 `base` 会在 GitHub Actions 中根据仓库名自动计算，不需要手动修改。
+
+## 许可证
+
+本仓库采用 `MIT` 许可证。

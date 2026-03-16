@@ -114,13 +114,7 @@
 - [Policy as Code](/norms/policy-as-code)
 - [Maker-Checker](/norms/maker-checker)
 
-## 七、维护与协作
-
-- [文档编写与维护指南](/documentation-maintenance)
-- [第一批文档完善计划](/first-batch-documentation-plan)
-- [第二批文档完善计划](/second-batch-documentation-plan)
-
-## 八、维护规则
+## 七、维护规则
 
 - 公开站点始终只展示当前方案与当前组件状态。
 - 主方案入口固定为 [方案](/framework)，组件入口固定为 [组件](/components)。

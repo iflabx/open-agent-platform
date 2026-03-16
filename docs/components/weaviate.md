@@ -23,7 +23,7 @@
 - 与 [Milvus](/components/milvus) 的关系是默认底座与演进候选的关系。
 - 在需要全文能力时，可与 [Elasticsearch](/components/elasticsearch) 形成条件配合，而非默认双底座长期并行。
 
-## 适用场景
+## 适合场景
 
 - 企业知识库检索
 - 智能体 RAG 检索
