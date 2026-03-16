@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：知识与检索层
+>
+> 官方网站：https://docs.llamaindex.ai/
+>
+> 开源仓库地址：https://github.com/run-llama/llama_index
 
 ## 当前定位
 

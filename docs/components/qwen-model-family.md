@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：模型网关与推理层
+>
+> 官方网站：https://qwen.readthedocs.io/
+>
+> 开源仓库地址：https://github.com/QwenLM
 
 ## 当前定位
 

@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：模型网关与推理层
+>
+> 官方网站：https://www.litellm.ai/
+>
+> 开源仓库地址：https://github.com/BerriAI/litellm
 
 ## 当前定位
 

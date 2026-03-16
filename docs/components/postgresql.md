@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：基础设施层
+>
+> 官方网站：https://www.postgresql.org/docs/
+>
+> 开源仓库地址：https://git.postgresql.org/git/postgresql.git
 
 ## 当前定位
 

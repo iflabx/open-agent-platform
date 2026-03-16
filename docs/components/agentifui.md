@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：门户与应用层
+>
+> 官方网站：https://agentifui.com/
+>
+> 开源仓库地址：https://github.com/iflabx/agentifui
 
 ## 当前定位
 

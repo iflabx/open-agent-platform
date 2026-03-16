@@ -3,6 +3,10 @@
 > 类型：agent-to-tool / context 协议
 >
 > 复用规则：稳定复用的协议说明页
+>
+> 官方网站：https://modelcontextprotocol.io/
+>
+> 开源仓库地址：https://github.com/modelcontextprotocol/modelcontextprotocol
 
 ## 当前定位
 

@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：治理与观测层
+>
+> 官方网站：https://prometheus.io/docs/
+>
+> 开源仓库地址：https://github.com/prometheus/prometheus
 
 ## 当前定位
 

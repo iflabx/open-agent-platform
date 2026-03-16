@@ -5,6 +5,10 @@
 > 复用规则：条件引入的组件说明页
 >
 > 所属层：Agent 编排层
+>
+> 官方网站：https://docs.letta.com/
+>
+> 开源仓库地址：https://github.com/letta-ai/letta
 
 ## 当前定位
 

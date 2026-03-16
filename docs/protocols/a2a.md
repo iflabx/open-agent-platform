@@ -3,6 +3,10 @@
 > 类型：agent-to-agent 协议
 >
 > 复用规则：稳定复用的协议说明页
+>
+> 官方网站：https://a2a-protocol.org/
+>
+> 开源仓库地址：https://github.com/google-a2a/A2A
 
 ## 当前定位
 

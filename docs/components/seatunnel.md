@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：数据治理层
+>
+> 官方网站：https://seatunnel.apache.org/
+>
+> 开源仓库地址：https://github.com/apache/seatunnel
 
 ## 当前定位
 

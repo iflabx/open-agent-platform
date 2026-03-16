@@ -3,6 +3,10 @@
 > 类型：API 契约协议
 >
 > 状态：目录已建立，正文待展开
+>
+> 官方网站：https://www.openapis.org/
+>
+> 开源仓库地址：https://github.com/OAI/OpenAPI-Specification
 
 ## 当前定位
 

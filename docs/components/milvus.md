@@ -5,6 +5,10 @@
 > 复用规则：条件引入的组件说明页
 >
 > 所属层：知识与检索层
+>
+> 官方网站：https://milvus.io/docs
+>
+> 开源仓库地址：https://github.com/milvus-io/milvus
 
 ## 当前定位
 

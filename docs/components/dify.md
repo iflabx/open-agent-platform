@@ -5,6 +5,10 @@
 > 复用规则：互斥候选的组件说明页
 >
 > 所属层：Agent 编排层
+>
+> 官方网站：https://docs.dify.ai/
+>
+> 开源仓库地址：https://github.com/langgenius/dify
 
 ## 当前定位
 

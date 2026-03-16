@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：数据治理层
+>
+> 官方网站：https://docs.getdbt.com/
+>
+> 开源仓库地址：https://github.com/dbt-labs/dbt-core
 
 ## 当前定位
 

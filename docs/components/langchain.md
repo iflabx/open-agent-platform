@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：Agent 编排层
+>
+> 官方网站：https://docs.langchain.com/
+>
+> 开源仓库地址：https://github.com/langchain-ai/langchain
 
 ## 当前定位
 

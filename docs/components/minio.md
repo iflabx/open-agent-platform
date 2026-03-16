@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：基础设施层
+>
+> 官方网站：https://min.io/docs/minio
+>
+> 开源仓库地址：https://github.com/minio/minio
 
 ## 当前定位
 

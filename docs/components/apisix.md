@@ -5,6 +5,10 @@
 > 复用规则：稳定复用的组件说明页
 >
 > 所属层：统一接入与流量治理层
+>
+> 官方网站：https://apisix.apache.org/docs/
+>
+> 开源仓库地址：https://github.com/apache/apisix
 
 ## 当前定位
 
