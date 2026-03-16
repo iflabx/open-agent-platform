@@ -17,12 +17,12 @@
 - [协议与标准体系](/protocol-standards)
 - [数据治理层（企业 AI 数据底座）](/data-governance)
 - [总体架构](/architecture)
-- [扩展能力与补齐方向](/extension-capabilities)
 - [技术选型](/stack)
 - [典型场景](/scenarios)
 - [安全与治理](/governance)
 - [部署与发布](/deployment)
 - [实施路线图](/roadmap)
+- [扩展升级](/extension-capabilities)
 
 ## 三、组件说明页
 
@@ -33,6 +33,7 @@
 ### [2. 统一接入与流量治理层](/layers/access-traffic-governance)
 
 - [APISIX](/components/apisix)
+- [agentgateway](/components/agentgateway)
 
 ### [3. 门户与应用层](/layers/portal-application)
 

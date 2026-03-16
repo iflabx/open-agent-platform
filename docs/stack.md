@@ -28,6 +28,7 @@
 | 向量检索 | `Weaviate` | 数据规模和隔离要求显著上升时演进到 `Milvus` | 默认先用单一向量底座 |
 | 全文 / 混合检索 | `Elasticsearch` | 只在确有全文检索需求时启用 | 不作为默认长期三套并行的一部分 |
 | 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 无 | 入口认证、流量治理和细粒度授权分层负责 |
+| AI 原生协议接入 | `agentgateway` | 在需要统一 `MCP / A2A / southbound` 协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 无 | 平台级和 AI 级观测都要有 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前都要有容量基线 |
 | 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展 |
@@ -50,6 +51,7 @@
 适合多业务线复用、需要更强治理和复杂流程的团队：
 
 - `APISIX + 企业现有 SSO / IAM + Casbin`
+- `agentgateway`
 - 一条主平台路线
 - `LangGraph + LangChain`
 - `LlamaIndex`
@@ -91,6 +93,13 @@
 - `APISIX` 负责入口级认证接入、流量治理和审计前置。
 - `Casbin` 负责应用内细粒度授权裁决。
 
+### 6. `APISIX`、`agentgateway`、`LiteLLM` 的关系
+
+- `APISIX` 负责公网或半公网北向入口。
+- `agentgateway` 负责内部 `MCP / A2A / southbound` 协议接入与治理。
+- `LiteLLM` 负责默认模型入口、模型路由和配额治理。
+- 三者协同，但不应彼此替代。
+
 ## 不建议的做法
 
 - 同时长期维护多条主平台路线。
@@ -110,6 +119,7 @@
 ## 参考资料
 
 - [LiteLLM Docs](https://docs.litellm.ai/)
+- [agentgateway Introduction](https://agentgateway.dev/docs/standalone/latest/about/introduction/)
 - [LangGraph Overview](https://docs.langchain.com/oss/python/langgraph)
 - [LlamaIndex Docs](https://docs.llamaindex.ai/)
 - [Apache APISIX Architecture](https://apisix.apache.org/docs/apisix/3.14/architecture-design/apisix/)

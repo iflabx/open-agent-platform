@@ -17,7 +17,7 @@
 | 层级 | 主要承载对象 | 说明 |
 | --- | --- | --- |
 | 1. 用户与渠道层 | 企业现有 Web / IM / 工单 / 邮件 / CRM / ERP 入口 | 当前不单独纳入新的正式组件 |
-| 2. 统一接入与流量治理层 | `APISIX`、企业现有 `SSO / IAM` | 统一入口、认证接入、流量治理 |
+| 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
 | 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 门户和应用入口，不承载底层智能逻辑 |
 | 4. Agent 编排层 | `Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta` | 主平台路线与复杂运行时 |
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 数据采集、标准化、元数据与资产发布 |
@@ -46,6 +46,7 @@
 ### 主组件
 
 - [APISIX](/components/apisix)
+- [agentgateway](/components/agentgateway)
 
 ### 复用能力
 
@@ -54,6 +55,7 @@
 ### 说明
 
 - `APISIX` 是这一层的统一北向入口。
+- `agentgateway` 是这一层的内部 AI 原生协议网关，负责 `MCP / A2A / southbound` 协议接入与治理。
 - 企业现有 `SSO / IAM` 负责身份源和组织上下文。
 - 这一层不替代模型网关，也不替代细粒度授权。
 

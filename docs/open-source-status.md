@@ -38,6 +38,7 @@
 | `Coze Studio` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `AgentifUI` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `APISIX` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `agentgateway` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `LangGraph` | 标准开源 | `MIT` | 可直接纳入 |
 | `LangChain` | 标准开源 | `MIT` | 可直接纳入 |
 | `LlamaIndex` | 标准开源 | `MIT` | 可直接纳入 |
@@ -112,6 +113,7 @@
 | 对象 | 公开来源 | 当前判断 |
 | --- | --- | --- |
 | `APISIX` | [官方仓库](https://github.com/apache/apisix) | 标准开源，`Apache-2.0` |
+| `agentgateway` | [官方仓库](https://github.com/agentgateway/agentgateway) | 标准开源，`Apache-2.0` |
 | `LangFuse` | [官方仓库](https://github.com/langfuse/langfuse) | 核心为 `MIT`，企业目录另有许可证，按 `Open core` 理解 |
 | `k6` | [官方仓库](https://github.com/grafana/k6) | `AGPL-3.0` |
 | `Casbin` | [官方仓库](https://github.com/apache/casbin) | 标准开源，`Apache-2.0` |
@@ -170,6 +172,7 @@
 ## 参考资料
 
 - [Dify 官方仓库](https://github.com/langgenius/dify)
+- [agentgateway 官方仓库](https://github.com/agentgateway/agentgateway)
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)
 - [Redis 官方仓库](https://github.com/redis/redis)

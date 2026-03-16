@@ -25,6 +25,7 @@
 
 - 上游承接 [用户与渠道层](/layers/user-channel) 的 Web、IM、工单和业务系统请求。
 - 与企业现有 `SSO / IAM` 协同完成认证接入和组织上下文继承。
+- 在协议丰富的内部链路中，与 [agentgateway](/components/agentgateway) 分层协作：`APISIX` 负责北向入口，`agentgateway` 负责内部 AI 原生协议接入。
 - 下游把请求分发到 [AgentifUI](/components/agentifui)、编排层服务和平台接口。
 - 与 [Casbin](/components/casbin) 协同，但不直接替代细粒度授权裁决。
 
@@ -37,12 +38,14 @@
 ## 边界
 
 - 不替代 `LiteLLM` 的模型路由
+- 不替代 `agentgateway` 的内部 `MCP / A2A` 协议治理
 - 不替代 `Casbin` 的细粒度授权裁决
 - 不承载业务工作流编排
 
 ## 采用规则
 
-- 当前方案默认使用 `APISIX` 作为统一北向入口，不再并行引入第二套正式网关组件。
+- 当前方案默认使用 `APISIX` 作为统一北向入口，不并行引入第二套公网入口网关。
+- 如启用 [agentgateway](/components/agentgateway)，其角色限定为内部 AI 原生协议网关，不替代 `APISIX` 的北向职责。
 - 所有公开或半公开接口都应优先经由网关层暴露，不建议业务服务直接对外开放入口。
 - 网关配置、限流策略和灰度规则应通过统一配置方式管理，而不是散落在各应用中。
 
@@ -52,10 +55,12 @@
 - 路由、插件、限流和灰度策略需要版本化管理，避免线上人工漂移。
 - 入口层只做前置治理，不应承载过重业务逻辑。
 - 身份接入规则要与企业既有 `SSO / IAM` 保持一致口径。
+- 对内部 `MCP / A2A` 链路的治理不应强行塞回 `APISIX`，避免公网入口网关职责膨胀。
 
 ## 关联文档
 
 - [2. 统一接入与流量治理层](/layers/access-traffic-governance)
+- [agentgateway](/components/agentgateway)
 - [身份接入协议](/protocols/identity-access)
 - [安全与治理](/governance)
 - [部署与发布](/deployment)

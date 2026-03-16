@@ -26,6 +26,7 @@
 - 下游连接 [vLLM](/components/vllm) 和具体模型池。
 - 向知识层提供统一的 Embedding、Reranker 和生成式模型调用入口。
 - 与 [APISIX](/components/apisix) 配合，但两者分别承担入口网关和模型网关职责。
+- 在需要统一 `MCP / A2A / southbound` 协议治理时，可与 [agentgateway](/components/agentgateway) 协同，但两者不互相替代。
 
 ## 适合场景
 
@@ -38,6 +39,7 @@
 - 不承载知识库
 - 不负责工作流编排
 - 不替代 API 网关
+- 不替代 `agentgateway` 的 AI 原生协议接入治理
 
 ## 采用规则
 
@@ -55,6 +57,7 @@
 ## 关联文档
 
 - [7. 模型网关与推理层](/layers/model-gateway-inference)
+- [agentgateway](/components/agentgateway)
 - [vLLM](/components/vllm)
 - [Qwen 模型族](/components/qwen-model-family)
 - [技术选型](/stack)

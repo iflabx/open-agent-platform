@@ -23,7 +23,7 @@
 | 层级 | 核心职责 | 当前方案落位 | 边界说明 |
 | --- | --- | --- | --- |
 | 1. 用户与渠道层 | 承接员工、运营、业务系统和外部渠道请求 | Web 门户、管理后台、企业 IM、工单系统、邮件、Webhook | 不直接承载模型调用和权限裁决 |
-| 2. 统一接入与流量治理层 | 统一入口、认证接入、路由、限流、灰度、审计前置 | `APISIX` + 企业现有 `SSO / IAM` | 不替代模型网关，不替代细粒度授权 |
+| 2. 统一接入与流量治理层 | 统一入口、认证接入、路由、限流、灰度、审计前置，以及 AI 原生协议 southbound 接入治理 | `APISIX` + `agentgateway` + 企业现有 `SSO / IAM` | 不替代模型网关，不替代细粒度授权 |
 | 3. 门户与应用层 | 负责工作台、BFF、会话上下文和应用入口 | `AgentifUI` + 门户 / BFF / API 层 | 不持有底层检索索引和策略引擎逻辑 |
 | 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify`、`RAGFlow` 或 `Coze Studio` 三选一；复杂流程由 `LangGraph` 承接；通用工程编排采用 `LangChain`；长期记忆场景按需使用 `Letta` | 不绕过治理直接访问原始数据源 |
 | 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 不直接承担终端交互 |
@@ -48,7 +48,7 @@
 
 ### 2. 复杂流程主链
 
-`APISIX -> AgentifUI / 门户-BFF -> LangGraph -> MCP / A2A -> 工具服务或远程 Agent -> LiteLLM -> vLLM -> Qwen`
+`APISIX -> AgentifUI / 门户-BFF -> LangGraph -> agentgateway -> MCP / A2A -> 工具服务或远程 Agent -> LiteLLM -> vLLM -> Qwen`
 
 配套治理链：
 
@@ -66,6 +66,7 @@
 
 - `MCP` 负责 agent-to-tool / context 的标准化接入。
 - `A2A` 负责 agent-to-agent 的协作关系。
+- 在协议丰富的内部链路中，可由 `agentgateway` 承接 `MCP / A2A` 的统一 southbound 接入与治理。
 - 协议的职责是降低互操作成本，不替代编排层、知识层或治理层本身。
 
 ## 三条关键视图
@@ -74,7 +75,7 @@
 
 业务执行面覆盖从请求进入到结果返回的运行主链路：
 
-`渠道 -> APISIX -> 门户/BFF -> 主平台路线或 Agent Runtime -> 检索/工具/模型 -> 结果返回`
+`渠道 -> APISIX -> 门户/BFF -> 主平台路线或 Agent Runtime -> 按需进入 agentgateway -> 检索/工具/模型 -> 结果返回`
 
 它强调的是请求处理效率、上下文拼装、工具执行和结果交付。
 
@@ -133,6 +134,7 @@
 | 模块 | 必须负责 | 不应负责 |
 | --- | --- | --- |
 | `APISIX` | 北向入口、认证接入、路由、限流、灰度、审计前置 | 不承担模型路由，不承担细粒度授权裁决 |
+| `agentgateway` | 内部 `MCP / A2A / LLM` 协议接入、southbound 路由与治理 | 不替代 `APISIX` 作为公网入口，不承接业务应用模型 |
 | 门户 / BFF | 用户会话、前端体验、应用入口、接口聚合 | 不直接持有检索索引和策略规则 |
 | 主平台路线 | 标准场景工作流、知识平面、应用配置 | 三条路线长期只保留一条主底座 |
 | `LangGraph` | 复杂状态机、人工介入、长链路恢复 | 不替代门户层，不直接承接 IAM |
@@ -163,6 +165,7 @@
 
 - 同一企业长期并行建设多套主平台底座。
 - 让 `APISIX` 同时承担入口治理和模型网关职责。
+- 把公网入口治理和内部 AI 协议治理混成同一套网关职责。
 - 让 Agent 直接绕过数据治理层访问原始业务库。
 - 把所有权限控制都放在前端或单个业务应用里。
 - 把 LLM Trace 工具误当成整个平台可观测体系的全部。
@@ -180,5 +183,6 @@
 
 - [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/)
 - [K3s Architecture](https://docs.k3s.io/architecture)
+- [agentgateway Introduction](https://agentgateway.dev/docs/standalone/latest/about/introduction/)
 - [Model Context Protocol Specification 2025-06-18](https://modelcontextprotocol.io/specification/2025-06-18)
 - [A2A Protocol 官方仓库](https://github.com/a2aproject/A2A)

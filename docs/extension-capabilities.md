@@ -1,6 +1,6 @@
-# 扩展能力与补齐方向
+# 扩展升级
 
-> 角色：企业智能体系统建设中的扩展能力研究页
+> 角色：企业智能体系统建设中的扩展能力研究与升级方向页
 >
 > 说明：本文总结的是企业建设智能体系统时经常需要、但当前正式组件清单尚未纳入的能力与代表性开源组件。本文不是当前正式组件清单，不改变 [组件](/components) 页的公开口径。
 
@@ -23,6 +23,7 @@
 - 敏感数据识别、脱敏和合规审查需要专门能力
 - 数据质量和多源查询在部分场景下需要额外补齐
 - 浏览器自动化或 UI 级执行需要专门运行能力
+- Agent 直接返回表单、卡片和审批界面时，需要声明式动态交互协议
 
 这些能力并不一定都要进入当前正式方案，但在企业级建设中很常见，因此有必要单独说明。
 
@@ -46,6 +47,7 @@
 | 数据质量验证与发布门槛 | 当前有 `dbt Core`、治理流程和元数据体系 | 面向表、文件、索引发布前的显式质量校验和验证报告 | `Great Expectations` |
 | 联邦查询与受控多源分析 | 当前以治理后数据层、`PostgreSQL` 和检索为主 | 多源联邦 SQL、跨存储统一查询入口 | `Trino` |
 | 浏览器自动化与 UI 级执行 | 当前主要通过工具调用和协议集成 | Web UI 自动化、浏览器步骤回放、页面级任务执行 | `Playwright` |
+| Agent 驱动界面与动态交互协议 | 当前以固定门户页面、组件页面和前端静态组件为主 | 动态表单、审批卡片、工件面板、运行中断补录与跨 runtime 统一交互表达 | `A2UI` |
 
 ## 四、逐项说明
 
@@ -287,6 +289,41 @@
 - [Playwright Docs](https://playwright.dev/docs/intro)
 - [Playwright Writing Tests](https://playwright.dev/docs/writing-tests)
 
+## 9. Agent 驱动界面与动态交互协议
+
+### 这项能力解决什么问题
+
+当前方案已经有统一门户和固定页面，但如果后续希望让 agent 或 runtime 在运行时返回可安全渲染的 UI，企业通常还会需要：
+
+- 动态表单与参数补录界面
+- 审批卡片与人工确认面板
+- 工件展示卡片和结果工作台
+- 运行中断后的上下文补录与恢复
+- 不同 runtime 之间更一致的前台交互表达
+
+### 当前方案为什么还没纳入
+
+当前正式方案优先解决统一门户、应用目录、权限、编排接入和治理链路，不把“agent 生成界面协议”作为第一阶段核心依赖。
+
+此外，`A2UI` 当前仍处于公开预览早期阶段，更适合作为扩展升级方向或候选标准，而不是立即升级为当前正式组件。
+
+### 什么时候值得评估
+
+- 需要让 agent 返回表单、卡片或审批界面，而不是只返回文本
+- 多个 runtime 都希望通过统一前端协议表达交互界面
+- 需要把人工确认、人工补录和工件展示纳入标准事件流
+- 希望在门户层建立“声明式动态 UI + 白名单组件渲染”能力
+
+### 代表性组件
+
+- `A2UI`
+
+### 官方参考
+
+- [A2UI GitHub](https://github.com/google/A2UI)
+- [Introducing A2UI: An open project for agent-driven interfaces](https://developers.googleblog.com/introducing-a2ui-an-open-project-for-agent-driven-interfaces/)
+- [A2UI Quickstart](https://a2ui.org/quickstart/)
+
 ## 五、建议的评估顺序
 
 如果企业后续要补齐这些扩展能力，建议按以下优先级评估：
@@ -299,8 +336,9 @@
 6. 敏感信息识别与脱敏
 7. 联邦查询与受控多源分析
 8. 浏览器自动化与 UI 级执行
+9. Agent 驱动界面与动态交互协议
 
-前四项更偏平台控制力和生产可控性，后四项更偏场景扩展与规模化深化。
+前四项更偏平台控制力和生产可控性，后五项更偏场景扩展与规模化深化。
 
 ## 六、与当前正式方案的关系
 
@@ -312,7 +350,7 @@
 
 ## 七、一句话收敛
 
-企业智能体平台的扩展重点，不是继续堆更多“看起来先进”的组件，而是在现有组件边界不足时，按能力缺口精准补齐工作流、事件流、策略、密钥、脱敏、数据质量、联邦查询和 UI 执行能力。
+企业智能体平台的扩展重点，不是继续堆更多“看起来先进”的组件，而是在现有组件边界不足时，按能力缺口精准补齐工作流、事件流、策略、密钥、脱敏、数据质量、联邦查询、UI 执行和动态交互协议能力。
 
 ## 参考资料
 
@@ -325,3 +363,6 @@
 - [Great Expectations Validations](https://docs.greatexpectations.io/docs/cloud/validations/validations_lp)
 - [Trino 官网](https://trino.io/)
 - [Playwright Docs](https://playwright.dev/docs/intro)
+- [A2UI GitHub](https://github.com/google/A2UI)
+- [Introducing A2UI: An open project for agent-driven interfaces](https://developers.googleblog.com/introducing-a2ui-an-open-project-for-agent-driven-interfaces/)
+- [A2UI Quickstart](https://a2ui.org/quickstart/)
