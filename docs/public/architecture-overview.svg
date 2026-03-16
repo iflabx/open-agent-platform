@@ -1,0 +1,49 @@
+<svg width="1400" height="860" viewBox="0 0 1400 860" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="860" rx="36" fill="#F3F7F2"/>
+  <rect x="44" y="38" width="1312" height="784" rx="30" fill="white" stroke="#D7E5E1" stroke-width="2"/>
+  <rect x="92" y="88" width="1216" height="106" rx="24" fill="#ECFDF5"/>
+  <text x="124" y="126" fill="#0F766E" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">接入与交互层</text>
+  <text x="124" y="166" fill="#285E61" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Web 门户 / 企业 IM / 管理后台 / Open API / Webhook</text>
+
+  <rect x="92" y="220" width="1216" height="144" rx="24" fill="#F0FDFA"/>
+  <text x="124" y="260" fill="#115E59" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">智能编排层</text>
+  <rect x="124" y="286" width="256" height="52" rx="16" fill="#CCFBF1"/>
+  <rect x="404" y="286" width="256" height="52" rx="16" fill="#CCFBF1"/>
+  <rect x="684" y="286" width="256" height="52" rx="16" fill="#CCFBF1"/>
+  <rect x="964" y="286" width="296" height="52" rx="16" fill="#CCFBF1"/>
+  <text x="170" y="319" fill="#134E4A" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Agent Runtime</text>
+  <text x="461" y="319" fill="#134E4A" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Prompt 编排</text>
+  <text x="735" y="319" fill="#134E4A" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Tool Hub</text>
+  <text x="1023" y="319" fill="#134E4A" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Workflow Orchestrator</text>
+
+  <rect x="92" y="392" width="588" height="188" rx="24" fill="#F8FAFC"/>
+  <text x="124" y="432" fill="#0F172A" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">知识与数据层</text>
+  <rect x="124" y="458" width="240" height="48" rx="14" fill="#E2E8F0"/>
+  <rect x="384" y="458" width="264" height="48" rx="14" fill="#E2E8F0"/>
+  <rect x="124" y="522" width="240" height="48" rx="14" fill="#E2E8F0"/>
+  <rect x="384" y="522" width="264" height="48" rx="14" fill="#E2E8F0"/>
+  <text x="174" y="489" fill="#334155" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">文档与知识源</text>
+  <text x="440" y="489" fill="#334155" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Embedding / Reranker</text>
+  <text x="182" y="553" fill="#334155" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">向量检索</text>
+  <text x="446" y="553" fill="#334155" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">会话 / 状态 / 评测</text>
+
+  <rect x="720" y="392" width="588" height="188" rx="24" fill="#FFFBEB"/>
+  <text x="752" y="432" fill="#B45309" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">治理与观测层</text>
+  <rect x="752" y="458" width="252" height="48" rx="14" fill="#FEF3C7"/>
+  <rect x="1024" y="458" width="252" height="48" rx="14" fill="#FEF3C7"/>
+  <rect x="752" y="522" width="252" height="48" rx="14" fill="#FEF3C7"/>
+  <rect x="1024" y="522" width="252" height="48" rx="14" fill="#FEF3C7"/>
+  <text x="810" y="489" fill="#92400E" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">SSO / 权限</text>
+  <text x="1082" y="489" fill="#92400E" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">审计与追踪</text>
+  <text x="793" y="553" fill="#92400E" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">安全策略</text>
+  <text x="1074" y="553" fill="#92400E" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">评测与告警</text>
+
+  <rect x="92" y="608" width="1216" height="154" rx="24" fill="#0F172A"/>
+  <text x="124" y="650" fill="#E2E8F0" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">基础设施层</text>
+  <text x="124" y="694" fill="#CBD5E1" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Kubernetes / GPU 推理集群 / PostgreSQL / Redis / 对象存储 / APISIX / OpenTelemetry</text>
+
+  <path d="M700 194V220" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M700 364V392" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M680 486H720" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M700 580V608" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+</svg>
