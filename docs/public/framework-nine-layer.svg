@@ -1,120 +1,94 @@
-<svg width="1600" height="1160" viewBox="0 0 1600 1160" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1600" height="1160" rx="40" fill="#F5F7F4"/>
-  <rect x="32" y="32" width="1536" height="1096" rx="32" fill="#FFFFFF" stroke="#D8E2DB" stroke-width="2"/>
+<svg width="1600" height="1300" viewBox="0 0 1600 1300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1300" rx="40" fill="#F5F7F4"/>
+  <rect x="32" y="32" width="1536" height="1236" rx="32" fill="#FFFFFF" stroke="#D8E2DB" stroke-width="2"/>
+
   <text x="84" y="108" fill="#111827" font-size="44" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">企业级智能体平台九层总体架构图</text>
   <text x="84" y="150" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">从用户入口到底层基础设施的正式分层，以及当前方案中已经收敛的关键组件位置。</text>
 
   <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="194" width="1432" height="86" rx="22" fill="#EEF6FF"/>
-    <rect x="104" y="210" width="208" height="54" rx="16" fill="#D8EAFE"/>
-    <text x="138" y="245" fill="#1D4ED8" font-size="28" font-weight="700">1. 用户与渠道层</text>
-    <text x="354" y="245" fill="#1F2937" font-size="24">企业 Web / IM / 工单 / CRM / ERP / Open API</text>
+    <rect x="84" y="192" width="1432" height="92" rx="24" fill="#EEF6FF"/>
+    <rect x="104" y="211" width="246" height="54" rx="16" fill="#D8EAFE"/>
+    <text x="132" y="247" fill="#1D4ED8" font-size="28" font-weight="700">1. 用户与渠道层</text>
+    <text x="386" y="235" fill="#1F2937" font-size="22">企业 Web / IM / 工单 / CRM / ERP</text>
+    <text x="386" y="261" fill="#475569" font-size="18">统一用户入口、系统入口与 Open API 接入面</text>
 
-    <rect x="84" y="296" width="1432" height="92" rx="22" fill="#ECFDF5"/>
-    <rect x="104" y="315" width="296" height="54" rx="16" fill="#C8F2DA"/>
-    <text x="130" y="350" fill="#047857" font-size="28" font-weight="700">2. 统一接入与流量治理层</text>
-    <rect x="438" y="315" width="170" height="54" rx="16" fill="#D9FBE8"/>
-    <rect x="626" y="315" width="206" height="54" rx="16" fill="#D9FBE8"/>
-    <text x="491" y="350" fill="#065F46" font-size="24" font-weight="600">APISIX</text>
-    <text x="664" y="350" fill="#065F46" font-size="24" font-weight="600">agentgateway</text>
-    <text x="866" y="350" fill="#1F2937" font-size="22">北向入口、灰度、审计、MCP / A2A southbound 治理</text>
+    <rect x="84" y="304" width="1432" height="104" rx="24" fill="#ECFDF5"/>
+    <rect x="104" y="329" width="324" height="54" rx="16" fill="#C8F2DA"/>
+    <text x="130" y="365" fill="#047857" font-size="28" font-weight="700">2. 统一接入与流量治理层</text>
+    <rect x="466" y="329" width="176" height="54" rx="16" fill="#D9FBE8"/>
+    <rect x="660" y="329" width="214" height="54" rx="16" fill="#D9FBE8"/>
+    <text x="521" y="365" fill="#065F46" font-size="24" font-weight="600">APISIX</text>
+    <text x="700" y="365" fill="#065F46" font-size="24" font-weight="600">agentgateway</text>
+    <text x="912" y="351" fill="#1F2937" font-size="20">北向统一入口、灰度、审计</text>
+    <text x="912" y="377" fill="#475569" font-size="17">MCP / A2A southbound 协议接入与治理</text>
 
-    <rect x="84" y="404" width="1432" height="92" rx="22" fill="#FFF7ED"/>
-    <rect x="104" y="423" width="252" height="54" rx="16" fill="#FBD7B0"/>
-    <text x="130" y="458" fill="#C2410C" font-size="28" font-weight="700">3. 门户与应用层</text>
-    <rect x="402" y="423" width="194" height="54" rx="16" fill="#FCE6C9"/>
-    <text x="445" y="458" fill="#9A3412" font-size="24" font-weight="600">AgentifUI</text>
-    <text x="630" y="458" fill="#1F2937" font-size="22">统一门户、应用目录、会话入口、反馈与运营后台</text>
+    <rect x="84" y="428" width="1432" height="96" rx="24" fill="#FFF7ED"/>
+    <rect x="104" y="449" width="270" height="54" rx="16" fill="#FBD7B0"/>
+    <text x="130" y="485" fill="#C2410C" font-size="28" font-weight="700">3. 门户与应用层</text>
+    <rect x="412" y="449" width="194" height="54" rx="16" fill="#FCE6C9"/>
+    <text x="455" y="485" fill="#9A3412" font-size="24" font-weight="600">AgentifUI</text>
+    <text x="646" y="471" fill="#1F2937" font-size="20">统一门户、应用目录、会话入口</text>
+    <text x="646" y="495" fill="#475569" font-size="17">反馈回收、运营后台与北向 BFF</text>
 
-    <rect x="84" y="512" width="1432" height="112" rx="22" fill="#FDF2F8"/>
-    <rect x="104" y="541" width="224" height="54" rx="16" fill="#F8CFE1"/>
-    <text x="130" y="576" fill="#BE185D" font-size="28" font-weight="700">4. Agent 编排层</text>
-    <rect x="360" y="541" width="182" height="54" rx="16" fill="#FCE0EC"/>
-    <rect x="560" y="541" width="216" height="54" rx="16" fill="#FCE0EC"/>
-    <rect x="794" y="541" width="214" height="54" rx="16" fill="#FCE0EC"/>
-    <rect x="1026" y="541" width="160" height="54" rx="16" fill="#FCE0EC"/>
-    <text x="416" y="576" fill="#9D174D" font-size="22" font-weight="600">Dify / RAGFlow</text>
-    <text x="618" y="576" fill="#9D174D" font-size="22" font-weight="600">Coze Studio / LangGraph</text>
-    <text x="850" y="576" fill="#9D174D" font-size="22" font-weight="600">LangChain / LlamaIndex</text>
-    <text x="1086" y="576" fill="#9D174D" font-size="22" font-weight="600">Letta</text>
+    <rect x="84" y="544" width="1432" height="138" rx="24" fill="#FDF2F8"/>
+    <rect x="104" y="586" width="246" height="54" rx="16" fill="#F8CFE1"/>
+    <text x="130" y="622" fill="#BE185D" font-size="28" font-weight="700">4. Agent 编排层</text>
+    <rect x="390" y="566" width="212" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="620" y="566" width="170" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="808" y="566" width="214" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="1040" y="566" width="150" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="390" y="624" width="212" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="620" y="624" width="170" height="46" rx="14" fill="#FCE0EC"/>
+    <text x="438" y="596" fill="#9D174D" font-size="18" font-weight="600">Dify / RAGFlow</text>
+    <text x="653" y="596" fill="#9D174D" font-size="18" font-weight="600">Coze Studio</text>
+    <text x="852" y="596" fill="#9D174D" font-size="18" font-weight="600">LangGraph</text>
+    <text x="1086" y="596" fill="#9D174D" font-size="18" font-weight="600">Letta</text>
+    <text x="446" y="654" fill="#9D174D" font-size="18" font-weight="600">LangChain</text>
+    <text x="651" y="654" fill="#9D174D" font-size="18" font-weight="600">LlamaIndex</text>
+    <text x="1224" y="591" fill="#1F2937" font-size="19">标准平台交付</text>
+    <text x="1224" y="617" fill="#1F2937" font-size="19">复杂流程与自研 Agent Runtime</text>
+    <text x="1224" y="643" fill="#475569" font-size="17">长期记忆与知识工程按需接入</text>
 
-    <rect x="84" y="640" width="1432" height="96" rx="22" fill="#F0F9FF"/>
-    <rect x="104" y="661" width="200" height="54" rx="16" fill="#CCEAFE"/>
-    <text x="126" y="696" fill="#0369A1" font-size="28" font-weight="700">5. 数据治理层</text>
-    <text x="348" y="696" fill="#1F2937" font-size="23">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
-    <text x="1072" y="696" fill="#475569" font-size="21">源系统登记、采集同步、治理、发布</text>
+    <rect x="84" y="702" width="1432" height="104" rx="24" fill="#F0F9FF"/>
+    <rect x="104" y="727" width="218" height="54" rx="16" fill="#CCEAFE"/>
+    <text x="130" y="763" fill="#0369A1" font-size="28" font-weight="700">5. 数据治理层</text>
+    <text x="360" y="749" fill="#1F2937" font-size="21">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
+    <text x="360" y="775" fill="#475569" font-size="17">数据源登记、采集同步、结构化治理、非结构化解析与发布</text>
 
-    <rect x="84" y="752" width="1432" height="104" rx="22" fill="#F5F3FF"/>
-    <rect x="104" y="777" width="228" height="54" rx="16" fill="#DDD6FE"/>
-    <text x="126" y="812" fill="#6D28D9" font-size="28" font-weight="700">6. 知识与检索层</text>
-    <text x="370" y="812" fill="#1F2937" font-size="23">Weaviate / Milvus / Elasticsearch / Embedding / Reranker</text>
-    <text x="1170" y="812" fill="#5B21B6" font-size="21">受控检索、重排、权限过滤</text>
+    <rect x="84" y="826" width="1432" height="104" rx="24" fill="#F5F3FF"/>
+    <rect x="104" y="851" width="240" height="54" rx="16" fill="#DDD6FE"/>
+    <text x="130" y="887" fill="#6D28D9" font-size="28" font-weight="700">6. 知识与检索层</text>
+    <text x="382" y="873" fill="#1F2937" font-size="21">Weaviate / Milvus / Elasticsearch / Embedding / Reranker</text>
+    <text x="382" y="899" fill="#475569" font-size="17">向量检索、全文检索、混合检索、重排与权限过滤</text>
 
-    <rect x="84" y="872" width="1432" height="96" rx="22" fill="#FFFBEB"/>
-    <rect x="104" y="893" width="260" height="54" rx="16" fill="#FDE68A"/>
-    <text x="126" y="928" fill="#B45309" font-size="28" font-weight="700">7. 模型网关与推理层</text>
-    <rect x="394" y="893" width="162" height="54" rx="16" fill="#FEF3C7"/>
-    <rect x="574" y="893" width="230" height="54" rx="16" fill="#FEF3C7"/>
-    <text x="440" y="928" fill="#92400E" font-size="24" font-weight="600">LiteLLM</text>
-    <text x="632" y="928" fill="#92400E" font-size="24" font-weight="600">vLLM + Qwen 模型族</text>
-    <text x="844" y="928" fill="#78350F" font-size="21">统一模型入口、路由、配额、故障切换</text>
+    <rect x="84" y="950" width="1432" height="104" rx="24" fill="#FFFBEB"/>
+    <rect x="104" y="975" width="298" height="54" rx="16" fill="#FDE68A"/>
+    <text x="130" y="1011" fill="#B45309" font-size="28" font-weight="700">7. 模型网关与推理层</text>
+    <rect x="440" y="975" width="166" height="54" rx="16" fill="#FEF3C7"/>
+    <rect x="624" y="975" width="230" height="54" rx="16" fill="#FEF3C7"/>
+    <text x="486" y="1011" fill="#92400E" font-size="24" font-weight="600">LiteLLM</text>
+    <text x="680" y="1011" fill="#92400E" font-size="22" font-weight="600">vLLM + Qwen</text>
+    <text x="894" y="997" fill="#1F2937" font-size="20">统一模型入口、路由、配额</text>
+    <text x="894" y="1021" fill="#475569" font-size="17">故障切换、推理执行与 GPU 资源承载</text>
 
-    <rect x="84" y="984" width="1432" height="92" rx="22" fill="#F1F5F9"/>
-    <rect x="104" y="1003" width="214" height="54" rx="16" fill="#DDE7F2"/>
-    <text x="126" y="1038" fill="#334155" font-size="28" font-weight="700">8. 治理与观测层</text>
-    <text x="354" y="1038" fill="#1F2937" font-size="23">Casbin / LangFuse / OpenTelemetry / Prometheus / Grafana / Loki / k6</text>
+    <rect x="84" y="1074" width="1432" height="96" rx="24" fill="#F1F5F9"/>
+    <rect x="104" y="1095" width="246" height="54" rx="16" fill="#DDE7F2"/>
+    <text x="130" y="1131" fill="#334155" font-size="28" font-weight="700">8. 治理与观测层</text>
+    <text x="388" y="1117" fill="#1F2937" font-size="21">Casbin / LangFuse / OpenTelemetry / Prometheus / Grafana / Loki / k6</text>
+    <text x="388" y="1141" fill="#475569" font-size="17">审计、评测、追踪、指标、日志、容量验证与质量回放</text>
 
-    <rect x="84" y="1092" width="1432" height="0" rx="0" fill="none"/>
+    <rect x="84" y="1190" width="1432" height="50" rx="24" fill="#111827"/>
+    <rect x="110" y="1200" width="206" height="30" rx="15" fill="#1F2937"/>
+    <text x="132" y="1221" fill="#F9FAFB" font-size="18" font-weight="600">9. 基础设施层</text>
+    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / PostgreSQL / Redis / MinIO / GPU 节点 / 企业 SSO / KMS</text>
   </g>
 
-  <rect x="84" y="1094" width="1432" height="0" fill="none"/>
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1094" width="1432" height="0" fill="none"/>
-    <rect x="84" y="1094" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1088" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1080" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1084" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1086" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1086" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1088" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1088" width="1432" height="0" fill="none"/>
-  </g>
-
-  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
-    <rect x="84" y="1088" width="1432" height="0" fill="none"/>
-    <rect x="84" y="1080" width="1432" height="44" rx="22" fill="#111827"/>
-    <rect x="110" y="1090" width="206" height="24" rx="12" fill="#1F2937"/>
-    <text x="132" y="1108" fill="#F9FAFB" font-size="18" font-weight="600">9. 基础设施层</text>
-    <text x="344" y="1108" fill="#CBD5E1" font-size="18">K3s / PostgreSQL / Redis / MinIO / GPU 节点 / 企业 SSO / KMS</text>
-  </g>
-
-  <path d="M800 280V296" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 388V404" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 496V512" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 624V640" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 736V752" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 856V872" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 968V984" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-  <path d="M800 1076V1080" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 284V304" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 408V428" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 524V544" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 682V702" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 806V826" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 930V950" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 1054V1074" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M800 1170V1190" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
 </svg>
