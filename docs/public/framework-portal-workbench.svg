@@ -1,0 +1,81 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="980" rx="40" fill="#F3F4F6"/>
+  <rect x="32" y="32" width="1536" height="916" rx="32" fill="#FFFFFF" stroke="#D8DADF" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="44" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">门户工作台效果示意图</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">这不是单一聊天框，而是“应用目录 + 工作台 + 会话入口 + 反馈闭环 + 运营入口”的统一前台形态。</text>
+
+  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
+    <rect x="84" y="188" width="1432" height="696" rx="28" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+    <rect x="84" y="188" width="1432" height="76" rx="28" fill="#111827"/>
+    <rect x="116" y="210" width="212" height="34" rx="17" fill="#1F2937"/>
+    <text x="142" y="233" fill="#F9FAFB" font-size="18" font-weight="700">AgentifUI Workspace</text>
+    <rect x="526" y="208" width="386" height="38" rx="19" fill="#1F2937" stroke="#374151" stroke-width="2"/>
+    <text x="560" y="233" fill="#9CA3AF" font-size="18">搜索应用、知识库、会话或管理项</text>
+    <rect x="1250" y="208" width="84" height="38" rx="19" fill="#374151"/>
+    <rect x="1350" y="208" width="132" height="38" rx="19" fill="#374151"/>
+    <text x="1276" y="233" fill="#E5E7EB" font-size="16">运营台</text>
+    <text x="1388" y="233" fill="#E5E7EB" font-size="16">张三 / IT</text>
+
+    <rect x="108" y="286" width="240" height="572" rx="24" fill="#111827"/>
+    <text x="138" y="330" fill="#F9FAFB" font-size="22" font-weight="700">统一入口</text>
+    <rect x="132" y="356" width="192" height="52" rx="16" fill="#1F2937"/>
+    <rect x="132" y="424" width="192" height="52" rx="16" fill="#1F2937"/>
+    <rect x="132" y="492" width="192" height="52" rx="16" fill="#1F2937"/>
+    <rect x="132" y="560" width="192" height="52" rx="16" fill="#1F2937"/>
+    <rect x="132" y="628" width="192" height="52" rx="16" fill="#1F2937"/>
+    <rect x="132" y="696" width="192" height="52" rx="16" fill="#1F2937"/>
+    <text x="160" y="390" fill="#E5E7EB" font-size="18">应用目录</text>
+    <text x="160" y="458" fill="#E5E7EB" font-size="18">会话中心</text>
+    <text x="160" y="526" fill="#E5E7EB" font-size="18">知识助手</text>
+    <text x="160" y="594" fill="#E5E7EB" font-size="18">服务台助手</text>
+    <text x="160" y="662" fill="#E5E7EB" font-size="18">数据分析助手</text>
+    <text x="160" y="730" fill="#E5E7EB" font-size="18">反馈与运营</text>
+    <text x="138" y="800" fill="#9CA3AF" font-size="16">目录、权限和入口都在一个壳内收敛</text>
+
+    <rect x="372" y="286" width="754" height="216" rx="24" fill="#FFFFFF" stroke="#D8E2EA" stroke-width="2"/>
+    <text x="406" y="330" fill="#111827" font-size="28" font-weight="700">应用目录与快捷入口</text>
+    <rect x="406" y="356" width="214" height="116" rx="20" fill="#DBEAFE"/>
+    <rect x="644" y="356" width="214" height="116" rx="20" fill="#D1FAE5"/>
+    <rect x="882" y="356" width="210" height="116" rx="20" fill="#FDE68A"/>
+    <text x="436" y="392" fill="#1E3A8A" font-size="20" font-weight="700">企业知识助手</text>
+    <text x="436" y="420" fill="#1F2937" font-size="16">查制度 / FAQ / 产品资料</text>
+    <text x="436" y="446" fill="#475569" font-size="15">全员可见</text>
+    <text x="674" y="392" fill="#065F46" font-size="20" font-weight="700">服务台智能分诊</text>
+    <text x="674" y="420" fill="#1F2937" font-size="16">工单分类 / 表单补全 / 流程引导</text>
+    <text x="674" y="446" fill="#475569" font-size="15">IT / HR / 财务</text>
+    <text x="912" y="392" fill="#92400E" font-size="20" font-weight="700">数据分析助手</text>
+    <text x="912" y="420" fill="#1F2937" font-size="16">SQL 辅助 / 指标解释 / 报表问答</text>
+    <text x="912" y="446" fill="#475569" font-size="15">研发 / 数据团队</text>
+
+    <rect x="372" y="526" width="754" height="332" rx="24" fill="#FFFFFF" stroke="#D8E2EA" stroke-width="2"/>
+    <text x="406" y="570" fill="#111827" font-size="28" font-weight="700">统一会话工作台</text>
+    <rect x="406" y="594" width="684" height="42" rx="16" fill="#FFF7ED"/>
+    <text x="430" y="620" fill="#9A3412" font-size="16">当前应用：服务台智能分诊  ·  组织：共享服务中心  ·  权限策略已加载</text>
+    <rect x="424" y="662" width="232" height="74" rx="18" fill="#111827"/>
+    <text x="452" y="696" fill="#F9FAFB" font-size="18">用户：帮我判断这个工单该转给谁</text>
+    <text x="452" y="722" fill="#9CA3AF" font-size="14">附带工单字段与附件</text>
+    <rect x="650" y="752" width="410" height="76" rx="18" fill="#ECFDF5"/>
+    <text x="678" y="786" fill="#065F46" font-size="18" font-weight="700">助手：建议先进入 IT 账号权限类分诊队列</text>
+    <text x="678" y="812" fill="#334155" font-size="14">引用：账号开通流程 / 工单分类规范 / 最近相似单据</text>
+    <rect x="650" y="654" width="344" height="70" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="678" y="688" fill="#1F2937" font-size="17">系统动作：已调用知识检索、规则校验和历史相似工单工具</text>
+    <text x="678" y="710" fill="#64748B" font-size="14">支持人工审批、转办和轨迹回放</text>
+
+    <rect x="1150" y="286" width="334" height="572" rx="24" fill="#FFFFFF" stroke="#D8E2EA" stroke-width="2"/>
+    <text x="1184" y="330" fill="#111827" font-size="24" font-weight="700">右侧运营与治理面板</text>
+    <rect x="1184" y="356" width="266" height="92" rx="18" fill="#F8FAFC"/>
+    <text x="1210" y="392" fill="#1F2937" font-size="18" font-weight="700">应用信息</text>
+    <text x="1210" y="420" fill="#475569" font-size="15">Owner：共享服务团队</text>
+    <text x="1210" y="442" fill="#475569" font-size="15">状态：正式发布</text>
+    <rect x="1184" y="472" width="266" height="104" rx="18" fill="#FFFBEB"/>
+    <text x="1210" y="508" fill="#92400E" font-size="18" font-weight="700">质量与反馈</text>
+    <text x="1210" y="536" fill="#475569" font-size="15">满意度：92%</text>
+    <text x="1210" y="558" fill="#475569" font-size="15">待处理反馈：7</text>
+    <rect x="1184" y="600" width="266" height="104" rx="18" fill="#EEF2FF"/>
+    <text x="1210" y="636" fill="#4338CA" font-size="18" font-weight="700">审计与可见性</text>
+    <text x="1210" y="664" fill="#475569" font-size="15">会话审计、应用访问记录、权限命中</text>
+    <rect x="1184" y="728" width="266" height="104" rx="18" fill="#F0FDF4"/>
+    <text x="1210" y="764" fill="#166534" font-size="18" font-weight="700">运营动作</text>
+    <text x="1210" y="792" fill="#475569" font-size="15">下架、灰度、公告、人工接管</text>
+  </g>
+</svg>

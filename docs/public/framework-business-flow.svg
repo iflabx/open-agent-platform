@@ -1,0 +1,125 @@
+<svg width="1680" height="980" viewBox="0 0 1680 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1680" height="980" rx="40" fill="#F6F7F8"/>
+  <rect x="32" y="32" width="1616" height="916" rx="32" fill="#FFFFFF" stroke="#D7DEE5" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="44" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">核心业务链路时序图</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">对应“标准请求”的主流程，强调入口、权限、编排、受控检索、模型调用和回传闭环。</text>
+
+  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
+    <rect x="84" y="188" width="186" height="62" rx="18" fill="#DBEAFE"/>
+    <rect x="298" y="188" width="188" height="62" rx="18" fill="#D1FAE5"/>
+    <rect x="514" y="188" width="220" height="62" rx="18" fill="#FCE7F3"/>
+    <rect x="762" y="188" width="236" height="62" rx="18" fill="#FDE68A"/>
+    <rect x="1026" y="188" width="232" height="62" rx="18" fill="#E9D5FF"/>
+    <rect x="1286" y="188" width="186" height="62" rx="18" fill="#FCD34D"/>
+    <rect x="1500" y="188" width="96" height="62" rx="18" fill="#E2E8F0"/>
+    <text x="146" y="228" fill="#1E3A8A" font-size="22" font-weight="700">用户</text>
+    <text x="334" y="228" fill="#065F46" font-size="22" font-weight="700">APISIX + SSO</text>
+    <text x="562" y="228" fill="#9D174D" font-size="22" font-weight="700">门户 / BFF</text>
+    <text x="820" y="228" fill="#92400E" font-size="22" font-weight="700">编排层</text>
+    <text x="1062" y="228" fill="#6D28D9" font-size="22" font-weight="700">协议 / 数据 / 检索</text>
+    <text x="1330" y="228" fill="#92400E" font-size="22" font-weight="700">LiteLLM / vLLM</text>
+    <text x="1518" y="228" fill="#334155" font-size="22" font-weight="700">治理</text>
+
+    <path d="M177 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M392 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M624 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M880 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M1142 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M1378 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+    <path d="M1548 250V866" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+
+    <rect x="92" y="286" width="196" height="70" rx="18" fill="#EFF6FF"/>
+    <circle cx="122" cy="321" r="18" fill="#2563EB"/>
+    <text x="116" y="328" fill="#FFFFFF" font-size="18" font-weight="700">1</text>
+    <text x="152" y="316" fill="#1F2937" font-size="19" font-weight="600">进入应用</text>
+    <text x="152" y="340" fill="#475569" font-size="16">用户从门户或渠道发起请求</text>
+    <path d="M288 321H298" stroke="#2563EB" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="308" y="390" width="230" height="86" rx="18" fill="#ECFDF5"/>
+    <circle cx="340" cy="433" r="18" fill="#059669"/>
+    <text x="334" y="440" fill="#FFFFFF" font-size="18" font-weight="700">2</text>
+    <text x="372" y="424" fill="#1F2937" font-size="19" font-weight="600">认证接入与入口治理</text>
+    <text x="372" y="448" fill="#475569" font-size="16">APISIX 限流、灰度、路由，协同 SSO</text>
+    <path d="M486 433H514" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="534" y="284" width="240" height="88" rx="18" fill="#FDF2F8"/>
+    <circle cx="568" cy="328" r="18" fill="#DB2777"/>
+    <text x="562" y="335" fill="#FFFFFF" font-size="18" font-weight="700">3</text>
+    <text x="598" y="318" fill="#1F2937" font-size="19" font-weight="600">门户识别用户与应用</text>
+    <text x="598" y="342" fill="#475569" font-size="16">初始化组织、权限、会话上下文</text>
+
+    <rect x="534" y="502" width="240" height="88" rx="18" fill="#FCE7F3"/>
+    <circle cx="568" cy="546" r="18" fill="#DB2777"/>
+    <text x="562" y="553" fill="#FFFFFF" font-size="18" font-weight="700">4</text>
+    <text x="598" y="536" fill="#1F2937" font-size="19" font-weight="600">北向统一 API</text>
+    <text x="598" y="560" fill="#475569" font-size="16">BFF 屏蔽下游平台与运行时差异</text>
+    <path d="M774 546H762" stroke="#F472B6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M774 328H762" stroke="#F472B6" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="788" y="302" width="246" height="86" rx="18" fill="#FFFBEB"/>
+    <circle cx="820" cy="345" r="18" fill="#D97706"/>
+    <text x="814" y="352" fill="#FFFFFF" font-size="18" font-weight="700">5</text>
+    <text x="852" y="336" fill="#1F2937" font-size="19" font-weight="600">编排层选择执行路径</text>
+    <text x="852" y="360" fill="#475569" font-size="16">判断标准平台场景还是定制 Agent</text>
+
+    <rect x="788" y="506" width="246" height="86" rx="18" fill="#FEF3C7"/>
+    <circle cx="820" cy="549" r="18" fill="#D97706"/>
+    <text x="814" y="556" fill="#FFFFFF" font-size="18" font-weight="700">6</text>
+    <text x="852" y="540" fill="#1F2937" font-size="19" font-weight="600">形成工具与上下文计划</text>
+    <text x="852" y="564" fill="#475569" font-size="16">准备 MCP / A2A / RAG / SQL 等调用</text>
+    <path d="M1034 345H1026" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1034 549H1026" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="1040" y="278" width="260" height="98" rx="18" fill="#F5F3FF"/>
+    <circle cx="1074" cy="327" r="18" fill="#7C3AED"/>
+    <text x="1068" y="334" fill="#FFFFFF" font-size="18" font-weight="700">7</text>
+    <text x="1108" y="318" fill="#1F2937" font-size="19" font-weight="600">agentgateway 处理 southbound</text>
+    <text x="1108" y="342" fill="#475569" font-size="16">MCP 工具、A2A 远程 Agent、OpenAPI 到 MCP</text>
+
+    <rect x="1040" y="416" width="260" height="98" rx="18" fill="#F3E8FF"/>
+    <circle cx="1074" cy="465" r="18" fill="#7C3AED"/>
+    <text x="1068" y="472" fill="#FFFFFF" font-size="18" font-weight="700">8</text>
+    <text x="1108" y="456" fill="#1F2937" font-size="19" font-weight="600">进入治理后数据与检索链路</text>
+    <text x="1108" y="480" fill="#475569" font-size="16">权限过滤、向量检索、全文检索、重排</text>
+
+    <rect x="1040" y="554" width="260" height="98" rx="18" fill="#EDE9FE"/>
+    <circle cx="1074" cy="603" r="18" fill="#7C3AED"/>
+    <text x="1068" y="610" fill="#FFFFFF" font-size="18" font-weight="700">9</text>
+    <text x="1108" y="594" fill="#1F2937" font-size="19" font-weight="600">返回受控上下文</text>
+    <text x="1108" y="618" fill="#475569" font-size="16">检索结果和工具结果回给编排层</text>
+    <path d="M1300 465H1286" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1300 603H1286" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="1298" y="352" width="208" height="112" rx="18" fill="#FFFBEB"/>
+    <circle cx="1332" cy="408" r="18" fill="#D97706"/>
+    <text x="1322" y="415" fill="#FFFFFF" font-size="18" font-weight="700">10</text>
+    <text x="1366" y="396" fill="#1F2937" font-size="19" font-weight="600">LiteLLM 统一模型入口</text>
+    <text x="1366" y="420" fill="#475569" font-size="16">路由到 vLLM / Qwen 模型池</text>
+
+    <rect x="1298" y="540" width="208" height="112" rx="18" fill="#FEF3C7"/>
+    <circle cx="1332" cy="596" r="18" fill="#D97706"/>
+    <text x="1322" y="603" fill="#FFFFFF" font-size="18" font-weight="700">11</text>
+    <text x="1366" y="584" fill="#1F2937" font-size="19" font-weight="600">生成结果与工具输出</text>
+    <text x="1366" y="608" fill="#475569" font-size="16">主模型、代码模型、安全模型按需协同</text>
+
+    <rect x="1460" y="330" width="156" height="344" rx="20" fill="#F8FAFC"/>
+    <circle cx="1494" cy="390" r="18" fill="#475569"/>
+    <text x="1484" y="397" fill="#FFFFFF" font-size="18" font-weight="700">12</text>
+    <text x="1524" y="386" fill="#1F2937" font-size="18" font-weight="600">全链路审计</text>
+    <text x="1524" y="410" fill="#475569" font-size="15">LangFuse / OTel</text>
+    <circle cx="1494" cy="500" r="18" fill="#475569"/>
+    <text x="1484" y="507" fill="#FFFFFF" font-size="18" font-weight="700">13</text>
+    <text x="1524" y="496" fill="#1F2937" font-size="18" font-weight="600">策略审查</text>
+    <text x="1524" y="520" fill="#475569" font-size="15">Qwen3Guard / Casbin</text>
+    <circle cx="1494" cy="610" r="18" fill="#475569"/>
+    <text x="1484" y="617" fill="#FFFFFF" font-size="18" font-weight="700">14</text>
+    <text x="1524" y="606" fill="#1F2937" font-size="18" font-weight="600">回传与留痕</text>
+    <text x="1524" y="630" fill="#475569" font-size="15">反馈、人工接管、回放</text>
+
+    <path d="M1506 596H1120C1060 596 1012 644 1012 704V760C1012 814 968 858 914 858H624" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M624 858H208" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="214,848 184,858 214,868" fill="#94A3B8"/>
+    <rect x="536" y="820" width="540" height="70" rx="22" fill="#111827"/>
+    <text x="568" y="864" fill="#F9FAFB" font-size="20">结果回到门户，支持引用展示、反馈提交、人工接管和全链路追溯。</text>
+  </g>
+</svg>

@@ -1,0 +1,68 @@
+<svg width="1400" height="980" viewBox="0 0 1400 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="980" rx="40" fill="#F6F7F5"/>
+  <rect x="32" y="32" width="1336" height="916" rx="32" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="44" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">安全与治理控制点闭环图</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">治理不是单点能力，而是沿请求生命周期分布的连续控制链条。</text>
+
+  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
+    <circle cx="700" cy="520" r="196" fill="#111827"/>
+    <circle cx="700" cy="520" r="156" fill="#1F2937"/>
+    <text x="610" y="500" fill="#F9FAFB" font-size="34" font-weight="700">企业智能体请求</text>
+    <text x="622" y="544" fill="#CBD5E1" font-size="22">用户进入应用</text>
+    <text x="622" y="576" fill="#CBD5E1" font-size="22">检索 / 工具 / 模型调用</text>
+    <text x="622" y="608" fill="#CBD5E1" font-size="22">结果回传 / 反馈 / 发布</text>
+
+    <circle cx="700" cy="246" r="106" fill="#DBEAFE"/>
+    <text x="650" y="224" fill="#1E3A8A" font-size="24" font-weight="700">1. 身份接入</text>
+    <text x="632" y="258" fill="#1F2937" font-size="17">企业 SSO / IAM</text>
+    <text x="608" y="284" fill="#475569" font-size="16">APISIX 承接认证接入</text>
+
+    <circle cx="964" cy="364" r="106" fill="#D1FAE5"/>
+    <text x="912" y="342" fill="#065F46" font-size="24" font-weight="700">2. 权限裁决</text>
+    <text x="908" y="376" fill="#1F2937" font-size="17">Casbin / 组织角色</text>
+    <text x="894" y="402" fill="#475569" font-size="16">应用、知识、工具粒度控制</text>
+
+    <circle cx="1038" cy="642" r="106" fill="#E0E7FF"/>
+    <text x="968" y="620" fill="#4338CA" font-size="24" font-weight="700">3. 数据分类与标签</text>
+    <text x="968" y="654" fill="#1F2937" font-size="17">OpenMetadata / 数据治理</text>
+    <text x="960" y="680" fill="#475569" font-size="16">分级、责任人、生命周期</text>
+
+    <circle cx="700" cy="794" r="106" fill="#FEF3C7"/>
+    <text x="630" y="772" fill="#B45309" font-size="24" font-weight="700">4. 检索与输出控制</text>
+    <text x="630" y="806" fill="#1F2937" font-size="17">权限过滤 / 重排 / Guard</text>
+    <text x="628" y="832" fill="#475569" font-size="16">检索前过滤，输出前审查</text>
+
+    <circle cx="362" cy="642" r="106" fill="#FCE7F3"/>
+    <text x="304" y="620" fill="#BE185D" font-size="24" font-weight="700">5. 审计留痕</text>
+    <text x="294" y="654" fill="#1F2937" font-size="17">LangFuse / OTel / 日志</text>
+    <text x="286" y="680" fill="#475569" font-size="16">用户动作、检索命中、模型调用</text>
+
+    <circle cx="436" cy="364" r="106" fill="#E0F2FE"/>
+    <text x="366" y="342" fill="#0369A1" font-size="24" font-weight="700">6. 发布门槛</text>
+    <text x="362" y="376" fill="#1F2937" font-size="17">评测、灰度、k6 基线</text>
+    <text x="344" y="402" fill="#475569" font-size="16">先评测再灰度，再正式发布</text>
+
+    <path d="M786 320L884 342" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M1038 470L1024 536" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M920 728L794 762" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M606 762L480 728" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M376 536L362 470" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M516 342L614 320" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+
+    <path d="M824 214C898 230 962 280 1006 344" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="995,340 1018,360 1002,332" fill="#111827"/>
+    <path d="M1066 446C1100 520 1096 600 1052 680" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="1040,670 1050,700 1062,670" fill="#111827"/>
+    <path d="M962 744C888 804 790 836 690 834" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="704,822 676,834 704,846" fill="#111827"/>
+    <path d="M602 834C510 828 426 792 362 734" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="374,726 346,724 362,748" fill="#111827"/>
+    <path d="M322 550C304 478 320 400 366 334" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="374,346 378,316 352,336" fill="#111827"/>
+    <path d="M486 274C544 232 616 210 694 210" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="682,198 712,210 682,222" fill="#111827"/>
+
+    <rect x="84" y="876" width="1232" height="46" rx="18" fill="#111827"/>
+    <text x="116" y="906" fill="#F9FAFB" font-size="18">治理闭环口径：身份先收敛、权限先裁决、数据先打标签、检索先过滤、输出再审查、全链路持续留痕，并以评测和灰度作为发布门槛。</text>
+  </g>
+</svg>

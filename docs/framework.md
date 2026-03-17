@@ -52,6 +52,12 @@
 
 `用户/系统入口 -> APISIX -> 门户工作台/BFF -> Agent/Workflow 编排 -> agentgateway（按需） -> MCP / A2A / 远程Agent / 工具 -> LiteLLM -> vLLM/Qwen`
 
+<div class="diagram-image">
+  <img src="/framework-nine-layer.svg" alt="企业级智能体平台九层总体架构图" />
+</div>
+
+上图用于快速回答三个问题：系统一共分几层、当前定下来的组件各在哪一层、从入口到模型的主路径如何穿层。
+
 ## 四、技术栈清单
 
 详细链接版清单见 [组件](/components)。
@@ -113,6 +119,12 @@
 ## 五、组件职责边界
 
 这是这套方案最关键的部分。
+
+<div class="diagram-image">
+  <img src="/framework-boundary-map.svg" alt="企业级智能体平台关键组件职责边界图" />
+</div>
+
+如果只记一个边界口径，应记住这一句：`APISIX` 负责北向统一入口，`AgentifUI` 负责门户与 BFF，`agentgateway` 负责内部 AI 协议网关，`LiteLLM` 负责唯一模型入口。
 
 ### 1. 推理层
 
@@ -506,6 +518,12 @@
 - 会话入口
 - 反馈与运营后台
 
+对应的前台形态，应更接近统一工作台，而不是单一聊天页：
+
+<div class="diagram-image">
+  <img src="/framework-portal-workbench.svg" alt="企业级智能体平台门户工作台效果示意图" />
+</div>
+
 ### 9. 评测、治理与验证平面
 
 - `LangFuse`
@@ -517,6 +535,10 @@
 ## 九、核心业务链路
 
 一个标准请求的链路建议是这样：
+
+<div class="diagram-image">
+  <img src="/framework-business-flow.svg" alt="企业级智能体平台核心业务链路时序图" />
+</div>
 
 1. 用户通过门户进入某个智能应用
 2. 请求先进入 `APISIX`，执行入口级路由、限流、审计和灰度治理
@@ -567,6 +589,10 @@
 - `prod`
 
 生产环境建议分区部署：
+
+<div class="diagram-image">
+  <img src="/framework-deployment-topology.svg" alt="企业级智能体平台部署拓扑建议图" />
+</div>
 
 ### 1. 推理区
 
@@ -642,6 +668,10 @@
 ## 十三、安全与治理框架
 
 这是企业级方案必须单列的一章。
+
+<div class="diagram-image">
+  <img src="/framework-governance-loop.svg" alt="企业级智能体平台安全与治理控制点闭环图" />
+</div>
 
 ### 1. 身份与权限
 

@@ -1,0 +1,79 @@
+<svg width="1600" height="1040" viewBox="0 0 1600 1040" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1040" rx="40" fill="#F5F7F8"/>
+  <rect x="32" y="32" width="1536" height="976" rx="32" fill="#FFFFFF" stroke="#D7DEE5" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="44" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">部署拓扑建议图</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">示意几万人规模企业的环境划分与生产分区部署方式，强调推理、平台服务、数据、观测和企业集成隔离。</text>
+
+  <g font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">
+    <rect x="84" y="196" width="236" height="736" rx="28" fill="#F8FAFC" stroke="#D7DEE5" stroke-width="2"/>
+    <text x="120" y="244" fill="#334155" font-size="30" font-weight="700">环境划分</text>
+    <rect x="116" y="288" width="172" height="126" rx="20" fill="#DBEAFE"/>
+    <text x="176" y="338" fill="#1E3A8A" font-size="28" font-weight="700">dev</text>
+    <text x="140" y="372" fill="#334155" font-size="18">研发联调、单机或轻量集群</text>
+    <rect x="116" y="446" width="172" height="126" rx="20" fill="#FDE68A"/>
+    <text x="156" y="496" fill="#92400E" font-size="28" font-weight="700">staging</text>
+    <text x="140" y="530" fill="#334155" font-size="18">发布前验证、灰度基线、回归测试</text>
+    <rect x="116" y="604" width="172" height="184" rx="20" fill="#D1FAE5"/>
+    <text x="170" y="654" fill="#065F46" font-size="28" font-weight="700">prod</text>
+    <text x="140" y="688" fill="#334155" font-size="18">正式生产、分区隔离</text>
+    <text x="140" y="718" fill="#334155" font-size="18">入口双实例</text>
+    <text x="140" y="748" fill="#334155" font-size="18">核心服务双实例</text>
+    <text x="140" y="778" fill="#334155" font-size="18">数据与推理独立扩容</text>
+
+    <rect x="364" y="196" width="1188" height="736" rx="28" fill="#F9FAFB" stroke="#E2E8F0" stroke-width="2"/>
+    <text x="404" y="244" fill="#111827" font-size="30" font-weight="700">生产环境建议分区</text>
+
+    <rect x="404" y="288" width="334" height="182" rx="24" fill="#ECFDF5"/>
+    <text x="438" y="334" fill="#047857" font-size="28" font-weight="700">接入层</text>
+    <text x="438" y="372" fill="#1F2937" font-size="20">APISIX</text>
+    <text x="438" y="404" fill="#1F2937" font-size="20">WAF / TLS / 灰度 / 限流</text>
+    <text x="438" y="436" fill="#475569" font-size="18">统一公网边界，建议至少双实例</text>
+
+    <rect x="772" y="288" width="356" height="182" rx="24" fill="#FFF7ED"/>
+    <text x="806" y="334" fill="#C2410C" font-size="28" font-weight="700">平台服务区</text>
+    <text x="806" y="372" fill="#1F2937" font-size="20">AgentifUI / BFF / Dify / RAGFlow / Coze Studio</text>
+    <text x="806" y="404" fill="#1F2937" font-size="20">LangGraph / LangChain / LlamaIndex / Casbin / LangFuse</text>
+    <text x="806" y="436" fill="#475569" font-size="18">业务编排、门户前台、治理服务集中区</text>
+
+    <rect x="1162" y="288" width="350" height="182" rx="24" fill="#FFFBEB"/>
+    <text x="1196" y="334" fill="#B45309" font-size="28" font-weight="700">推理区</text>
+    <text x="1196" y="372" fill="#1F2937" font-size="20">LiteLLM / vLLM / Qwen 模型池</text>
+    <text x="1196" y="404" fill="#1F2937" font-size="20">通用池 / 代码池 / 安全审查池</text>
+    <text x="1196" y="436" fill="#475569" font-size="18">GPU 节点独立扩容，避免与业务服务抢资源</text>
+
+    <rect x="404" y="506" width="334" height="192" rx="24" fill="#F0F9FF"/>
+    <text x="438" y="552" fill="#0369A1" font-size="28" font-weight="700">数据区</text>
+    <text x="438" y="590" fill="#1F2937" font-size="20">PostgreSQL / Redis / MinIO</text>
+    <text x="438" y="622" fill="#1F2937" font-size="20">Weaviate / Milvus / Elasticsearch</text>
+    <text x="438" y="654" fill="#475569" font-size="18">有状态组件独立存储、备份、恢复与高可用</text>
+
+    <rect x="772" y="506" width="356" height="192" rx="24" fill="#F5F3FF"/>
+    <text x="806" y="552" fill="#6D28D9" font-size="28" font-weight="700">数据治理与协议区</text>
+    <text x="806" y="590" fill="#1F2937" font-size="20">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
+    <text x="806" y="622" fill="#1F2937" font-size="20">agentgateway / MCP Server / A2A Client-Server</text>
+    <text x="806" y="654" fill="#475569" font-size="18">离线治理与 southbound 协议能力分区</text>
+
+    <rect x="1162" y="506" width="350" height="192" rx="24" fill="#F8FAFC"/>
+    <text x="1196" y="552" fill="#334155" font-size="28" font-weight="700">观测区</text>
+    <text x="1196" y="590" fill="#1F2937" font-size="20">OpenTelemetry Collector</text>
+    <text x="1196" y="622" fill="#1F2937" font-size="20">Prometheus / Grafana / Loki</text>
+    <text x="1196" y="654" fill="#475569" font-size="18">平台级指标、日志、追踪统一收口</text>
+
+    <rect x="404" y="734" width="1108" height="158" rx="24" fill="#EEF2FF"/>
+    <text x="438" y="780" fill="#4338CA" font-size="28" font-weight="700">企业集成区</text>
+    <text x="438" y="818" fill="#1F2937" font-size="20">企业 SSO / IAM / KMS / 证书体系 / 审计日志平台 / 安全审查服务</text>
+    <text x="438" y="850" fill="#475569" font-size="18">优先复用企业现有能力，作为外部依赖系统对接，不在平台内重复建设。</text>
+
+    <path d="M738 380H772" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1128 380H1162" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M572 470V506" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M950 470V506" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1336 470V506" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M958 698V734" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="364" y="948" width="1188" height="0" fill="none"/>
+  </g>
+
+  <rect x="404" y="914" width="1108" height="18" rx="9" fill="#111827"/>
+  <text x="432" y="927" fill="#F9FAFB" font-size="0">.</text>
+</svg>
