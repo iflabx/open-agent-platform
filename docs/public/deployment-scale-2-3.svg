@@ -1,0 +1,55 @@
+<svg width="1680" height="980" viewBox="0 0 1680 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1680" height="980" rx="36" fill="#F6F7F8"/>
+  <rect x="32" y="32" width="1616" height="916" rx="28" fill="#FFFFFF" stroke="#D7DEE5" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="42" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">2-3 Servers / Team Pilot</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, Arial, sans-serif">2-node mode keeps external model API. 3-node mode adds LiteLLM on the app node and a dedicated GPU node.</text>
+
+  <g font-family="IBM Plex Sans, Arial, sans-serif">
+    <rect x="84" y="250" width="460" height="520" rx="28" fill="#ECFDF5" stroke="#CAE7D6" stroke-width="2"/>
+    <text x="122" y="306" fill="#047857" font-size="30" font-weight="700">S1 App Node</text>
+    <text x="122" y="340" fill="#64748B" font-size="18">16 vCPU / 32 GiB / 500 GiB NVMe</text>
+    <rect x="122" y="386" width="156" height="60" rx="18" fill="#D1FAE5"/>
+    <rect x="296" y="386" width="156" height="60" rx="18" fill="#D1FAE5"/>
+    <rect x="122" y="466" width="156" height="60" rx="18" fill="#D1FAE5"/>
+    <rect x="296" y="466" width="156" height="60" rx="18" fill="#ECFCCB" stroke="#84CC16" stroke-width="2" stroke-dasharray="8 8"/>
+    <text x="164" y="424" fill="#065F46" font-size="24" font-weight="700">APISIX</text>
+    <text x="340" y="424" fill="#065F46" font-size="24" font-weight="700">AgentifUI</text>
+    <text x="178" y="504" fill="#065F46" font-size="24" font-weight="700">Dify</text>
+    <text x="330" y="498" fill="#3F6212" font-size="20" font-weight="700">LiteLLM</text>
+    <text x="332" y="522" fill="#3F6212" font-size="14">(3-node mode)</text>
+    <text x="122" y="590" fill="#475569" font-size="17">Entry, portal and main platform stay together for pilot speed.</text>
+
+    <rect x="610" y="250" width="460" height="520" rx="28" fill="#F0F9FF" stroke="#CFE4F3" stroke-width="2"/>
+    <text x="648" y="306" fill="#0369A1" font-size="30" font-weight="700">S2 Data Node</text>
+    <text x="648" y="340" fill="#64748B" font-size="18">16 vCPU / 64 GiB / 1 TiB NVMe</text>
+    <rect x="648" y="386" width="170" height="60" rx="18" fill="#DBEAFE"/>
+    <rect x="836" y="386" width="140" height="60" rx="18" fill="#DBEAFE"/>
+    <rect x="648" y="466" width="170" height="60" rx="18" fill="#DBEAFE"/>
+    <rect x="836" y="466" width="168" height="60" rx="18" fill="#DBEAFE"/>
+    <text x="688" y="424" fill="#1E3A8A" font-size="24" font-weight="700">PostgreSQL</text>
+    <text x="878" y="424" fill="#1E3A8A" font-size="24" font-weight="700">Redis</text>
+    <text x="700" y="504" fill="#1E3A8A" font-size="24" font-weight="700">MinIO</text>
+    <text x="870" y="504" fill="#1E3A8A" font-size="24" font-weight="700">Weaviate</text>
+    <text x="648" y="590" fill="#475569" font-size="17">Stateful services are separated from the app node from this tier.</text>
+
+    <rect x="1136" y="250" width="460" height="520" rx="28" fill="#FFF7ED" stroke="#F0D6B3" stroke-width="2" stroke-dasharray="10 10"/>
+    <text x="1174" y="306" fill="#C2410C" font-size="30" font-weight="700">S3 GPU Node (optional)</text>
+    <text x="1174" y="340" fill="#64748B" font-size="18">24-32 vCPU / 128 GiB / 1 TiB NVMe / 1 x 48 GiB GPU</text>
+    <rect x="1174" y="406" width="160" height="60" rx="18" fill="#FCE7C5"/>
+    <rect x="1352" y="406" width="160" height="60" rx="18" fill="#FCE7C5"/>
+    <text x="1222" y="444" fill="#9A3412" font-size="24" font-weight="700">vLLM</text>
+    <text x="1410" y="444" fill="#9A3412" font-size="24" font-weight="700">Qwen</text>
+    <text x="1174" y="540" fill="#475569" font-size="17">Add this node when the pilot moves from external API to self-hosted model path.</text>
+
+    <rect x="1136" y="792" width="460" height="100" rx="20" fill="#FFFBEB" stroke="#F3D38C" stroke-width="2"/>
+    <text x="1174" y="834" fill="#92400E" font-size="20" font-weight="700">2-node mode</text>
+    <text x="1174" y="862" fill="#78350F" font-size="17">App node calls an external</text>
+    <text x="1174" y="886" fill="#78350F" font-size="17">OpenAI-compatible API</text>
+
+    <path d="M544 510H610" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1070 510H1136" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 8"/>
+    <rect x="84" y="792" width="986" height="100" rx="20" fill="#111827"/>
+    <text x="122" y="834" fill="#F9FAFB" font-size="17">Pilot guidance: keep data isolated by default.</text>
+    <text x="122" y="860" fill="#F9FAFB" font-size="17">Add the GPU node only when self-hosted model latency and cost justify the extra operational complexity.</text>
+  </g>
+</svg>

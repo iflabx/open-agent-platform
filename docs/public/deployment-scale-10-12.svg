@@ -1,0 +1,85 @@
+<svg width="1860" height="1180" viewBox="0 0 1860 1180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1860" height="1180" rx="36" fill="#F6F7F8"/>
+  <rect x="32" y="32" width="1796" height="1116" rx="28" fill="#FFFFFF" stroke="#D7DEE5" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="42" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">10-12+ Servers / HA Production</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, Arial, sans-serif">High-availability starting line: split stateless scale-out, data / retrieval, GPU pool and observability, with optional extra governance or storage nodes.</text>
+
+  <g font-family="IBM Plex Sans, Arial, sans-serif">
+    <rect x="84" y="218" width="760" height="290" rx="28" fill="#F8FAFC" stroke="#D7DEE5" stroke-width="2"/>
+    <text x="122" y="270" fill="#111827" font-size="30" font-weight="700">3x Control / Core App Nodes</text>
+    <text x="122" y="306" fill="#64748B" font-size="18">16 vCPU / 64 GiB / 500 GiB SSD each</text>
+    <rect x="122" y="346" width="214" height="116" rx="22" fill="#ECFDF5"/>
+    <rect x="356" y="346" width="214" height="116" rx="22" fill="#FFF7ED"/>
+    <rect x="590" y="346" width="214" height="116" rx="22" fill="#F5F3FF"/>
+    <text x="196" y="388" fill="#047857" font-size="22" font-weight="700">C1 Entry</text>
+    <text x="156" y="420" fill="#065F46" font-size="16">APISIX / Portal BFF</text>
+    <text x="428" y="388" fill="#C2410C" font-size="22" font-weight="700">C2 Platform</text>
+    <text x="388" y="420" fill="#9A3412" font-size="16">Dify / LiteLLM / Casbin</text>
+    <text x="656" y="388" fill="#6D28D9" font-size="22" font-weight="700">C3 Runtime</text>
+    <text x="628" y="420" fill="#5B21B6" font-size="16">LangGraph / shared ops</text>
+
+    <rect x="894" y="218" width="430" height="290" rx="28" fill="#ECFDF5" stroke="#CAE7D6" stroke-width="2"/>
+    <text x="932" y="270" fill="#047857" font-size="30" font-weight="700">2x Stateless App Nodes</text>
+    <text x="932" y="306" fill="#64748B" font-size="18">Extra UI / workflow / API replicas for horizontal scale</text>
+    <rect x="932" y="346" width="168" height="116" rx="22" fill="#D1FAE5"/>
+    <rect x="1118" y="346" width="168" height="116" rx="22" fill="#D1FAE5"/>
+    <text x="974" y="388" fill="#065F46" font-size="22" font-weight="700">A1 Replica</text>
+    <text x="958" y="420" fill="#065F46" font-size="16">AgentifUI / BFF</text>
+    <text x="1160" y="388" fill="#065F46" font-size="22" font-weight="700">A2 Replica</text>
+    <text x="1142" y="420" fill="#065F46" font-size="16">Workflow / API</text>
+
+    <rect x="1374" y="218" width="400" height="290" rx="28" fill="#FFFBEB" stroke="#F3D38C" stroke-width="2"/>
+    <text x="1412" y="270" fill="#B45309" font-size="30" font-weight="700">2x GPU Nodes</text>
+    <text x="1412" y="306" fill="#64748B" font-size="18">32-64 vCPU / 128-256 GiB / 2 x 80 GiB GPU class</text>
+    <rect x="1412" y="346" width="148" height="116" rx="22" fill="#FEF3C7"/>
+    <rect x="1578" y="346" width="148" height="116" rx="22" fill="#FEF3C7"/>
+    <text x="1458" y="388" fill="#92400E" font-size="22" font-weight="700">G1</text>
+    <text x="1432" y="420" fill="#92400E" font-size="16">vLLM / Qwen pool</text>
+    <text x="1624" y="388" fill="#92400E" font-size="22" font-weight="700">G2</text>
+    <text x="1598" y="420" fill="#92400E" font-size="16">vLLM / Qwen pool</text>
+
+    <rect x="84" y="570" width="620" height="300" rx="28" fill="#F0F9FF" stroke="#CFE4F3" stroke-width="2"/>
+    <text x="122" y="622" fill="#0369A1" font-size="30" font-weight="700">2x Data / Retrieval Nodes</text>
+    <text x="122" y="658" fill="#64748B" font-size="18">24-32 vCPU / 128-256 GiB / 2-4 TiB NVMe each</text>
+    <rect x="122" y="698" width="260" height="126" rx="22" fill="#DBEAFE"/>
+    <rect x="402" y="698" width="260" height="126" rx="22" fill="#DBEAFE"/>
+    <text x="212" y="742" fill="#1E3A8A" font-size="22" font-weight="700">D1 State</text>
+    <text x="162" y="774" fill="#1E3A8A" font-size="16">PostgreSQL / Redis / MinIO</text>
+    <text x="484" y="742" fill="#1E3A8A" font-size="22" font-weight="700">D2 Retrieval</text>
+    <text x="430" y="774" fill="#1E3A8A" font-size="16">Weaviate / Milvus / Elasticsearch</text>
+
+    <rect x="754" y="570" width="430" height="300" rx="28" fill="#F8FAFC" stroke="#D7DEE5" stroke-width="2"/>
+    <text x="792" y="622" fill="#334155" font-size="30" font-weight="700">1x Observability Node</text>
+    <text x="792" y="658" fill="#64748B" font-size="18">16-24 vCPU / 64-128 GiB / 2-4 TiB SSD</text>
+    <rect x="792" y="698" width="150" height="52" rx="16" fill="#E2E8F0"/>
+    <rect x="958" y="698" width="96" height="52" rx="16" fill="#E2E8F0"/>
+    <rect x="1070" y="698" width="76" height="52" rx="16" fill="#E2E8F0"/>
+    <text x="824" y="732" fill="#334155" font-size="18" font-weight="700">LangFuse</text>
+    <text x="986" y="732" fill="#334155" font-size="18" font-weight="700">OTel</text>
+    <text x="1086" y="732" fill="#334155" font-size="18" font-weight="700">Loki</text>
+    <text x="792" y="792" fill="#475569" font-size="16">Prometheus / Grafana and trace retention policies live here.</text>
+
+    <rect x="1234" y="570" width="540" height="300" rx="28" fill="#F5F3FF" stroke="#D9CCFB" stroke-width="2" stroke-dasharray="10 8"/>
+    <text x="1272" y="622" fill="#6D28D9" font-size="30" font-weight="700">+1 or +2 Optional Expansion Nodes</text>
+    <text x="1272" y="658" fill="#64748B" font-size="18">Use these when governance jobs, storage growth</text>
+    <text x="1272" y="684" fill="#64748B" font-size="18">or ingestion volume outgrow the baseline.</text>
+    <rect x="1272" y="698" width="214" height="126" rx="22" fill="#E9D5FF"/>
+    <rect x="1510" y="698" width="214" height="126" rx="22" fill="#E9D5FF"/>
+    <text x="1330" y="742" fill="#5B21B6" font-size="22" font-weight="700">DG-1</text>
+    <text x="1300" y="774" fill="#5B21B6" font-size="16">OpenMetadata / SeaTunnel / dbt / Tika</text>
+    <text x="1584" y="742" fill="#5B21B6" font-size="22" font-weight="700">OBJ-1</text>
+    <text x="1548" y="774" fill="#5B21B6" font-size="16">Object storage or backup expansion</text>
+
+    <path d="M844 364H894" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1324 364H1374" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M394 508V570" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1086 508V570" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1574 508V570" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="84" y="920" width="1690" height="188" rx="24" fill="#111827"/>
+    <text x="122" y="972" fill="#F9FAFB" font-size="22" font-weight="700">HA starting-line summary</text>
+    <text x="122" y="1010" fill="#CBD5E1" font-size="18">Mandatory 10-server shape: 3 core nodes + 2 stateless app nodes + 2 data / retrieval nodes + 2 GPU nodes + 1 observability node.</text>
+    <text x="122" y="1040" fill="#CBD5E1" font-size="18">The last 1-2 nodes are elastic headroom for governance, storage or ingestion growth, which is why this tier is written as 10-12+ rather than a fixed count.</text>
+    <text x="122" y="1070" fill="#CBD5E1" font-size="18">Reuse enterprise SSO / IAM, KMS, WAF and managed database services whenever possible to avoid unnecessary self-built HA burden.</text>
+  </g>
+</svg>

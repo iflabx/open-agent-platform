@@ -1,0 +1,78 @@
+<svg width="1760" height="1040" viewBox="0 0 1760 1040" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1760" height="1040" rx="36" fill="#F6F7F8"/>
+  <rect x="32" y="32" width="1696" height="976" rx="28" fill="#FFFFFF" stroke="#D7DEE5" stroke-width="2"/>
+  <text x="84" y="104" fill="#111827" font-size="42" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">5 Servers / Production Baseline</text>
+  <text x="84" y="146" fill="#4B5563" font-size="22" font-family="IBM Plex Sans, Arial, sans-serif">The minimum serious production shape: split stateless core, stateful data and GPU inference into dedicated units.</text>
+
+  <g font-family="IBM Plex Sans, Arial, sans-serif">
+    <rect x="84" y="220" width="1060" height="640" rx="28" fill="#F8FAFC" stroke="#D7DEE5" stroke-width="2"/>
+    <text x="126" y="276" fill="#111827" font-size="30" font-weight="700">K3s Pool / 3 Nodes</text>
+    <text x="126" y="312" fill="#64748B" font-size="18">Each node: 8-16 vCPU / 32 GiB / 300-500 GiB SSD</text>
+
+    <rect x="126" y="354" width="292" height="434" rx="24" fill="#ECFDF5"/>
+    <text x="180" y="396" fill="#047857" font-size="22" font-weight="700">K3s-1 Entry</text>
+    <text x="204" y="424" fill="#047857" font-size="22" font-weight="700">Portal</text>
+    <rect x="158" y="438" width="106" height="52" rx="16" fill="#D1FAE5"/>
+    <rect x="280" y="438" width="124" height="52" rx="16" fill="#D1FAE5"/>
+    <rect x="158" y="506" width="150" height="52" rx="16" fill="#D1FAE5"/>
+    <text x="180" y="472" fill="#065F46" font-size="20" font-weight="700">APISIX</text>
+    <text x="298" y="472" fill="#065F46" font-size="20" font-weight="700">AgentifUI</text>
+    <text x="186" y="540" fill="#065F46" font-size="20" font-weight="700">Portal BFF</text>
+    <text x="158" y="620" fill="#475569" font-size="15">Northbound traffic, user context,</text>
+    <text x="158" y="642" fill="#475569" font-size="15">app entry and session initiation.</text>
+
+    <rect x="468" y="354" width="292" height="434" rx="24" fill="#FFF7ED"/>
+    <text x="544" y="396" fill="#C2410C" font-size="22" font-weight="700">K3s-2 Platform</text>
+    <text x="530" y="424" fill="#C2410C" font-size="22" font-weight="700">Model Gateway</text>
+    <rect x="500" y="438" width="114" height="52" rx="16" fill="#FCE7C5"/>
+    <rect x="630" y="438" width="140" height="52" rx="16" fill="#FCE7C5"/>
+    <rect x="500" y="506" width="118" height="52" rx="16" fill="#FCE7C5"/>
+    <text x="540" y="472" fill="#9A3412" font-size="20" font-weight="700">Dify</text>
+    <text x="666" y="472" fill="#9A3412" font-size="20" font-weight="700">LiteLLM</text>
+    <text x="534" y="540" fill="#9A3412" font-size="20" font-weight="700">Casbin</text>
+    <text x="500" y="620" fill="#475569" font-size="15">Main platform route, model gateway</text>
+    <text x="500" y="642" fill="#475569" font-size="15">and fine-grained authorization.</text>
+
+    <rect x="810" y="354" width="292" height="434" rx="24" fill="#F5F3FF"/>
+    <text x="876" y="396" fill="#6D28D9" font-size="22" font-weight="700">K3s-3 Knowledge</text>
+    <text x="878" y="424" fill="#6D28D9" font-size="22" font-weight="700">Observability</text>
+    <rect x="842" y="438" width="144" height="52" rx="16" fill="#E9D5FF"/>
+    <rect x="1002" y="438" width="128" height="52" rx="16" fill="#E9D5FF"/>
+    <rect x="842" y="506" width="88" height="52" rx="16" fill="#E9D5FF"/>
+    <rect x="946" y="506" width="140" height="52" rx="16" fill="#E9D5FF"/>
+    <text x="862" y="472" fill="#5B21B6" font-size="20" font-weight="700">LlamaIndex</text>
+    <text x="1032" y="472" fill="#5B21B6" font-size="20" font-weight="700">LangFuse</text>
+    <text x="866" y="540" fill="#5B21B6" font-size="20" font-weight="700">OTel</text>
+    <text x="968" y="540" fill="#5B21B6" font-size="20" font-weight="700">Prom / Graf / Loki</text>
+    <text x="842" y="620" fill="#475569" font-size="15">Knowledge orchestration, traces</text>
+    <text x="842" y="642" fill="#475569" font-size="15">and baseline platform observability.</text>
+
+    <rect x="1204" y="260" width="470" height="270" rx="28" fill="#F0F9FF" stroke="#CFE4F3" stroke-width="2"/>
+    <text x="1242" y="316" fill="#0369A1" font-size="30" font-weight="700">S4 Data Node</text>
+    <text x="1242" y="350" fill="#64748B" font-size="18">24 vCPU / 128 GiB / 2 TiB NVMe</text>
+    <rect x="1242" y="392" width="150" height="54" rx="16" fill="#DBEAFE"/>
+    <rect x="1408" y="392" width="120" height="54" rx="16" fill="#DBEAFE"/>
+    <rect x="1242" y="462" width="132" height="54" rx="16" fill="#DBEAFE"/>
+    <rect x="1390" y="462" width="138" height="54" rx="16" fill="#DBEAFE"/>
+    <text x="1274" y="427" fill="#1E3A8A" font-size="20" font-weight="700">PostgreSQL</text>
+    <text x="1442" y="427" fill="#1E3A8A" font-size="20" font-weight="700">Redis</text>
+    <text x="1278" y="497" fill="#1E3A8A" font-size="20" font-weight="700">MinIO</text>
+    <text x="1420" y="497" fill="#1E3A8A" font-size="20" font-weight="700">Weaviate</text>
+
+    <rect x="1204" y="590" width="470" height="270" rx="28" fill="#FFFBEB" stroke="#F3D38C" stroke-width="2"/>
+    <text x="1242" y="646" fill="#B45309" font-size="30" font-weight="700">S5 GPU Node</text>
+    <text x="1242" y="680" fill="#64748B" font-size="17">32 vCPU / 128 GiB / 1-2 TiB NVMe</text>
+    <text x="1242" y="704" fill="#64748B" font-size="17">1 x 80 GiB GPU or 2 x 48 GiB GPU</text>
+    <rect x="1242" y="734" width="138" height="54" rx="16" fill="#FEF3C7"/>
+    <rect x="1398" y="734" width="120" height="54" rx="16" fill="#FEF3C7"/>
+    <text x="1284" y="769" fill="#92400E" font-size="20" font-weight="700">vLLM</text>
+    <text x="1432" y="769" fill="#92400E" font-size="20" font-weight="700">Qwen</text>
+    <text x="1242" y="830" fill="#475569" font-size="16">Dedicated inference path for self-hosted model serving.</text>
+
+    <path d="M1144 540H1204" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1144 700H1204" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="84" y="892" width="1590" height="80" rx="22" fill="#111827"/>
+    <text x="122" y="940" fill="#F9FAFB" font-size="18">Baseline rule: 3-node K3s pool carries the stateless control plane, while the data node and GPU node stay isolated for recoverability and scaling.</text>
+  </g>
+</svg>

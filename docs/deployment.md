@@ -51,6 +51,10 @@
 
 这一档只适合验证“门户 + 主平台路线”是否能跑通，不作为正式生产形态。
 
+<div class="diagram-image">
+  <img src="/deployment-scale-1.svg" alt="1 台最小验证版部署架构图" />
+</div>
+
 - 目标功能：
   - `AgentifUI` 门户前台
   - `Dify` 应用编排、工作流、基础知识问答
@@ -73,6 +77,10 @@
 
 这一档的目标是把应用层、数据层和模型层初步拆开，让平台从“能跑”变成“能试点、能扩展”。
 
+<div class="diagram-image">
+  <img src="/deployment-scale-2-3.svg" alt="2-3 台小团队试点版部署架构图" />
+</div>
+
 - `2` 台变体：适合仍然使用外部模型 API 的团队
   - 应用节点：`APISIX + AgentifUI + Dify`
   - 数据节点：`PostgreSQL + Redis + MinIO + Weaviate`
@@ -94,6 +102,10 @@
 ### 3. 5 台：生产基线版
 
 这是当前方案里“最小但认真”的生产基线，重点不是把所有组件堆齐，而是先把核心运行面、状态面和模型面拆开。
+
+<div class="diagram-image">
+  <img src="/deployment-scale-5.svg" alt="5 台生产基线版部署架构图" />
+</div>
 
 - 推荐组件范围：
   - 入口与应用：`APISIX + AgentifUI + Dify`
@@ -119,6 +131,10 @@
 ### 4. 7-8 台：完整功能版
 
 这一档把当前方案的核心功能基本补齐，尤其补齐数据治理层和更完整的观测、检索隔离。
+
+<div class="diagram-image">
+  <img src="/deployment-scale-7-8.svg" alt="7-8 台完整功能版部署架构图" />
+</div>
 
 - 在 5 台基线版上新增：
   - 数据治理层：`OpenMetadata + SeaTunnel + dbt Core + Apache Tika`
@@ -147,6 +163,10 @@
 ### 5. 10-12+ 台：完整高可用版
 
 当平台承接多业务线、多模型池和正式生产流量时，重点不再是“组件有没有”，而是“故障隔离是否充分、状态服务是否可恢复、GPU 是否可切换”。
+
+<div class="diagram-image">
+  <img src="/deployment-scale-10-12.svg" alt="10-12 台以上完整高可用版部署架构图" />
+</div>
 
 - 推荐能力：
   - 网关、门户、编排、检索、观测、模型分别独立扩缩容
