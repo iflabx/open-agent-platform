@@ -59,12 +59,12 @@ export default defineConfig({
           { text: '协议与标准体系', link: '/protocol-standards' },
           { text: '数据治理层', link: '/data-governance' },
           { text: '总体架构', link: '/architecture' },
-          { text: '扩展能力与补齐方向', link: '/extension-capabilities' },
           { text: '技术选型', link: '/stack' },
           { text: '典型场景', link: '/scenarios' },
           { text: '安全与治理', link: '/governance' },
           { text: '部署与发布', link: '/deployment' },
-          { text: '实施路线图', link: '/roadmap' }
+          { text: '实施路线图', link: '/roadmap' },
+          { text: '扩展升级', link: '/extension-capabilities' }
         ]
       },
       {
@@ -110,7 +110,8 @@ export default defineConfig({
             text: '2. 统一接入与流量治理层',
             link: '/layers/access-traffic-governance',
             items: [
-              { text: 'APISIX', link: '/components/apisix' }
+              { text: 'APISIX', link: '/components/apisix' },
+              { text: 'agentgateway', link: '/components/agentgateway' }
             ]
           },
           {
