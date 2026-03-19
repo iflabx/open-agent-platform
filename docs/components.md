@@ -16,7 +16,7 @@
 
 | 层级 | 主要承载对象 | 说明 |
 | --- | --- | --- |
-| 1. 用户与渠道层 | 企业现有 Web / IM / 工单 / 邮件 / CRM / ERP 入口 | 当前不单独纳入新的正式组件 |
+| 1. 用户与渠道层 | [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints) | 以企业现有入口复用能力说明页承载，统一说明 Web、IM、工单、邮件、CRM / ERP 和 Webhook 等入口 |
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
 | 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 门户和应用入口，不承载底层智能逻辑 |
 | 4. Agent 编排层 | `Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta` | 主平台路线与复杂运行时 |
@@ -30,16 +30,13 @@
 
 ## 1. 用户与渠道层
 
-这一层当前主要复用企业现有入口系统，不单独新增正式组件。
+这一层当前主要复用企业现有入口系统，通过独立的复用能力说明页承载，不新增新的前门组件。
 
 典型入口包括：
 
-- 企业 Web 门户
-- 企业 IM
-- 工单系统
-- 邮件入口
-- CRM / ERP / 业务系统入口
-- Webhook / 外部系统入口
+- [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints)
+
+该说明页统一覆盖企业 Web 门户、企业 IM、工单系统、邮件入口、CRM / ERP / 业务系统入口以及 Webhook / 外部系统入口。
 
 ## 2. 统一接入与流量治理层
 

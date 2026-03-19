@@ -103,7 +103,7 @@ export default defineConfig({
             text: '1. 用户与渠道层',
             link: '/layers/user-channel',
             items: [
-              { text: '企业现有 Web / IM / 工单 / CRM / ERP 入口', link: '/components' }
+              { text: '企业现有 Web / IM / 工单 / CRM / ERP 入口', link: '/components/existing-enterprise-entrypoints' }
             ]
           },
           {
