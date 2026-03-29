@@ -25,10 +25,12 @@
     <rect x="84" y="428" width="1432" height="96" rx="24" fill="#FFF7ED"/>
     <rect x="104" y="449" width="270" height="54" rx="16" fill="#FBD7B0"/>
     <text x="130" y="485" fill="#C2410C" font-size="28" font-weight="700">3. 门户与应用层</text>
-    <rect x="412" y="449" width="194" height="54" rx="16" fill="#FCE6C9"/>
-    <text x="455" y="485" fill="#9A3412" font-size="24" font-weight="600">AgentifUI</text>
-    <text x="646" y="471" fill="#1F2937" font-size="20">统一门户、应用目录、会话入口</text>
-    <text x="646" y="495" fill="#475569" font-size="17">反馈回收、运营后台与北向 BFF</text>
+    <rect x="412" y="449" width="172" height="54" rx="16" fill="#FCE6C9"/>
+    <rect x="600" y="449" width="176" height="54" rx="16" fill="#FFF2E8" stroke="#EA580C" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="431" y="485" fill="#9A3412" font-size="24" font-weight="600">AgentifUI</text>
+    <text x="626" y="485" fill="#C2410C" font-size="24" font-weight="600">OpenClaw</text>
+    <text x="816" y="471" fill="#1F2937" font-size="20">默认统一门户 / 条件超级智能体前台</text>
+    <text x="816" y="495" fill="#475569" font-size="17">应用目录、会话入口、反馈回收与北向 BFF</text>
 
     <rect x="84" y="544" width="1432" height="138" rx="24" fill="#FDF2F8"/>
     <rect x="104" y="586" width="246" height="54" rx="16" fill="#F8CFE1"/>

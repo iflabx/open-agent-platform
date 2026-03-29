@@ -46,7 +46,7 @@
 | --- | --- | --- | --- |
 | 治理与责任归属 | 有平台 owner、数据 owner、应用 owner、发布责任链 | 没有 owner 的能力不进入生产 | 平台团队 + 业务团队 + 数据团队 + 安全团队协作 |
 | 身份与组织上下文 | 统一身份、组织属性、租户与渠道上下文 | 认证与授权分离 | 企业现有 `SSO / IAM` + `APISIX` + `Casbin` |
-| 门户与应用管理 | 统一入口、应用目录、反馈闭环 | 门户不承载底层智能逻辑 | `AgentifUI` + 门户 / BFF |
+| 门户与应用管理 | 统一入口、应用目录、反馈闭环 | 门户不承载底层智能逻辑 | `AgentifUI` + `OpenClaw`（条件组件）+ 门户 / BFF |
 | 运行时与编排 | 多步任务、状态持久化、人工介入、失败恢复 | 高风险动作不能走无审计直写 | 主平台路线 + `LangGraph` + `LangChain` |
 | 工具与协议互操作 | 工具有统一接入、参数契约和调用留痕 | 协议优先于私有耦合 | `MCP`、`A2A`、`OpenAPI`、`JSON Schema` |
 | 模型服务与治理 | 统一模型入口、路由、配额、留痕和回滚 | 上层不直接耦合底层推理实现 | `LiteLLM` + `vLLM` + `Qwen` |
@@ -107,6 +107,13 @@
 
 企业平台需要统一入口，而不是多套零散聊天界面。
 
+这一能力域在当前方案中允许两种前台形态：
+
+- 默认统一门户前台，重点是应用目录、工作台和多应用分发。
+- 条件引入的成品化超级智能体前台，重点是单一高价值助手的连续交互和产品化体验。
+
+两者都属于门户与应用管理域，不改变下游编排、知识、模型和治理的分层边界。
+
 最低要求：
 
 - 应用目录、应用 owner、应用分组和反馈通道
@@ -117,10 +124,12 @@
 
 - 门户只负责入口和应用分发
 - 核心智能逻辑不写死在前端页面
+- 即使采用成品化超级智能体前台，也不能把模型路由、知识治理和权限策略下沉到前台内部
 
 当前方案落点：
 
 - `AgentifUI`
+- `OpenClaw`（条件组件）
 - 门户 / BFF / API 层
 
 ## 4. 运行时与编排
@@ -351,3 +360,5 @@
 - [NIST AI Resource Center](https://airc.nist.gov/)
 - [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)
 - [OpenTelemetry GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
+- [OpenClaw 官网](https://openclaw.ai/)
+- [OpenClaw Architecture](https://docs.openclaw.ai/concepts/architecture)

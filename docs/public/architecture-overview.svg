@@ -2,8 +2,9 @@
   <rect width="1400" height="860" rx="36" fill="#F3F7F2"/>
   <rect x="44" y="38" width="1312" height="784" rx="30" fill="white" stroke="#D7E5E1" stroke-width="2"/>
   <rect x="92" y="88" width="1216" height="106" rx="24" fill="#ECFDF5"/>
-  <text x="124" y="126" fill="#0F766E" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">接入与交互层</text>
-  <text x="124" y="166" fill="#285E61" font-size="22" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Web 门户 / 企业 IM / 管理后台 / Open API / Webhook</text>
+  <text x="124" y="126" fill="#0F766E" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">接入、门户与交互层</text>
+  <text x="124" y="162" fill="#285E61" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">统一门户 / 超级智能体前台 / 企业 IM / 管理后台</text>
+  <text x="124" y="188" fill="#285E61" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">Open API / Webhook / 系统入口</text>
 
   <rect x="92" y="220" width="1216" height="144" rx="24" fill="#F0FDFA"/>
   <text x="124" y="260" fill="#115E59" font-size="30" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif" font-weight="700">智能编排层</text>

@@ -30,9 +30,15 @@
 
 | 阶段 | 必须启用的核心组件 | 说明 |
 | --- | --- | --- |
-| 第一阶段 | `APISIX`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`LangFuse` | 先完成最小可试用闭环 |
+| 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`LangFuse` | 先完成最小可试用闭环 |
 | 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph` | 进入生产治理和复杂流程能力 |
 | 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` 的全链路治理，以及条件启用 `Milvus` / `Elasticsearch` | 进入平台化和规模化阶段 |
+
+门户前台的阶段口径保持收敛：
+
+- 默认起步以前台统一门户 [AgentifUI](/components/agentifui) 为主。
+- 只有当业务明确需要单一旗舰助手、多渠道接入和成品化连续会话体验时，才在第二阶段或第三阶段条件评估 [OpenClaw](/components/openclaw)。
+- 条件引入 `OpenClaw` 不改变“一条主平台路线”的规则，也不替代 `APISIX`、`LiteLLM` 和治理链路。
 
 ## 第一阶段：0 到 30 天
 
@@ -44,10 +50,11 @@
 
 - 选定一个高价值、低耦合、可量化的场景，优先考虑 [内部知识助手](/scenarios)。
 - 选择一条主平台路线：`Dify`、`RAGFlow` 或 `Coze Studio` 三选一。
-- 打通 `APISIX -> 门户 / BFF -> 主平台路线 -> LiteLLM -> vLLM` 的最小链路。
+- 打通 `APISIX -> AgentifUI / 门户 BFF -> 主平台路线 -> LiteLLM -> vLLM` 的最小链路。
 - 建立 `PostgreSQL`、`Redis`、`MinIO`、`Weaviate` 的最小可用底座。
 - 用 `LlamaIndex` 建立可控的知识接入、检索和引用链路。
 - 引入最小审计和最小 `LangFuse` 观测能力。
+- 如果首个试点本身就是成品化旗舰助手产品，可同步评估 [OpenClaw](/components/openclaw) 的前台适配，但不改变后端收敛原则。
 
 ### 阶段交付物
 
@@ -82,6 +89,7 @@
 - 引入第二个场景，并复用现有底座，而不是复制一套新系统。
 - 把高风险工具动作纳入人工确认和审计流程。
 - 用 `k6` 建立关键链路容量基线。
+- 当多渠道接入、持续会话和产品化前台诉求变得明确时，再评估是否条件引入 [OpenClaw](/components/openclaw)。
 
 ### 阶段交付物
 
@@ -111,6 +119,7 @@
 ### 建议任务
 
 - 明确主平台路线、`LangGraph`、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
+- 明确 [AgentifUI](/components/agentifui) 与 [OpenClaw](/components/openclaw) 的适用边界，避免统一门户和成品化超级智能体前台混成一类对象。
 - 将知识接入、索引发布、Prompt、工具和模型路由都纳入统一发布管理。
 - 建立跨部门的评测集、审计抽样和例行复盘机制。
 - 把入口层、检索层、模型层和治理层按负载分别扩容。
@@ -178,3 +187,4 @@
 - [NIST AI Resource Center](https://airc.nist.gov/)
 - [Grafana k6 Overview](https://grafana.com/oss/k6/)
 - [LangGraph Overview](https://docs.langchain.com/oss/python/langgraph)
+- [OpenClaw 官网](https://openclaw.ai/)

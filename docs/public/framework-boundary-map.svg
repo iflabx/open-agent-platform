@@ -23,14 +23,16 @@
 
     <path d="M274 550V582" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
 
-    <rect x="120" y="582" width="308" height="170" rx="20" fill="#DBEAFE"/>
-    <text x="180" y="628" fill="#1E3A8A" font-size="30" font-weight="700">AgentifUI + BFF</text>
-    <text x="152" y="660" fill="#1F2937" font-size="17">统一门户、应用目录、会话承接</text>
-    <text x="152" y="686" fill="#1F2937" font-size="17">反馈入口、运营后台、北向统一 API</text>
-    <text x="152" y="712" fill="#475569" font-size="16">不直接承接核心编排，不绕过网关访问模型</text>
+    <rect x="120" y="582" width="308" height="188" rx="20" fill="#DBEAFE"/>
+    <text x="146" y="626" fill="#1E3A8A" font-size="28" font-weight="700">AgentifUI / OpenClaw</text>
+    <text x="152" y="656" fill="#1F2937" font-size="17">默认统一门户 / 条件超级智能体前台</text>
+    <text x="152" y="682" fill="#1F2937" font-size="17">应用目录、会话承接、北向 BFF</text>
+    <text x="152" y="708" fill="#1F2937" font-size="17">反馈入口、运营后台、统一 API</text>
+    <text x="152" y="736" fill="#475569" font-size="16">不直接承接核心编排，不绕过网关访问模型</text>
 
-    <rect x="120" y="782" width="308" height="76" rx="18" fill="#E8F1FB"/>
-    <text x="150" y="826" fill="#475569" font-size="18">北向口径：APISIX 收口流量，门户承接用户和应用体验。</text>
+    <rect x="120" y="790" width="308" height="76" rx="18" fill="#E8F1FB"/>
+    <text x="150" y="826" fill="#475569" font-size="16">北向口径：APISIX 收口流量，第 3 层承接统一门户</text>
+    <text x="150" y="848" fill="#475569" font-size="16">或条件引入的超级智能体前台。</text>
 
     <rect x="504" y="196" width="500" height="692" rx="28" fill="#FFF7ED" stroke="#F0D6B3" stroke-width="2"/>
     <text x="540" y="246" fill="#C2410C" font-size="30" font-weight="700">业务编排与知识执行面</text>
@@ -93,5 +95,5 @@
   <path d="M1004 482H1044" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
 
   <rect x="84" y="918" width="1512" height="82" rx="22" fill="#111827"/>
-  <text x="118" y="964" fill="#F9FAFB" font-size="20" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI 负责门户与 BFF，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
+  <text x="110" y="964" fill="#F9FAFB" font-size="18" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI 负责默认门户与 BFF，OpenClaw 条件承接超级智能体前台，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
 </svg>

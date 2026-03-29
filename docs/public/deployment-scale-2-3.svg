@@ -13,7 +13,8 @@
     <rect x="122" y="466" width="156" height="60" rx="18" fill="#D1FAE5"/>
     <rect x="296" y="466" width="156" height="60" rx="18" fill="#ECFCCB" stroke="#84CC16" stroke-width="2" stroke-dasharray="8 8"/>
     <text x="164" y="424" fill="#065F46" font-size="24" font-weight="700">APISIX</text>
-    <text x="340" y="424" fill="#065F46" font-size="24" font-weight="700">AgentifUI</text>
+    <text x="328" y="414" fill="#065F46" font-size="18" font-weight="700">Portal UI</text>
+    <text x="304" y="434" fill="#065F46" font-size="12" font-weight="600">AgentifUI / OpenClaw</text>
     <text x="178" y="504" fill="#065F46" font-size="24" font-weight="700">Dify</text>
     <text x="330" y="498" fill="#3F6212" font-size="20" font-weight="700">LiteLLM</text>
     <text x="332" y="522" fill="#3F6212" font-size="14">(3-node mode)</text>

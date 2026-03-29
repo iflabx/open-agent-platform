@@ -13,13 +13,13 @@
     <text x="180" y="396" fill="#047857" font-size="22" font-weight="700">K3s-1 Entry</text>
     <text x="204" y="424" fill="#047857" font-size="22" font-weight="700">Portal</text>
     <rect x="158" y="438" width="106" height="52" rx="16" fill="#D1FAE5"/>
-    <rect x="280" y="438" width="124" height="52" rx="16" fill="#D1FAE5"/>
+    <rect x="272" y="438" width="148" height="52" rx="16" fill="#D1FAE5"/>
     <rect x="158" y="506" width="150" height="52" rx="16" fill="#D1FAE5"/>
     <text x="180" y="472" fill="#065F46" font-size="20" font-weight="700">APISIX</text>
-    <text x="298" y="472" fill="#065F46" font-size="20" font-weight="700">AgentifUI</text>
+    <text x="296" y="470" fill="#065F46" font-size="18" font-weight="700">Portal UI</text>
     <text x="186" y="540" fill="#065F46" font-size="20" font-weight="700">Portal BFF</text>
     <text x="158" y="620" fill="#475569" font-size="15">Northbound traffic, user context,</text>
-    <text x="158" y="642" fill="#475569" font-size="15">app entry and session initiation.</text>
+    <text x="158" y="642" fill="#475569" font-size="15">app entry and default / optional front-end.</text>
 
     <rect x="468" y="354" width="292" height="434" rx="24" fill="#FFF7ED"/>
     <text x="544" y="396" fill="#C2410C" font-size="22" font-weight="700">K3s-2 Platform</text>

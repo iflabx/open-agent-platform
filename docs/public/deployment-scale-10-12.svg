@@ -24,7 +24,7 @@
     <rect x="932" y="346" width="168" height="116" rx="22" fill="#D1FAE5"/>
     <rect x="1118" y="346" width="168" height="116" rx="22" fill="#D1FAE5"/>
     <text x="974" y="388" fill="#065F46" font-size="22" font-weight="700">A1 Replica</text>
-    <text x="958" y="420" fill="#065F46" font-size="16">AgentifUI / BFF</text>
+    <text x="958" y="420" fill="#065F46" font-size="16">Portal UI / BFF</text>
     <text x="1160" y="388" fill="#065F46" font-size="22" font-weight="700">A2 Replica</text>
     <text x="1142" y="420" fill="#065F46" font-size="16">Workflow / API</text>
 

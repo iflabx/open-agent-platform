@@ -6,7 +6,7 @@
 
 ## 部署规模对照总表
 
-| 档位 | 核心目标 | 最小组件组合 | 模型策略 | 推荐服务器数 | 适合阶段 |
+| 档位 | 核心目标 | 最小组件组合（默认基线） | 模型策略 | 推荐服务器数 | 适合阶段 |
 | --- | --- | --- | --- | --- | --- |
 | `1 台` 最小验证版 | 先验证门户与主平台路线可用 | `AgentifUI + Dify` | 调外部 `OpenAI 兼容 API` | `1` | 首轮 PoC、内测 |
 | `2-3 台` 小团队试点版 | 把应用层、数据层、模型层初步拆开 | `APISIX + AgentifUI + Dify + PostgreSQL + Redis + MinIO + Weaviate` | `2` 台时外部模型，`3` 台时可加 `LiteLLM + vLLM + Qwen` | `2-3` | 小团队试点 |
@@ -18,6 +18,8 @@
 - 这张表只给决策和预算对齐使用，具体落位方式看下文各档位说明。
 - 服务器数按“单环境”计算，不包含企业既有 `SSO / IAM`、`KMS`、`WAF`、`DNS / LB`、托管数据库等复用能力。
 - 如果数据库、对象存储或 GPU 使用企业现有托管能力，服务器数可以下降，但部署单元和治理边界不变。
+- 上表和下文所有部署图都按 `AgentifUI` 默认门户基线绘制。
+- 当第 3 层目标是成品化超级智能体产品时，可在同一“门户单元”位置条件引入 `OpenClaw`；通常不改变服务器档位估算，但会改变应用节点上的前台与会话承载形态。
 
 ## 部署原则
 
@@ -45,7 +47,8 @@
 - 以下服务器数量按“单环境”计算，只讨论平台本体，不包含企业既有 `SSO / IAM`、`KMS`、`WAF`、`DNS / LB`、企业数据库托管服务等复用能力。
 - 以下硬件值是结合组件官方最低要求、依赖拓扑和可用性留量得出的工程建议，不等于各组件官方最低启动门槛。
 - 默认以 `x86_64 Linux` 私有化部署为口径；如果使用云托管数据库、对象存储或 GPU 池，服务器数量可以下降，但部署单元不会消失。
-- 以下分级以 `AgentifUI + Dify` 作为起步路线展开；若主平台路线改为 `RAGFlow` 或 `Coze Studio`，服务器数量通常不变，但知识链路和运营链路的瓶颈位置会不同。
+- 以下分级以 `AgentifUI + Dify` 作为默认起步路线展开；若主平台路线改为 `RAGFlow` 或 `Coze Studio`，服务器数量通常不变，但知识链路和运营链路的瓶颈位置会不同。
+- 如第 3 层条件引入 `OpenClaw`，其部署位置仍属于同一门户单元，不替代 `APISIX`、主平台路线、`LiteLLM` 或治理链路。
 
 ### 1. 1 台：最小验证版
 
@@ -56,11 +59,12 @@
 </div>
 
 - 目标功能：
-  - `AgentifUI` 门户前台
+  - 默认前台为 `AgentifUI`；如果只验证单一旗舰助手产品体验，也可条件改为 `OpenClaw`
   - `Dify` 应用编排、工作流、基础知识问答
   - 通过外部 `OpenAI 兼容 API` 调用模型，不自托管 `vLLM + Qwen`
 - 推荐部署方式：
-  - 正式组件只落 `AgentifUI + Dify`
+  - 正式组件默认只落 `AgentifUI + Dify`
+  - 如果验证的是成品化超级智能体产品，可用 `OpenClaw + Dify` 代替默认门户前台组合
   - `Dify` 所需 `PostgreSQL / Redis / Weaviate / Nginx / Sandbox` 等依赖以同机容器方式随默认安装栈启动
 - 工程建议硬件：
   - `8 vCPU`
@@ -71,7 +75,7 @@
   - 只做价值验证，不做严格容量承诺
   - 不建议在这一档叠加 `LiteLLM`、`vLLM`、`Qwen`、`OpenMetadata` 或完整观测栈
 
-说明：`Dify` 官方自托管快速开始给出的最低门槛是 `CPU >= 2 Core`、`RAM >= 4 GiB`，但官方 `Docker Compose` 同时会启动 `5` 个核心服务和 `6` 个依赖组件，因此本方案把单机起步档上调到 `8 vCPU / 16 GiB`，以留出 `AgentifUI`、数据卷和回滚空间。
+说明：`Dify` 官方自托管快速开始给出的最低门槛是 `CPU >= 2 Core`、`RAM >= 4 GiB`，但官方 `Docker Compose` 同时会启动 `5` 个核心服务和 `6` 个依赖组件，因此本方案把单机起步档上调到 `8 vCPU / 16 GiB`，以留出 `AgentifUI` 或 `OpenClaw`、数据卷和回滚空间。
 
 ### 2. 2-3 台：小团队试点版
 
@@ -82,10 +86,10 @@
 </div>
 
 - `2` 台变体：适合仍然使用外部模型 API 的团队
-  - 应用节点：`APISIX + AgentifUI + Dify`
+  - 应用节点：`APISIX + AgentifUI / OpenClaw + Dify`
   - 数据节点：`PostgreSQL + Redis + MinIO + Weaviate`
 - `3` 台变体：适合开始自托管模型的团队
-  - 应用节点：`APISIX + AgentifUI + Dify + LiteLLM`
+  - 应用节点：`APISIX + AgentifUI / OpenClaw + Dify + LiteLLM`
   - 数据节点：`PostgreSQL + Redis + MinIO + Weaviate`
   - GPU 节点：`vLLM + Qwen`
 - 工程建议硬件：
@@ -108,13 +112,13 @@
 </div>
 
 - 推荐组件范围：
-  - 入口与应用：`APISIX + AgentifUI + Dify`
+  - 入口与应用：`APISIX + AgentifUI / OpenClaw + Dify`
   - 模型链路：`LiteLLM + vLLM + Qwen`
   - 知识链路：`LlamaIndex + Weaviate`
   - 治理与观测：`Casbin + LangFuse + OpenTelemetry + Prometheus + Grafana + Loki`
   - 有状态底座：`PostgreSQL + Redis + MinIO`
 - 推荐部署单元：
-  - `3` 台 `K3s` 节点：承载 `APISIX`、`AgentifUI`、`Dify`、`LiteLLM`、`LlamaIndex`、`Casbin`、`LangFuse`、平台观测服务
+  - `3` 台 `K3s` 节点：承载 `APISIX`、`AgentifUI / OpenClaw`、`Dify`、`LiteLLM`、`LlamaIndex`、`Casbin`、`LangFuse`、平台观测服务
   - `1` 台数据节点：承载 `PostgreSQL + Redis + MinIO + Weaviate`
   - `1` 台 GPU 节点：承载 `vLLM + Qwen`
 - 工程建议硬件：
@@ -142,7 +146,7 @@
   - 需要时引入 `LangGraph` 处理复杂流程、人工介入和长链路恢复
 - 推荐部署单元：
   - `3` 台 `K3s` 节点：承载网关、门户、主平台、复杂运行时和控制面服务
-  - `1` 台应用扩展节点：承载高流量门户 / BFF / 编排扩展实例
+  - `1` 台应用扩展节点：承载高流量门户 / 超级智能体前台 / `BFF` / 编排扩展实例
   - `1` 台检索节点：承载 `LlamaIndex + Weaviate`，必要时兼容 `Elasticsearch`
   - `1` 台数据治理节点：承载 `OpenMetadata + SeaTunnel + dbt Core + Apache Tika`
   - `1` 台观测节点：承载 `LangFuse + Prometheus + Grafana + Loki`
@@ -205,7 +209,8 @@
 
 - 主平台路线负责标准场景
 - `LangGraph` 负责复杂状态机、人工介入和长链路恢复
-- 门户 / BFF 负责用户上下文、会话和应用聚合
+- 默认由 `AgentifUI + 门户 / BFF` 负责用户上下文、会话和应用聚合
+- 当需要成品化超级智能体产品时，可由 `OpenClaw` 在同一门户单元位置条件承接前台体验
 
 ### 知识与数据层
 
@@ -225,7 +230,7 @@
 | 部署单元 | 主要组件 | 说明 |
 | --- | --- | --- |
 | 入口单元 | `APISIX` | 统一承接北向流量和入口治理 |
-| 门户单元 | `AgentifUI` + 门户 / BFF | 负责页面、应用入口和会话上下文 |
+| 门户单元 | `AgentifUI` / `OpenClaw` + 门户 / BFF | 默认统一门户以前者为主；需要成品化超级智能体产品时条件引入后者 |
 | 主平台单元 | `Dify` / `RAGFlow` / `Coze Studio` | 标准场景只保留一条主平台路线 |
 | 复杂运行时单元 | `LangGraph` + `LangChain` | 负责长链路流程、状态机和复杂工具编排 |
 | 数据治理单元 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 负责采集、清洗、元数据和资产发布 |
@@ -338,3 +343,5 @@
 - [Kubernetes Production Environment](https://kubernetes.io/docs/setup/production-environment/)
 - [Kubernetes Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 - [Grafana k6 Overview](https://grafana.com/oss/k6/)
+- [OpenClaw 官网](https://openclaw.ai/)
+- [OpenClaw Architecture](https://docs.openclaw.ai/concepts/architecture)

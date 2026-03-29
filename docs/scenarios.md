@@ -22,14 +22,22 @@
 | 流程自动化 Agent | 中到高 | 高 | 高 | 第二批更合适 |
 | 数据分析助手 | 高 | 高 | 高 | 需要更严格治理后再做 |
 
+## 场景前台形态选择
+
+场景优先级主要由业务价值、治理风险和集成复杂度决定，不由前台形态决定。
+
+- 默认前台形态是 [AgentifUI](/components/agentifui)，适合统一应用目录、统一工作台和多应用分发。
+- 当目标是交付一个单一高价值、连续会话、多渠道接入的成品化助手产品时，可条件引入 [OpenClaw](/components/openclaw) 作为超级智能体前台。
+- 无论采用哪种前台形态，下游仍保持“一条主平台路线 + 知识层 + 模型网关 + 治理链路”的收敛规则。
+
 ## 场景与组件组合速览
 
-| 场景 | 主控组件 | 知识 / 数据组件 | 模型与治理组件 |
-| --- | --- | --- | --- |
-| 内部知识助手 | `Dify` / `RAGFlow` / `Coze Studio` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
-| 服务台智能分诊 | 主平台路线 + `LangGraph` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`Casbin`、`OpenTelemetry` |
-| 流程自动化 Agent | `LangGraph` | `OpenMetadata`、`dbt Core`、`LlamaIndex` | `LiteLLM`、`Casbin`、`LangFuse` |
-| 数据分析助手 | `LangGraph` | `OpenMetadata`、`dbt Core`、`PostgreSQL` | `LiteLLM`、`Casbin`、`LangFuse` |
+| 场景 | 前台形态 | 主控组件 | 知识 / 数据组件 | 模型与治理组件 |
+| --- | --- | --- | --- | --- |
+| 内部知识助手 | `AgentifUI` 默认；单一高价值助手可条件用 `OpenClaw` | `Dify` / `RAGFlow` / `Coze Studio` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
+| 服务台智能分诊 | `AgentifUI` / 工单前台；需要连续助手体验时可条件用 `OpenClaw` | 主平台路线 + `LangGraph` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`Casbin`、`OpenTelemetry` |
+| 流程自动化 Agent | `AgentifUI` + 门户 / `BFF` | `LangGraph` | `OpenMetadata`、`dbt Core`、`LlamaIndex` | `LiteLLM`、`Casbin`、`LangFuse` |
+| 数据分析助手 | `AgentifUI` / 业务门户 | `LangGraph` | `OpenMetadata`、`dbt Core`、`PostgreSQL` | `LiteLLM`、`Casbin`、`LangFuse` |
 
 ## 场景一：内部知识助手
 
@@ -39,7 +47,7 @@
 
 ### 推荐链路
 
-`门户 / 企业 IM -> APISIX -> 主平台路线 -> LlamaIndex -> Weaviate -> LiteLLM -> vLLM`
+`门户 / 企业 IM -> APISIX -> AgentifUI / OpenClaw / 门户-BFF -> 主平台路线 -> LlamaIndex -> Weaviate -> LiteLLM -> vLLM`
 
 如需更复杂的问答状态控制，可在编排层补充 `LangGraph`。
 
@@ -76,7 +84,7 @@
 
 ### 推荐链路
 
-`渠道入口 -> APISIX -> 门户 / 工单集成层 -> 主平台路线或 LangGraph -> 工单工具 -> LiteLLM`
+`渠道入口 -> APISIX -> AgentifUI / OpenClaw / 工单集成层 -> 主平台路线或 LangGraph -> 工单工具 -> LiteLLM`
 
 知识回答部分仍通过 `LlamaIndex + Weaviate` 提供支持。
 
@@ -211,3 +219,4 @@
 - [Dify Workflow Docs](https://docs.dify.ai/en/use-dify/workflow/readme)
 - [LlamaIndex Docs](https://docs.llamaindex.ai/)
 - [LangGraph Overview](https://docs.langchain.com/oss/python/langgraph)
+- [OpenClaw 官网](https://openclaw.ai/)

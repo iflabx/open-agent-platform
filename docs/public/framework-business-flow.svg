@@ -14,7 +14,7 @@
     <rect x="1500" y="188" width="96" height="62" rx="18" fill="#E2E8F0"/>
     <text x="146" y="228" fill="#1E3A8A" font-size="22" font-weight="700">用户</text>
     <text x="334" y="228" fill="#065F46" font-size="22" font-weight="700">APISIX + SSO</text>
-    <text x="562" y="228" fill="#9D174D" font-size="22" font-weight="700">门户 / BFF</text>
+    <text x="546" y="228" fill="#9D174D" font-size="22" font-weight="700">前台 / BFF</text>
     <text x="820" y="228" fill="#92400E" font-size="22" font-weight="700">编排层</text>
     <text x="1062" y="228" fill="#6D28D9" font-size="22" font-weight="700">协议 / 数据 / 检索</text>
     <text x="1330" y="228" fill="#92400E" font-size="22" font-weight="700">LiteLLM / vLLM</text>
@@ -32,7 +32,7 @@
     <circle cx="122" cy="321" r="18" fill="#2563EB"/>
     <text x="116" y="328" fill="#FFFFFF" font-size="18" font-weight="700">1</text>
     <text x="152" y="316" fill="#1F2937" font-size="19" font-weight="600">进入应用</text>
-    <text x="152" y="340" fill="#475569" font-size="16">用户从门户或渠道发起请求</text>
+    <text x="152" y="340" fill="#475569" font-size="16">用户从统一前台或渠道发起请求</text>
     <path d="M288 321H298" stroke="#2563EB" stroke-width="4" stroke-linecap="round"/>
 
     <rect x="308" y="390" width="230" height="86" rx="18" fill="#ECFDF5"/>
@@ -45,7 +45,7 @@
     <rect x="534" y="284" width="240" height="88" rx="18" fill="#FDF2F8"/>
     <circle cx="568" cy="328" r="18" fill="#DB2777"/>
     <text x="562" y="335" fill="#FFFFFF" font-size="18" font-weight="700">3</text>
-    <text x="598" y="318" fill="#1F2937" font-size="19" font-weight="600">门户识别用户与应用</text>
+    <text x="598" y="318" fill="#1F2937" font-size="19" font-weight="600">前台识别用户与应用</text>
     <text x="598" y="342" fill="#475569" font-size="16">初始化组织、权限、会话上下文</text>
 
     <rect x="534" y="502" width="240" height="88" rx="18" fill="#FCE7F3"/>
@@ -120,6 +120,6 @@
     <path d="M624 858H208" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
     <polygon points="214,848 184,858 214,868" fill="#94A3B8"/>
     <rect x="536" y="820" width="540" height="70" rx="22" fill="#111827"/>
-    <text x="568" y="864" fill="#F9FAFB" font-size="20">结果回到门户，支持引用展示、反馈提交、人工接管和全链路追溯。</text>
+    <text x="560" y="864" fill="#F9FAFB" font-size="20">结果回到前台，支持引用展示、反馈提交、人工接管和全链路追溯。</text>
   </g>
 </svg>

@@ -26,11 +26,12 @@
 
 当前推荐架构可以概括为：
 
-`APISIX + 门户 / BFF + 一条主平台路线 + LangGraph + LlamaIndex + LiteLLM + vLLM + 数据治理链路 + 双层观测治理体系`
+`APISIX + 默认统一门户前台（AgentifUI）/ 条件引入的超级智能体前台（OpenClaw） + 一条主平台路线 + LangGraph + LlamaIndex + LiteLLM + vLLM + 数据治理链路 + 双层观测治理体系`
 
 这意味着：
 
 - 入口统一收敛
+- 第 3 层默认以统一门户承接，只有在需要成品化超级智能体产品时才条件引入专门前台
 - 主平台路线收敛为一条
 - 复杂流程由专门运行时承接
 - 模型调用统一经过模型网关
@@ -124,3 +125,4 @@
 - [Kubernetes Production Environment](https://kubernetes.io/docs/setup/production-environment/)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/specification/2024-11-05/index)
 - [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)
+- [OpenClaw 官网](https://openclaw.ai/)

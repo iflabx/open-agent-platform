@@ -16,6 +16,8 @@
 
 它负责把员工、运营、客服、业务系统和外部事件稳定送入智能体平台，让平台能力能够通过企业已经存在的 `Web / IM / 工单 / CRM / ERP / Webhook` 等前门进入真实业务流程。
 
+渠道层复用的是企业已有前门；进入平台后，再由第 3 层的 [AgentifUI](/components/agentifui) 或条件引入的 [OpenClaw](/components/openclaw) 承接统一门户或成品化超级智能体前台体验。
+
 ## 主要职责
 
 - 承接员工门户、企业 IM、工单系统、CRM / ERP 和业务系统入口。
@@ -55,7 +57,7 @@
 ## 与其他组件关系
 
 - 上游承接员工、运营、客服和业务系统事件。
-- 下游统一进入 [APISIX](/components/apisix) 这一北向入口，再分发到 [AgentifUI](/components/agentifui)、`BFF` 和编排层。
+- 下游统一进入 [APISIX](/components/apisix) 这一北向入口，再分发到 [AgentifUI](/components/agentifui)、[OpenClaw](/components/openclaw)、`BFF` 和编排层。
 - 与企业现有 `SSO / IAM` 协同，把身份与组织上下文传递到后续各层。
 - 与 [Casbin](/components/casbin) 配合时，只负责传递主体上下文，不负责细粒度授权裁决。
 - 与 [用户与渠道层](/layers/user-channel) 的关系是“复用能力说明页”与“层定义文档”的关系。
@@ -72,6 +74,7 @@
 - 不替代统一入口网关、门户层或编排层。
 - 不直接做细粒度授权裁决。
 - 不要求把所有渠道统一重写成一套新前端。
+- 不决定第 3 层最终采用统一门户前台还是超级智能体前台，只负责把请求稳定送入平台。
 
 ## 采用规则
 
@@ -79,6 +82,7 @@
 - 所有入口流量优先统一收敛到网关层，不建议每个入口直接暴露后端能力。
 - 渠道侧只保留最薄适配层，业务流程、模型调用和知识访问放到下游层处理。
 - 新接入入口需要明确身份承接方式、上下文传递方式和审计字段。
+- 如需成品化超级智能体产品，可在下游第 3 层由 [OpenClaw](/components/openclaw) 承接，但渠道复用和统一入口治理规则不变。
 
 ## 治理注意点
 
@@ -92,6 +96,7 @@
 - [1. 用户与渠道层](/layers/user-channel)
 - [APISIX](/components/apisix)
 - [AgentifUI](/components/agentifui)
+- [OpenClaw](/components/openclaw)
 - [身份接入协议（OIDC / OAuth2 / SAML / SCIM）](/protocols/identity-access)
 - [安全与治理](/governance)
 
