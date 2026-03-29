@@ -9,6 +9,7 @@
 当前包含：
 
 - [AgentifUI](/components/agentifui)
+- [OpenClaw](/components/openclaw)
 - [LangGraph](/components/langgraph)
 - [LangChain](/components/langchain)
 - [LlamaIndex](/components/llamaindex)

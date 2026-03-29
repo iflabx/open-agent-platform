@@ -76,6 +76,7 @@
 
 - 主平台中枢：`Dify`、`RAGFlow` 或 `Coze Studio`
 - 门户与交互：`AgentifUI`
+- 条件引入的成品超级智能体产品：`OpenClaw`
 
 ### 3. 定制化与高级 Agent 能力
 
@@ -124,7 +125,7 @@
   <img src="/framework-boundary-map.svg" alt="企业级智能体平台关键组件职责边界图" />
 </div>
 
-如果只记一个边界口径，应记住这一句：`APISIX` 负责北向统一入口，`AgentifUI` 负责门户与 BFF，`agentgateway` 负责内部 AI 协议网关，`LiteLLM` 负责唯一模型入口。
+如果只记一个边界口径，应记住这一句：`APISIX` 负责北向统一入口，`AgentifUI` 负责默认门户与 BFF，`OpenClaw` 作为条件引入的超级智能体产品前台，`agentgateway` 负责内部 AI 协议网关，`LiteLLM` 负责唯一模型入口。
 
 ### 1. 推理层
 
@@ -317,6 +318,16 @@
   - 不持有核心编排逻辑
   - 不直接耦合底层模型
   - 通过统一 BFF / API 层对接 Dify、RAGFlow、Coze Studio、自研服务以及协议层能力
+
+- `OpenClaw`
+  职责：
+  - 作为条件引入的成品化超级智能体产品前台
+  - 承载多渠道、多端交互、持续会话、技能和 Control UI 体验
+  - 适合作为旗舰智能体产品，而不是通用门户壳
+  边界：
+  - 不默认替代统一门户、应用目录和企业控制面
+  - 不按通用主平台路线或低代码编排平台理解
+  - 企业化落地时仍应接入统一身份、模型网关和治理链路
 
 这层如果后续发现能力不足，原则上也要继续沿“自建门户壳”方向演进。
 
@@ -512,6 +523,7 @@
 ### 8. 门户与应用发布平面
 
 - `AgentifUI`
+- `OpenClaw`（条件组件）
 - 企业 SSO
 - 应用中心
 - 应用目录
@@ -742,6 +754,7 @@
 解决方式：
 
 - 把它定义为起步前端壳
+- 在需要成品化超级智能体产品时，条件引入 `OpenClaw`
 - 核心控制点放在自研 BFF 和统一身份层
 - 前端可替换，后端契约不变
 
@@ -833,6 +846,6 @@
 - `LangGraph + LangChain` 构成生产级 Agent 运行与定制化业务编排层
 - `LlamaIndex` 构成知识工程与复杂 RAG 能力层
 - `Letta` 构成长期记忆 Agent 能力层
-- `AgentifUI` 构成门户交互层
+- `AgentifUI` 构成默认门户交互层，`OpenClaw` 作为成品超级智能体产品条件引入
 - `PostgreSQL + Redis + MinIO + K3s` 构成运行基础设施
 - `LangFuse + k6 + Casbin + 平台观测体系` 构成观测评测与企业治理层

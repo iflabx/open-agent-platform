@@ -18,7 +18,7 @@
 | --- | --- | --- |
 | 1. 用户与渠道层 | [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints) | 以企业现有入口复用能力说明页承载，统一说明 Web、IM、工单、邮件、CRM / ERP 和 Webhook 等入口 |
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
-| 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 门户和应用入口，不承载底层智能逻辑 |
+| 3. 门户与应用层 | `AgentifUI`、`OpenClaw`、门户 / `BFF` / API 层 | 默认统一门户以前台壳为主；当需要成品化超级智能体产品时可条件引入 `OpenClaw` |
 | 4. Agent 编排层 | `Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta` | 主平台路线与复杂运行时 |
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 数据采集、标准化、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
@@ -62,6 +62,10 @@
 
 - [AgentifUI](/components/agentifui)
 
+### 条件组件
+
+- [OpenClaw](/components/openclaw)
+
 ### 配套能力
 
 - 门户 / `BFF` / API 层
@@ -69,6 +73,7 @@
 ### 说明
 
 - 这一层负责工作台、应用入口、会话入口和用户交互。
+- `OpenClaw` 作为条件组件，适合承载成品化超级智能体产品形态，而不是通用门户壳。
 - 门户层不应直接持有知识索引、模型路由或授权裁决逻辑。
 
 ## 4. Agent 编排层

@@ -118,7 +118,8 @@ export default defineConfig({
             text: '3. 门户与应用层',
             link: '/layers/portal-application',
             items: [
-              { text: 'AgentifUI', link: '/components/agentifui' }
+              { text: 'AgentifUI', link: '/components/agentifui' },
+              { text: 'OpenClaw', link: '/components/openclaw' }
             ]
           },
           {

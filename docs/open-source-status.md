@@ -37,6 +37,7 @@
 | `RAGFlow` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `Coze Studio` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `AgentifUI` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `OpenClaw` | 标准开源 | `MIT` | 可作为门户与应用层条件组件纳入 |
 | `APISIX` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `agentgateway` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `LangGraph` | 标准开源 | `MIT` | 可直接纳入 |
@@ -82,6 +83,7 @@
 | `RAGFlow` | [官方仓库](https://github.com/infiniflow/ragflow) | 标准开源，`Apache-2.0` |
 | `Coze Studio` | [官方仓库](https://github.com/coze-dev/coze-studio) | 标准开源，`Apache-2.0` |
 | `AgentifUI` | [官方仓库](https://github.com/iflabx/agentifui) | 标准开源，`Apache-2.0` |
+| `OpenClaw` | [官方仓库](https://github.com/openclaw/openclaw) | 标准开源，`MIT`，更适合作为门户与应用层条件组件理解 |
 
 ## 3. Agent 框架与知识工程
 
@@ -172,6 +174,7 @@
 ## 参考资料
 
 - [Dify 官方仓库](https://github.com/langgenius/dify)
+- [OpenClaw 官方仓库](https://github.com/openclaw/openclaw)
 - [agentgateway 官方仓库](https://github.com/agentgateway/agentgateway)
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)

@@ -2,11 +2,12 @@
 
 > 定位：承接统一工作台、应用目录、会话入口和 BFF / API 编排边界。
 >
-> 当前承载组件：`AgentifUI`、门户 / `BFF` / API 层。
+> 当前承载组件：`AgentifUI`、`OpenClaw`（条件组件）、门户 / `BFF` / API 层。
 
 相关文档：
 
 - [AgentifUI](/components/agentifui)
+- [OpenClaw](/components/openclaw)
 - [方案综述](/guide/)
 - [组件](/components)
 - [Agent 编排层](/layers/agent-orchestration)
@@ -21,15 +22,17 @@
 
 - 提供企业统一 AI 工作台和应用目录。
 - 提供聊天、任务发起、结果查看、反馈回收等交互界面。
+- 在需要时承载成品化超级智能体产品形态和持续会话体验。
 - 通过 `BFF` 或 API 层聚合下游能力，向前端暴露稳定接口。
 - 承载应用级导航、用户上下文、会话入口和最小必要状态。
 
 ## 三、当前承载组件
 
 - [AgentifUI](/components/agentifui)
+- [OpenClaw](/components/openclaw)
 - 门户 / `BFF` / API 层
 
-当前方案在门户层保持收敛，只明确 `AgentifUI` 作为统一前台，不再额外引入新的正式门户组件。
+当前方案在门户层仍以 [AgentifUI](/components/agentifui) 作为默认统一前台；当需要一个自带多渠道、多端交互和成品化助手体验的旗舰智能体产品时，可条件引入 [OpenClaw](/components/openclaw)。
 
 ## 四、上下游关系
 
@@ -89,6 +92,7 @@
 
 - 如果把太多编排逻辑塞进 `BFF`，应用层会膨胀成不可维护的控制面。
 - 如果每个应用自带独立前门，平台统一工作台会失去意义。
+- 如果把成品超级智能体产品误当成通用门户层替代物，会导致应用目录、统一身份和控制面边界再次混乱。
 - 如果门户层直接依赖底层检索或模型接口，后续切换编排路线会非常困难。
 
 ## 十、关联文档
@@ -101,4 +105,5 @@
 ## 参考资料
 
 - [AgentifUI](https://agentifui.com/)
+- [OpenClaw](https://openclaw.ai/)
 - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)

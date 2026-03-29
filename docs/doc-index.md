@@ -38,6 +38,7 @@
 ### [3. 门户与应用层](/layers/portal-application)
 
 - [AgentifUI](/components/agentifui)
+- [OpenClaw](/components/openclaw)
 
 ### [4. Agent 编排层](/layers/agent-orchestration)
 
