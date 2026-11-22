@@ -24,15 +24,15 @@
     <path d="M274 550V582" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
 
     <rect x="120" y="582" width="308" height="188" rx="20" fill="#DBEAFE"/>
-    <text x="146" y="626" fill="#1E3A8A" font-size="28" font-weight="700">AgentifUI / OpenClaw</text>
-    <text x="152" y="656" fill="#1F2937" font-size="17">默认统一门户 / 条件超级智能体前台</text>
+    <text x="274" y="626" text-anchor="middle" fill="#1E3A8A" font-size="28" font-weight="700">AgentifUI</text>
+    <text x="152" y="656" fill="#1F2937" font-size="17">统一门户 / BFF / API 层</text>
     <text x="152" y="682" fill="#1F2937" font-size="17">应用目录、会话承接、北向 BFF</text>
     <text x="152" y="708" fill="#1F2937" font-size="17">反馈入口、运营后台、统一 API</text>
     <text x="152" y="736" fill="#475569" font-size="16">不直接承接核心编排，不绕过网关访问模型</text>
 
     <rect x="120" y="790" width="308" height="76" rx="18" fill="#E8F1FB"/>
-    <text x="150" y="826" fill="#475569" font-size="16">北向口径：APISIX 收口流量，第 3 层承接统一门户</text>
-    <text x="150" y="848" fill="#475569" font-size="16">或条件引入的超级智能体前台。</text>
+    <text x="142" y="826" fill="#475569" font-size="16">北向口径：APISIX 收口流量，第 3 层承接</text>
+    <text x="142" y="848" fill="#475569" font-size="16">统一门户、BFF 与业务 API 聚合。</text>
 
     <rect x="504" y="196" width="500" height="692" rx="28" fill="#FFF7ED" stroke="#F0D6B3" stroke-width="2"/>
     <text x="540" y="246" fill="#C2410C" font-size="30" font-weight="700">业务编排与知识执行面</text>
@@ -59,41 +59,42 @@
     <rect x="1044" y="196" width="552" height="692" rx="28" fill="#ECFDF5" stroke="#CAE7D6" stroke-width="2"/>
     <text x="1080" y="246" fill="#047857" font-size="30" font-weight="700">southbound 协议面与模型面</text>
 
-    <rect x="1080" y="278" width="224" height="148" rx="20" fill="#C8F2DA"/>
-    <text x="1146" y="322" fill="#065F46" font-size="30" font-weight="700">agentgateway</text>
-    <text x="1112" y="356" fill="#065F46" font-size="17">内部 AI 原生协议网关</text>
-    <text x="1112" y="382" fill="#065F46" font-size="17">MCP / A2A / OpenAPI 到 MCP</text>
-    <text x="1112" y="408" fill="#065F46" font-size="17">负责 southbound 接入与治理</text>
+    <rect x="1072" y="278" width="236" height="156" rx="20" fill="#C8F2DA"/>
+    <text x="1190" y="318" text-anchor="middle" fill="#065F46" font-size="25" font-weight="700">agentgateway</text>
+    <text x="1090" y="350" fill="#065F46" font-size="15">内部 AI 原生协议网关</text>
+    <text x="1090" y="376" fill="#065F46" font-size="14">MCP / A2A / OpenAPI 到 MCP</text>
+    <text x="1090" y="402" fill="#065F46" font-size="14.5">负责 southbound 接入与治理</text>
 
-    <rect x="1332" y="278" width="228" height="148" rx="20" fill="#DDF7E7"/>
-    <text x="1406" y="322" fill="#166534" font-size="30" font-weight="700">MCP / A2A</text>
-    <text x="1366" y="356" fill="#166534" font-size="17">工具、上下文、远程 Agent</text>
-    <text x="1366" y="382" fill="#166534" font-size="17">agent-to-tool / agent-to-agent 协议</text>
-    <path d="M1304 352H1332" stroke="#34D399" stroke-width="4" stroke-linecap="round"/>
+    <rect x="1332" y="278" width="236" height="156" rx="20" fill="#DDF7E7"/>
+    <text x="1450" y="318" text-anchor="middle" fill="#166534" font-size="25" font-weight="700">MCP / A2A</text>
+    <text x="1350" y="350" fill="#166534" font-size="15">工具、上下文、远程 Agent</text>
+    <text x="1350" y="376" fill="#166534" font-size="14.5">agent-to-tool /</text>
+    <text x="1350" y="400" fill="#166534" font-size="14.5">agent-to-agent 协议</text>
+    <path d="M1308 356H1332" stroke="#34D399" stroke-width="4" stroke-linecap="round"/>
 
-    <rect x="1080" y="468" width="224" height="148" rx="20" fill="#FEF3C7"/>
-    <text x="1160" y="514" fill="#92400E" font-size="30" font-weight="700">LiteLLM</text>
-    <text x="1108" y="548" fill="#78350F" font-size="17">唯一模型入口</text>
-    <text x="1108" y="574" fill="#78350F" font-size="17">统一路由、配额、成本、熔断</text>
+    <rect x="1072" y="468" width="236" height="148" rx="20" fill="#FEF3C7"/>
+    <text x="1190" y="512" text-anchor="middle" fill="#92400E" font-size="26" font-weight="700">LiteLLM</text>
+    <text x="1090" y="548" fill="#78350F" font-size="15">唯一模型入口</text>
+    <text x="1090" y="574" fill="#78350F" font-size="15">统一路由、配额、成本、熔断</text>
 
-    <rect x="1332" y="468" width="228" height="148" rx="20" fill="#FFFBEB"/>
-    <text x="1390" y="514" fill="#92400E" font-size="30" font-weight="700">vLLM + Qwen</text>
-    <text x="1366" y="548" fill="#78350F" font-size="17">推理执行、GPU 调度、模型池拆分</text>
-    <text x="1366" y="574" fill="#78350F" font-size="17">不直接面向上层业务系统暴露</text>
-    <path d="M1304 542H1332" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+    <rect x="1332" y="468" width="236" height="148" rx="20" fill="#FFFBEB"/>
+    <text x="1450" y="512" text-anchor="middle" fill="#92400E" font-size="25" font-weight="700">vLLM + Qwen</text>
+    <text x="1350" y="548" fill="#78350F" font-size="15">推理执行、GPU 调度、模型池拆分</text>
+    <text x="1350" y="574" fill="#78350F" font-size="15">不直接面向上层业务系统暴露</text>
+    <path d="M1308 542H1332" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
 
-    <rect x="1080" y="658" width="480" height="200" rx="20" fill="#F0FDF4"/>
-    <text x="1116" y="704" fill="#166534" font-size="24" font-weight="700">横向能力始终覆盖全部执行面</text>
-    <text x="1116" y="740" fill="#1F2937" font-size="18">数据治理与知识面</text>
-    <text x="1116" y="766" fill="#475569" font-size="16">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
-    <text x="1116" y="792" fill="#475569" font-size="16">Weaviate / Milvus / Elasticsearch</text>
-    <text x="1116" y="826" fill="#1F2937" font-size="18">治理与观测面</text>
-    <text x="1116" y="852" fill="#475569" font-size="16">Casbin / LangFuse / OpenTelemetry / Prometheus / Grafana / Loki / k6</text>
+    <rect x="1072" y="658" width="496" height="200" rx="20" fill="#F0FDF4"/>
+    <text x="1102" y="704" fill="#166534" font-size="24" font-weight="700">横向能力始终覆盖全部执行面</text>
+    <text x="1102" y="740" fill="#1F2937" font-size="18">数据治理与知识面</text>
+    <text x="1102" y="766" fill="#475569" font-size="15">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
+    <text x="1102" y="792" fill="#475569" font-size="15">Weaviate / Milvus / Elasticsearch</text>
+    <text x="1102" y="826" fill="#1F2937" font-size="18">治理与观测面</text>
+    <text x="1102" y="852" fill="#475569" font-size="13.5">Casbin / LangFuse / OpenTelemetry / Prometheus / Grafana / Loki / k6</text>
   </g>
 
   <path d="M464 482H504" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
   <path d="M1004 482H1044" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
 
   <rect x="84" y="918" width="1512" height="82" rx="22" fill="#111827"/>
-  <text x="110" y="964" fill="#F9FAFB" font-size="18" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI 负责默认门户与 BFF，OpenClaw 条件承接超级智能体前台，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
+  <text x="110" y="964" fill="#F9FAFB" font-size="18" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI 负责统一门户与 BFF，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
 </svg>

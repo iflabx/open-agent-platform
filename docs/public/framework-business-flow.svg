@@ -70,56 +70,63 @@
     <path d="M1034 345H1026" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
     <path d="M1034 549H1026" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
 
-    <rect x="1040" y="278" width="260" height="98" rx="18" fill="#F5F3FF"/>
-    <circle cx="1074" cy="327" r="18" fill="#7C3AED"/>
-    <text x="1068" y="334" fill="#FFFFFF" font-size="18" font-weight="700">7</text>
-    <text x="1108" y="318" fill="#1F2937" font-size="19" font-weight="600">agentgateway 处理 southbound</text>
-    <text x="1108" y="342" fill="#475569" font-size="16">MCP 工具、A2A 远程 Agent、OpenAPI 到 MCP</text>
+    <rect x="1028" y="278" width="232" height="104" rx="18" fill="#F5F3FF"/>
+    <circle cx="1054" cy="308" r="15" fill="#7C3AED"/>
+    <text x="1054" y="314" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="700">7</text>
+    <text x="1076" y="306" fill="#1F2937" font-size="15.5" font-weight="600">agentgateway 处理</text>
+    <text x="1076" y="326" fill="#1F2937" font-size="15.5" font-weight="600">southbound</text>
+    <text x="1042" y="350" fill="#475569" font-size="13">MCP 工具、A2A 远程 Agent、</text>
+    <text x="1042" y="368" fill="#475569" font-size="13">OpenAPI 到 MCP</text>
 
-    <rect x="1040" y="416" width="260" height="98" rx="18" fill="#F3E8FF"/>
-    <circle cx="1074" cy="465" r="18" fill="#7C3AED"/>
-    <text x="1068" y="472" fill="#FFFFFF" font-size="18" font-weight="700">8</text>
-    <text x="1108" y="456" fill="#1F2937" font-size="19" font-weight="600">进入治理后数据与检索链路</text>
-    <text x="1108" y="480" fill="#475569" font-size="16">权限过滤、向量检索、全文检索、重排</text>
+    <rect x="1028" y="416" width="232" height="104" rx="18" fill="#F3E8FF"/>
+    <circle cx="1054" cy="446" r="15" fill="#7C3AED"/>
+    <text x="1054" y="452" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="700">8</text>
+    <text x="1076" y="444" fill="#1F2937" font-size="15.5" font-weight="600">进入治理后数据与</text>
+    <text x="1076" y="464" fill="#1F2937" font-size="15.5" font-weight="600">检索链路</text>
+    <text x="1042" y="492" fill="#475569" font-size="13">权限过滤、向量检索、全文检索、重排</text>
 
-    <rect x="1040" y="554" width="260" height="98" rx="18" fill="#EDE9FE"/>
-    <circle cx="1074" cy="603" r="18" fill="#7C3AED"/>
-    <text x="1068" y="610" fill="#FFFFFF" font-size="18" font-weight="700">9</text>
-    <text x="1108" y="594" fill="#1F2937" font-size="19" font-weight="600">返回受控上下文</text>
-    <text x="1108" y="618" fill="#475569" font-size="16">检索结果和工具结果回给编排层</text>
-    <path d="M1300 465H1286" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
-    <path d="M1300 603H1286" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+    <rect x="1028" y="554" width="232" height="98" rx="18" fill="#EDE9FE"/>
+    <circle cx="1054" cy="586" r="15" fill="#7C3AED"/>
+    <text x="1054" y="592" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="700">9</text>
+    <text x="1076" y="592" fill="#1F2937" font-size="16" font-weight="600">返回受控上下文</text>
+    <text x="1042" y="624" fill="#475569" font-size="13.5">检索结果和工具结果回给编排层</text>
+    <path d="M1260 412H1272" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M1260 600H1272" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
 
-    <rect x="1298" y="352" width="208" height="112" rx="18" fill="#FFFBEB"/>
-    <circle cx="1332" cy="408" r="18" fill="#D97706"/>
-    <text x="1322" y="415" fill="#FFFFFF" font-size="18" font-weight="700">10</text>
-    <text x="1366" y="396" fill="#1F2937" font-size="19" font-weight="600">LiteLLM 统一模型入口</text>
-    <text x="1366" y="420" fill="#475569" font-size="16">路由到 vLLM / Qwen 模型池</text>
+    <rect x="1272" y="352" width="196" height="118" rx="18" fill="#FFFBEB"/>
+    <circle cx="1296" cy="382" r="15" fill="#D97706"/>
+    <text x="1296" y="388" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">10</text>
+    <text x="1318" y="380" fill="#1F2937" font-size="16" font-weight="600">LiteLLM</text>
+    <text x="1318" y="400" fill="#1F2937" font-size="16" font-weight="600">统一模型入口</text>
+    <text x="1286" y="428" fill="#475569" font-size="13.5">路由到 vLLM / Qwen</text>
+    <text x="1286" y="448" fill="#475569" font-size="13.5">模型池</text>
 
-    <rect x="1298" y="540" width="208" height="112" rx="18" fill="#FEF3C7"/>
-    <circle cx="1332" cy="596" r="18" fill="#D97706"/>
-    <text x="1322" y="603" fill="#FFFFFF" font-size="18" font-weight="700">11</text>
-    <text x="1366" y="584" fill="#1F2937" font-size="19" font-weight="600">生成结果与工具输出</text>
-    <text x="1366" y="608" fill="#475569" font-size="16">主模型、代码模型、安全模型按需协同</text>
+    <rect x="1272" y="540" width="196" height="118" rx="18" fill="#FEF3C7"/>
+    <circle cx="1296" cy="570" r="15" fill="#D97706"/>
+    <text x="1296" y="576" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">11</text>
+    <text x="1318" y="568" fill="#1F2937" font-size="16" font-weight="600">生成结果与</text>
+    <text x="1318" y="588" fill="#1F2937" font-size="16" font-weight="600">工具输出</text>
+    <text x="1286" y="616" fill="#475569" font-size="13.5">主模型、代码模型、</text>
+    <text x="1286" y="636" fill="#475569" font-size="13.5">安全模型按需协同</text>
 
-    <rect x="1460" y="330" width="156" height="344" rx="20" fill="#F8FAFC"/>
-    <circle cx="1494" cy="390" r="18" fill="#475569"/>
-    <text x="1484" y="397" fill="#FFFFFF" font-size="18" font-weight="700">12</text>
-    <text x="1524" y="386" fill="#1F2937" font-size="18" font-weight="600">全链路审计</text>
-    <text x="1524" y="410" fill="#475569" font-size="15">LangFuse / OTel</text>
-    <circle cx="1494" cy="500" r="18" fill="#475569"/>
-    <text x="1484" y="507" fill="#FFFFFF" font-size="18" font-weight="700">13</text>
-    <text x="1524" y="496" fill="#1F2937" font-size="18" font-weight="600">策略审查</text>
-    <text x="1524" y="520" fill="#475569" font-size="15">Qwen3Guard / Casbin</text>
-    <circle cx="1494" cy="610" r="18" fill="#475569"/>
-    <text x="1484" y="617" fill="#FFFFFF" font-size="18" font-weight="700">14</text>
-    <text x="1524" y="606" fill="#1F2937" font-size="18" font-weight="600">回传与留痕</text>
-    <text x="1524" y="630" fill="#475569" font-size="15">反馈、人工接管、回放</text>
+    <rect x="1480" y="330" width="156" height="344" rx="20" fill="#F8FAFC"/>
+    <circle cx="1504" cy="382" r="15" fill="#475569"/>
+    <text x="1504" y="388" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">12</text>
+    <text x="1526" y="388" fill="#1F2937" font-size="16" font-weight="600">全链路审计</text>
+    <text x="1494" y="416" fill="#475569" font-size="14">LangFuse / OTel</text>
+    <circle cx="1504" cy="492" r="15" fill="#475569"/>
+    <text x="1504" y="498" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">13</text>
+    <text x="1526" y="498" fill="#1F2937" font-size="16" font-weight="600">策略审查</text>
+    <text x="1494" y="526" fill="#475569" font-size="13.5">Qwen3Guard / Casbin</text>
+    <circle cx="1504" cy="602" r="15" fill="#475569"/>
+    <text x="1504" y="608" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">14</text>
+    <text x="1526" y="608" fill="#1F2937" font-size="16" font-weight="600">回传与留痕</text>
+    <text x="1494" y="636" fill="#475569" font-size="13.5">反馈、人工接管、回放</text>
 
-    <path d="M1506 596H1120C1060 596 1012 644 1012 704V760C1012 814 968 858 914 858H624" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M624 858H208" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
-    <polygon points="214,848 184,858 214,868" fill="#94A3B8"/>
-    <rect x="536" y="820" width="540" height="70" rx="22" fill="#111827"/>
-    <text x="560" y="864" fill="#F9FAFB" font-size="20">结果回到前台，支持引用展示、反馈提交、人工接管和全链路追溯。</text>
+    <path d="M1558 674V790C1558 825 1530 854 1494 854H1220" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M460 854H208" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="214,844 184,854 214,864" fill="#94A3B8"/>
+    <rect x="460" y="820" width="760" height="68" rx="22" fill="#111827"/>
+    <text x="840" y="861" text-anchor="middle" fill="#F9FAFB" font-size="19">结果回到前台，支持引用展示、反馈提交、人工接管和全链路追溯。</text>
   </g>
 </svg>

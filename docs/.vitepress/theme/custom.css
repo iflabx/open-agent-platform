@@ -382,7 +382,9 @@ body {
 }
 
 .docs-pill-row a,
-.docs-home-panel-actions a {
+.docs-home-panel-actions a,
+.vp-doc .docs-pill-row a,
+.vp-doc .docs-home-panel-actions a {
   display: inline-flex;
   align-items: center;
   min-height: 2.5rem;
@@ -391,21 +393,43 @@ body {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
   color: var(--vp-c-text-1);
+  font-weight: 500;
   text-decoration: none;
-  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dark .docs-pill-row a,
-.dark .docs-home-panel-actions a {
+.dark .docs-home-panel-actions a,
+.dark .vp-doc .docs-pill-row a,
+.dark .vp-doc .docs-home-panel-actions a {
   background: rgba(31, 31, 31, 0.9);
+  color: var(--vp-c-text-1);
 }
 
 .docs-pill-row a:hover,
 .docs-home-panel-actions a:hover,
 .docs-card:hover,
-.docs-step-card:hover {
+.docs-step-card:hover,
+.vp-doc .docs-pill-row a:hover,
+.vp-doc .docs-home-panel-actions a:hover,
+.vp-doc a.docs-card:hover,
+.vp-doc a.docs-step-card:hover {
   border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-text-1);
+  text-decoration: none;
   transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark .docs-pill-row a:hover,
+.dark .docs-home-panel-actions a:hover,
+.dark .docs-card:hover,
+.dark .docs-step-card:hover,
+.dark .vp-doc .docs-pill-row a:hover,
+.dark .vp-doc .docs-home-panel-actions a:hover,
+.dark .vp-doc a.docs-card:hover,
+.dark .vp-doc a.docs-step-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
 .docs-home-panel {
@@ -470,20 +494,26 @@ body {
 }
 
 .docs-card,
-.docs-step-card {
+.docs-step-card,
+.vp-doc a.docs-card,
+.vp-doc a.docs-step-card {
   display: block;
   padding: 20px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.92);
-  color: inherit;
+  color: var(--vp-c-text-1);
+  font-weight: 400;
   text-decoration: none;
-  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dark .docs-card,
-.dark .docs-step-card {
+.dark .docs-step-card,
+.dark .vp-doc a.docs-card,
+.dark .vp-doc a.docs-step-card {
   background: rgba(31, 31, 31, 0.92);
+  color: var(--vp-c-text-1);
 }
 
 .docs-card span,

@@ -39,10 +39,10 @@
 
     <rect x="804" y="286" width="372" height="202" rx="24" fill="#FFF7ED"/>
     <text x="838" y="334" fill="#C2410C" font-size="28" font-weight="700">平台服务区</text>
-    <text x="838" y="370" fill="#1F2937" font-size="17">AgentifUI / OpenClaw / Portal BFF</text>
+    <text x="838" y="370" fill="#1F2937" font-size="18">AgentifUI / 门户 BFF / 统一 API</text>
     <text x="838" y="396" fill="#1F2937" font-size="18">Dify / RAGFlow / Coze Studio</text>
     <text x="838" y="422" fill="#1F2937" font-size="18">LangGraph / LangChain / LlamaIndex</text>
-    <text x="838" y="450" fill="#475569" font-size="16">默认统一门户，条件成品化超级智能体前台</text>
+    <text x="838" y="450" fill="#475569" font-size="16">统一门户、门户 BFF 与业务 API 聚合</text>
     <text x="838" y="474" fill="#475569" font-size="16">业务编排、运营治理和前台会话集中区</text>
 
     <rect x="1218" y="286" width="342" height="202" rx="24" fill="#FFFBEB"/>
@@ -59,11 +59,12 @@
     <text x="444" y="694" fill="#475569" font-size="17">检索底座按规模演进，不默认长期全量并行</text>
 
     <rect x="804" y="530" width="372" height="212" rx="24" fill="#F5F3FF"/>
-    <text x="838" y="578" fill="#6D28D9" font-size="28" font-weight="700">数据治理与协议区</text>
-    <text x="838" y="616" fill="#1F2937" font-size="18">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
-    <text x="838" y="642" fill="#1F2937" font-size="18">agentgateway / MCP Server / A2A Client-Server</text>
-    <text x="838" y="668" fill="#475569" font-size="17">离线治理链路与 southbound 协议能力分区</text>
-    <text x="838" y="694" fill="#475569" font-size="17">避免治理任务与在线推理链路争抢资源</text>
+    <text x="828" y="574" fill="#6D28D9" font-size="28" font-weight="700">数据治理与协议区</text>
+    <text x="828" y="608" fill="#1F2937" font-size="15.5">OpenMetadata / SeaTunnel / dbt Core</text>
+    <text x="828" y="630" fill="#1F2937" font-size="15.5">Apache Tika / agentgateway</text>
+    <text x="828" y="652" fill="#1F2937" font-size="15.5">MCP Server / A2A Client-Server</text>
+    <text x="828" y="684" fill="#475569" font-size="15.5">离线治理链路与 southbound 协议能力分区</text>
+    <text x="828" y="708" fill="#475569" font-size="15.5">避免治理任务与在线推理链路争抢资源</text>
 
     <rect x="1218" y="530" width="342" height="212" rx="24" fill="#F8FAFC"/>
     <text x="1252" y="578" fill="#334155" font-size="28" font-weight="700">观测区</text>
