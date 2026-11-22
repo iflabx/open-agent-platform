@@ -23,7 +23,7 @@
 
 ## 与其他组件关系
 
-- **与 [MinIO](/components/minio) 配合**：从 `MinIO` 读取知识源文件与用户上传附件，并将解析生成的结构化 Markdown / JSON 及中间产物回写留存。
+- **与 [SeaweedFS](/components/seaweedfs) 配合**：从 `SeaweedFS`（或企业既有 S3 兼容对象存储）读取知识源文件与用户上传附件，并将解析生成的结构化 Markdown / JSON 及中间产物回写留存。
 - **与 [SeaTunnel](/components/seatunnel) 互补**：`SeaTunnel` 负责多源文档与对象数据的批量、增量同步采集，`Docling` 负责对入湖后的非结构化文件执行版面感知解析。
 - **与 [OpenMetadata](/components/openmetadata) 协同**：将文档来源、解析版本、结构化产物路径与质量状态纳入统一元数据目录与血缘体系。
 - **与 [Apache Tika](/components/apache-tika) 分工协作**：`Docling` 承担默认结构化文档解析；当面对老旧格式、生僻文件类型或需要前置 MIME 类型嗅探与路由时，由 `Apache Tika` 作为条件引入的兼容辅助层配合处理。
@@ -64,7 +64,7 @@
 - [数据治理层（企业 AI 数据底座）](/data-governance)
 - [Apache Tika](/components/apache-tika)
 - [OpenMetadata](/components/openmetadata)
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)
 - [6. 知识与检索层](/layers/knowledge-retrieval)
 
 ## 参考资料

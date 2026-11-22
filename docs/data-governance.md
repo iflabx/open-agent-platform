@@ -4,7 +4,7 @@
 数据治理层位于企业原始业务系统与 AI 消费层之间，负责将结构化、非结构化与半结构化数据转化为**可治理、可授权、可复用、可追溯**的 AI 可消费数据服务。
 
 - **治理前置**：数据须先经登记、分层清洗、元数据建档与权限打标，再进入知识索引与 Agent 消费。
-- **统一底座**：核心组合收敛为 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）、`MinIO`、`PostgreSQL`、`LlamaIndex` 与 `Weaviate`（`Milvus` 与 `Elasticsearch` 按条件演进兼容）。
+- **统一底座**：核心组合收敛为 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）、`SeaweedFS`（默认自建 S3 兼容对象存储，轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、`PostgreSQL`、`LlamaIndex` 与 `Weaviate`（`Milvus` 与 `Elasticsearch` 按条件演进兼容）。
 - **关联阅读**：[总体架构](/architecture) · [技术选型](/stack) · [组件](/components) · [安全与治理](/governance) · [企业智能体能力与规范体系](/capability-framework)
 :::
 
@@ -85,7 +85,7 @@
 - 同步频率按业务 SLA 可配置
 - 不同源系统遵循统一接入契约
 
-方案落点：`SeaTunnel`、`MinIO`。
+方案落点：`SeaTunnel`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）。
 
 ### 3. 分层存放与标准化
 
@@ -97,7 +97,7 @@
 
 分层治理的核心价值在于支持全链路回溯、索引重建、治理前后差异比对，以及合规审计与质量追踪。
 
-方案落点：原始文件与对象数据由 `MinIO` 承接；治理中间结果与元数据配置由 `PostgreSQL` 承接。
+方案落点：原始文件与对象数据优先复用企业现有 S3 兼容对象存储，自建默认由 `SeaweedFS`（`Apache-2.0`，轻量替代 `RustFS`）承接；治理中间结果与元数据配置由 `PostgreSQL` 承接。
 
 ### 4. 解析、清洗与结构化处理
 
@@ -222,7 +222,7 @@ AI 平台不得仅在检索阶段临时判断权限，权限标签须在数据�
 - `SeaTunnel`
 - `dbt Core`
 - `Docling`
-- `MinIO`
+- `SeaweedFS`（默认自建 S3 兼容对象存储，优先复用企业现有 S3 对象存储；轻量替代 `RustFS`）
 - `PostgreSQL`
 - `LlamaIndex`
 - `Weaviate`

@@ -35,16 +35,14 @@
     <rect x="84" y="544" width="1432" height="138" rx="24" fill="#FDF2F8"/>
     <rect x="104" y="586" width="246" height="54" rx="16" fill="#F8CFE1"/>
     <text x="130" y="622" fill="#BE185D" font-size="28" font-weight="700">4. Agent 编排层</text>
-    <rect x="390" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="648" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="906" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="390" y="624" width="240" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="648" y="624" width="240" height="46" rx="14" fill="#FCE0EC"/>
-    <text x="510" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Dify / RAGFlow</text>
-    <text x="768" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LangGraph</text>
-    <text x="1026" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LangChain</text>
-    <text x="510" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LlamaIndex</text>
-    <text x="768" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Letta</text>
+    <rect x="390" y="566" width="366" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="780" y="566" width="366" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="390" y="624" width="366" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="780" y="624" width="366" height="46" rx="14" fill="#FCE0EC"/>
+    <text x="573" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Dify / RAGFlow</text>
+    <text x="963" y="596" text-anchor="middle" fill="#9D174D" font-size="17" font-weight="600">LangGraph（可选 LangChain 组件）</text>
+    <text x="573" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LlamaIndex</text>
+    <text x="963" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Mem0</text>
     <text x="1184" y="591" fill="#1F2937" font-size="19">标准平台交付</text>
     <text x="1184" y="617" fill="#1F2937" font-size="19">复杂流程与自研 Agent Runtime</text>
     <text x="1184" y="643" fill="#475569" font-size="17">长期记忆与知识工程按需接入</text>
@@ -80,7 +78,7 @@
     <rect x="84" y="1190" width="1432" height="50" rx="24" fill="#111827"/>
     <rect x="110" y="1200" width="206" height="30" rx="15" fill="#1F2937"/>
     <text x="132" y="1221" fill="#F9FAFB" font-size="18" font-weight="600">9. 基础设施层</text>
-    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / agent-sandbox / PostgreSQL / Redis / MinIO / GPU 节点 / 企业 SSO / KMS</text>
+    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / agent-sandbox / PostgreSQL / Redis / SeaweedFS / GPU 节点 / 企业 SSO / KMS</text>
   </g>
 
   <path d="M800 284V304" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>

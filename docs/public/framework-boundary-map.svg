@@ -42,9 +42,9 @@
     <text x="580" y="366" fill="#7C2D12" font-size="17">标准场景主平台中枢，承担业务交付主路径</text>
 
     <rect x="540" y="434" width="428" height="124" rx="20" fill="#FCE6C9"/>
-    <text x="652" y="478" fill="#9A3412" font-size="28" font-weight="700">LangGraph / LangChain</text>
+    <text x="754" y="478" text-anchor="middle" fill="#9A3412" font-size="28" font-weight="700">LangGraph</text>
     <text x="580" y="510" fill="#7C2D12" font-size="17">复杂业务、自研 Agent Runtime、状态控制</text>
-    <text x="580" y="536" fill="#7C2D12" font-size="17">工程化编排与长时运行能力</text>
+    <text x="580" y="536" fill="#7C2D12" font-size="16">工程化编排与长时运行（按需搭配 LangChain 组件）</text>
 
     <rect x="540" y="590" width="428" height="124" rx="20" fill="#FCEDE0"/>
     <text x="698" y="634" fill="#9A3412" font-size="28" font-weight="700">LlamaIndex</text>

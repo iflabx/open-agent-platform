@@ -25,7 +25,7 @@
 
 - **运行在 [K3s](/components/k3s) / Kubernetes 底座之上**：通过独立 `RuntimeClass`（如 `gvisor`、`kata`）接入集群容器运行时，不改变核心业务工作负载的默认调度路径。
 - **服务于 [4. Agent 编排层](/layers/agent-orchestration) 与受控工具链路**：由 [Dify](/components/dify)、[LangGraph](/components/langgraph) 或经由 [agentgateway](/components/agentgateway) 授权的 MCP 工具服务按需拉起沙箱实例，禁止在编排引擎主进程或共享业务容器中直接执行模型生成代码。
-- **与 [MinIO](/components/minio) 配合交换产物**：通过受限临时凭证或单次预签名方式交换输入文件与执行产物，避免将共享存储直挂沙箱。
+- **与 [SeaweedFS](/components/seaweedfs) 配合交换产物**：通过受限临时凭证或单次预签名方式与 `SeaweedFS`（或企业既有 S3 兼容对象存储）交换输入文件与执行产物，避免将共享存储直挂沙箱。
 - **与 [8. 治理与观测层](/layers/governance-observability) 联动**：将沙箱创建、命令执行、网络拦截与资源超限事件纳入 `OpenTelemetry`、`Loki` 与统一安全审计链路。
 - **与 [OpenClaw](/components/openclaw) 互补**：`OpenClaw` 作为面向个人 / 团队的独立沙箱扩展形态运行，而 `Agent Sandbox` 为平台内各类 Agent 与工具调用提供统一的底层执行隔离基础设施。
 
@@ -39,7 +39,7 @@
 ## 边界
 
 - **不替代上层权限裁决与工具网关**：沙箱解决“执行爆炸半径隔离”，不替代 [Casbin](/components/casbin) 的权限决策与 [agentgateway](/components/agentgateway) 的南向工具治理。
-- **不承载核心持久化状态服务**：不用于运行 [PostgreSQL](/components/postgresql)、[Redis](/components/redis)、[MinIO](/components/minio) 或主平台控制面组件。
+- **不承载核心持久化状态服务**：不用于运行 [PostgreSQL](/components/postgresql)、[Redis](/components/redis)、[SeaweedFS](/components/seaweedfs) 或主平台控制面组件。
 - **不替代主机安全与镜像供应链治理**：仍需配合最小化只读根文件系统、非 root 运行与内部可信镜像仓库基线。
 
 ## 采用规则

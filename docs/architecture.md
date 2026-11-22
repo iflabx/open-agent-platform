@@ -28,12 +28,12 @@
 | 1. 用户与渠道层 | 承接员工、运营、业务系统和外部渠道请求 | Web 门户、管理后台、企业 IM、工单系统、邮件、Webhook | 不直接承载模型调用和权限裁决 |
 | 2. 统一接入与流量治理层 | 北向统一入口、认证接入、路由、限流、灰度、审计前置，以及 AI 原生协议南向（Southbound）接入治理 | `APISIX` + `agentgateway` + 企业现有 `SSO / IAM` | 不替代模型网关，不替代细粒度授权 |
 | 3. 门户与应用层 | 负责工作台、BFF、会话上下文和应用入口 | `AgentifUI` + 门户 / BFF / API 层 | 不持有底层检索索引和策略引擎逻辑 |
-| 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify` 或 `RAGFlow` 二选一；复杂流程由 `LangGraph` 承接；通用工程编排采用 `LangChain`；长期记忆场景按需使用 `Letta` | 不绕过治理直接访问原始数据源 |
+| 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify` 或 `RAGFlow` 二选一；复杂流程核心生产级 Runtime 由 `LangGraph` 承接（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包）；跨会话长期记忆按需引入 `Mem0` | 不绕过治理直接访问原始数据源 |
 | 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容） | 不直接承担终端交互 |
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
 | 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
-| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO`、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
+| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 

@@ -45,8 +45,8 @@
     <text x="122" y="658" fill="#64748B" font-size="18">24-32 vCPU / 128-256 GiB / 2-4 TiB NVMe each</text>
     <rect x="122" y="698" width="260" height="126" rx="22" fill="#DBEAFE"/>
     <rect x="402" y="698" width="260" height="126" rx="22" fill="#DBEAFE"/>
-    <text x="212" y="742" fill="#1E3A8A" font-size="22" font-weight="700">D1 State</text>
-    <text x="162" y="774" fill="#1E3A8A" font-size="16">PostgreSQL / Redis / MinIO</text>
+    <text x="252" y="742" text-anchor="middle" fill="#1E3A8A" font-size="22" font-weight="700">D1 State</text>
+    <text x="252" y="774" text-anchor="middle" fill="#1E3A8A" font-size="15">PostgreSQL / Redis / SeaweedFS</text>
     <text x="484" y="742" fill="#1E3A8A" font-size="22" font-weight="700">D2 Retrieval</text>
     <text x="430" y="774" fill="#1E3A8A" font-size="16">Weaviate / Milvus / Elasticsearch</text>
 

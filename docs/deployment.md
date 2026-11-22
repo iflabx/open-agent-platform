@@ -9,7 +9,7 @@
 | 档位 | 核心目标 | 最小组件组合（默认基线） | 模型策略 | 推荐服务器数 | 适合阶段 |
 | --- | --- | --- | --- | --- | --- |
 | 1 台最小验证版 | 验证门户与主平台路线可用性 | `AgentifUI` + `Dify` | 调用外部 `OpenAI 兼容 API` | 1 | 首轮 PoC、内测 |
-| 2–3 台小团队试点版 | 将应用层、数据层与模型层初步解耦 | `APISIX` + `AgentifUI` + `Dify` + `PostgreSQL` + `Redis` + `MinIO` + `Weaviate` | 2 台时使用外部模型；3 台时可增加 `LiteLLM` + `vLLM` + `Qwen` | 2–3 | 小团队试点 |
+| 2–3 台小团队试点版 | 将应用层、数据层与模型层初步解耦 | `APISIX` + `AgentifUI` + `Dify` + `PostgreSQL` + `Redis` + `SeaweedFS` + `Weaviate` | 2 台时使用外部模型；3 台时可增加 `LiteLLM` + `vLLM` + `Qwen` | 2–3 | 小团队试点 |
 | 5 台生产基线版 | 满足部门级生产治理要求的最小组合 | `APISIX` + `AgentifUI` + `Dify` + `LiteLLM` + `vLLM` + `Qwen` + `LlamaIndex` + `Casbin` + `LangFuse` + 平台观测栈 | 默认自托管模型 | 5 | 部门级推广 |
 | 7–8 台完整功能版 | 补齐数据治理和完整平台能力 | 在 5 台版基础上增加 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容） | 自托管模型，拆出检索、数据治理、观测单元；多步 Agent / 代码负载可按需评估 `SGLang` | 7–8 | 多部门共用平台 |
 | 10–12+ 台完整高可用版 | 进入企业级正式生产与故障隔离 | 在 7–8 台版基础上对无状态、数据、GPU 单元分别实施双活或高可用，按需增设独立 Agent 沙箱节点池 | 自托管模型，多 GPU 节点（`vLLM` 通用池 + `SGLang` 多步 Agent / 代码池，大规模演进 PD 分离） | 10–12+ | 企业级正式生产 |
@@ -49,7 +49,7 @@
 - 默认以 `x86_64 Linux` 私有化部署为口径；若使用云托管数据库、对象存储或 GPU 池，服务器数量可相应下降，但部署单元不会消失。
 - 以下分级以 `AgentifUI` + `Dify` 作为默认起步路线展开；若主平台路线调整为 `RAGFlow`，服务器数量通常不变，但知识解析与检索链路的资源瓶颈位置会有所差异。
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
-- 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`MinIO`、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` 或观测节点，不改变各档位服务器数量基线。
+- 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS`（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` 或观测节点，不改变各档位服务器数量基线。
 - 若业务场景涉及 AI 生成代码、不可信脚本或高敏文件处理工具执行，须独立规划第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 专属节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping），严禁与控制面或核心有状态服务混布。
 
 ### 1. 1 台：最小验证版
@@ -88,10 +88,10 @@
 
 - **2 台变体**（继续使用外部模型 API 的团队）：
   - 应用节点：`APISIX` + `AgentifUI` + `Dify`
-  - 数据节点：`PostgreSQL` + `Redis` + `MinIO` + `Weaviate`
+  - 数据节点：`PostgreSQL` + `Redis` + `SeaweedFS` + `Weaviate`
 - **3 台变体**（开始自托管模型的团队）：
   - 应用节点：`APISIX` + `AgentifUI` + `Dify` + `LiteLLM`
-  - 数据节点：`PostgreSQL` + `Redis` + `MinIO` + `Weaviate`
+  - 数据节点：`PostgreSQL` + `Redis` + `SeaweedFS` + `Weaviate`
   - GPU 节点：`vLLM` + `Qwen`
 - **工程建议硬件**：
   - 应用节点：`16 vCPU / 32 GiB / 500 GiB NVMe`
@@ -102,7 +102,7 @@
   - 具备真实知识库和权限边界，仍以单部门为主
   - 可开始推进 `staging` 环境和灰度验证，但尚未达到高可用要求
 
-说明：`Weaviate` 官方建议小于 1M 对象的项目无需单独做复杂资源规划，但 CPU 和内存仍是核心资源；因此本档位默认将 `Weaviate` 与 `PostgreSQL` / `Redis` / `MinIO` 独立部署至数据节点，不再与应用层混部。
+说明：`Weaviate` 官方建议小于 1M 对象的项目无需单独做复杂资源规划，但 CPU 和内存仍是核心资源；因此本档位默认将 `Weaviate` 与 `PostgreSQL` / `Redis` / `SeaweedFS` 独立部署至数据节点，不再与应用层混部。
 
 ### 3. 5 台：生产基线版
 
@@ -117,10 +117,10 @@
   - 模型链路：`LiteLLM` + `vLLM` + `Qwen`
   - 知识链路：`LlamaIndex` + `Weaviate`
   - 治理与观测：`Casbin` + `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki`
-  - 有状态底座：`PostgreSQL` + `Redis` + `MinIO`
+  - 有状态底座：`PostgreSQL` + `Redis` + `SeaweedFS`（默认自建 `S3` 兼容对象存储，`Apache-2.0`；轻量即插替代可选 `RustFS`，有企业既有 `S3` 兼容对象存储时优先复用）
 - **推荐部署单元**：
   - 3 台 `K3s` 节点：承载 `APISIX`、`AgentifUI`、`Dify`、`LiteLLM`、`LlamaIndex`、`Casbin`、`LangFuse`、平台观测服务
-  - 1 台数据节点：承载 `PostgreSQL` + `Redis` + `MinIO` + `Weaviate`
+  - 1 台数据节点：承载 `PostgreSQL` + `Redis` + `SeaweedFS` + `Weaviate`
   - 1 台 GPU 节点：承载 `vLLM` + `Qwen`
 - **工程建议硬件**：
   - 每台 `K3s` 节点：`8-16 vCPU / 32 GiB / 300-500 GiB SSD`
@@ -144,7 +144,7 @@
 - **在 5 台基线版上新增**：
   - 数据治理层：`OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）
   - 更独立的检索与观测部署单元
-  - 按需引入 `LangGraph` 处理复杂流程、人工介入和长链路恢复
+  - 按需引入核心生产 Agent Runtime `LangGraph`（依托 `PostgreSQL` Checkpointer 持久化状态，按需配合 `LangChain` 生态连接器及 `Mem0` 可插拔长期记忆层）处理复杂流程、人工介入和长链路恢复
 - **推荐部署单元**：
   - 3 台 `K3s` 节点：承载网关、门户、主平台、复杂运行时和控制面服务
   - 1 台应用扩展节点：承载高流量门户 / BFF / 编排扩展实例
@@ -212,7 +212,7 @@
 ### 应用与编排层
 
 - 主平台路线负责标准场景。
-- `LangGraph` 负责复杂状态机、人工介入和长链路恢复。
+- `LangGraph` 作为核心生产 Agent Runtime，负责复杂状态机、人工介入和基于 `PostgreSQL` Checkpointer 的长链路恢复；`LangChain` 收敛为 `LangGraph` 下的条件生态工具库与连接器；跨会话长期记忆按需条件引入 `Mem0`（`Apache-2.0`）。
 - 由 `AgentifUI` + 门户 / BFF 负责用户上下文、会话和应用聚合。
 
 ### 知识与数据层
@@ -235,13 +235,13 @@
 | 入口单元 | `APISIX` | 统一承接北向流量和入口治理 |
 | 门户单元 | `AgentifUI` + 门户 / BFF | 统一承接企业共享门户、应用目录、会话上下文与 BFF 聚合 |
 | 主平台单元 | `Dify` / `RAGFlow` | 标准场景二选一，仅保留一条主平台路线 |
-| 复杂运行时单元 | `LangGraph` + `LangChain` | 负责长链路流程、状态机和复杂工具编排 |
+| 复杂运行时单元 | `LangGraph`（核心生产 Agent Runtime），条件配合 `LangChain`（生态连接器）与 `Mem0`（可插拔长期记忆层） | 负责长链路流程、状态机、基于 `PostgreSQL` Checkpointer 的状态恢复与可选跨会话长期记忆 |
 | 数据治理单元 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（条件兼容 `Apache Tika`） | 负责采集、版面解析、清洗、元数据和资产发布 |
 | 知识检索单元 | `LlamaIndex` + `Weaviate` | 负责索引编排、召回、重排和引用 |
 | 模型服务单元 | `LiteLLM` + `vLLM` / `SGLang` + `Qwen` | 负责模型路由与推理执行；`vLLM` 为通用默认引擎，`SGLang` 面向多步 Agent 与代码负载按需分池部署 |
-| 治理观测单元 | `Casbin`、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`LangSet` 直接复用既有 `PostgreSQL`、`MinIO`、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不新增数据库或存储引擎 |
+| 治理观测单元 | `Casbin`、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS`（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不新增数据库或存储引擎 |
 | Agent 执行沙箱单元 | [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离） | 专属沙箱隔离节点池，承接 AI 生成代码、不可信脚本与高敏工具的瞬时强隔离执行，落实默认拒绝出向白名单与凭据剥离 |
-| 基础设施单元 | `K3s`、`PostgreSQL`、`Redis`、`MinIO` | 负责运行底座和持久化能力 |
+| 基础设施单元 | `K3s`、`PostgreSQL`、`Redis`、`SeaweedFS`（轻量替代 `RustFS` / 优先复用企业既有 `S3` 兼容对象存储） | 负责运行底座和持久化能力 |
 
 ## 有状态组件与持久化
 
@@ -249,7 +249,7 @@
 | --- | --- | --- |
 | `PostgreSQL` | 平台配置、业务状态、审计元数据 | 必须配备持久卷、定期备份与恢复演练 |
 | `Redis` | 会话缓存、任务状态、短期上下文 | 明确持久化策略与失效策略 |
-| `MinIO` | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略 |
+| `SeaweedFS`（轻量替代 `RustFS` / 优先复用企业既有 `S3` 兼容对象存储） | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略 |
 | `Weaviate` / `Milvus` | 向量索引与检索状态 | 与知识发布节奏联动，避免无序重建 |
 | `Elasticsearch` | 全文 / 混合检索索引 | 保留索引治理与容量水位监控 |
 | 观测存储 | 指标、日志、追踪、评测数据 | 明确留存周期、冷热分层与清理机制 |

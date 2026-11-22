@@ -44,8 +44,8 @@
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
 - [LangGraph](/components/langgraph)
-- [LangChain](/components/langchain)
-- [Letta](/components/letta)
+- [LangChain](/components/langchain)（条件生态连接器工具包）
+- [Mem0](/components/mem0)（条件可插拔长期记忆层）
 
 ### [5. 数据治理层](/layers/data-governance-layer)
 
@@ -84,7 +84,7 @@
 
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)
 - [K3s](/components/k3s)
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 

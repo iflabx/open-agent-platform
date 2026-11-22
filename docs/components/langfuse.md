@@ -23,7 +23,7 @@
 
 ## 与其他组件关系
 
-- 与 [Dify](/components/dify)、[LangGraph](/components/langgraph)、[LangChain](/components/langchain) 等编排能力配合采集链路信息。
+- 与 [Dify](/components/dify)、[RAGFlow](/components/ragflow)、[LangGraph](/components/langgraph)（及按需引入的 [LangChain](/components/langchain) 生态连接器或原生 SDK）等编排与调用链路配合采集追踪信息。
 - 与 [LangSet](/components/langset) 形成上下游互补：`LangSet` 负责测试数据集工程、版本化管理与离线回归评测，并与 `LangFuse` 进行数据集双向同步及评分、评语回拉；`LangFuse` 负责在线生产 Trace、Prompt 与 LLM 链路观测。
 - 与 [LiteLLM](/components/litellm) 和模型层联动，记录模型调用、成本和结果质量。
 - 与 [Prometheus](/components/prometheus)、[Grafana](/components/grafana)、[Loki](/components/loki) 互补，不替代基础设施级观测。

@@ -10,7 +10,7 @@
 
 ## 当前定位
 
-`LangSet` 是面向团队协作的可追溯、可版本化测试数据集工程与 Agent 离线评测工作台，用于将多源原始素材加工为带血缘溯源的不可变评测数据集，并执行离线回归评测与评分闭环。其运行时采用 React + Fastify + Ordinary / Model Worker 架构，直接复用平台既有的 `PostgreSQL` 与 `MinIO`，不引入新的数据库类型。
+`LangSet` 是面向团队协作的可追溯、可版本化测试数据集工程与 Agent 离线评测工作台，用于将多源原始素材加工为带血缘溯源的不可变评测数据集，并执行离线回归评测与评分闭环。其运行时采用 React + Fastify + Ordinary / Model Worker 架构，直接复用平台既有的 `PostgreSQL` 与 S3 兼容对象存储（默认 [SeaweedFS](/components/seaweedfs) 或企业既有 S3 兼容对象存储），不引入新的数据库类型。
 
 ## 主要职责
 
@@ -26,7 +26,7 @@
 - 与 [LangFuse](/components/langfuse) 形成上下游互补：`LangSet` 承担上游测试数据集工程、版本固化与离线回归评测，并与 `LangFuse` 进行数据集双向同步及评分、评语回拉；`LangFuse` 承担在线生产 Trace、Prompt 与 LLM 链路观测。
 - 与 [Dify](/components/dify) 编排层直接联动：支持面向 `Dify` Chat / Chatflow 的单轮与多轮离线评测；若企业主平台路线采用 [RAGFlow](/components/ragflow) 或自研 [LangGraph](/components/langgraph)，则使用 `LangSet` 完成版本化测试数据集工程，并通过 `LangFuse` 数据集进行同步或导出对接。
 - 与 [LiteLLM](/components/litellm) 模型网关联动：候选样本加工、离线评测及项目助手的模型调用均须经由 `LiteLLM`（`OpenAI 兼容 API`）统一路由，不直连底层推理节点或外部模型服务。
-- 与 [PostgreSQL](/components/postgresql)、[MinIO](/components/minio) 复用底座：直接复用平台基础设施层的关系型数据库与对象存储，保持数据底座收敛。
+- 与 [PostgreSQL](/components/postgresql)、[SeaweedFS](/components/seaweedfs)（或企业既有 S3 兼容对象存储）复用底座：直接复用平台基础设施层的关系型数据库与 S3 兼容对象存储后端，保持数据底座收敛。
 - 与 [k6](/components/k6) 互补：`LangSet` 聚焦测试数据工程与 Agent 效果离线回归，`k6` 聚焦接口性能基线、压力测试与容量验证。
 
 ## 适合场景

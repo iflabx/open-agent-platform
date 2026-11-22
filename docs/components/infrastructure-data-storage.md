@@ -10,7 +10,7 @@
 
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)（默认自建对象存储；优先复用企业既有 S3 兼容对象存储，历史参考：[MinIO](/components/minio)）
 - [Weaviate](/components/weaviate)
 - [Milvus](/components/milvus)
 - [Elasticsearch](/components/elasticsearch)

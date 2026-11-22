@@ -10,9 +10,9 @@
 
 - [AgentifUI](/components/agentifui)
 - [LangGraph](/components/langgraph)
-- [LangChain](/components/langchain)
+- [LangChain](/components/langchain)（条件引入：`LangGraph` 体系生态工具包与连接器）
 - [LlamaIndex](/components/llamaindex)
-- [Letta](/components/letta)
+- [Mem0](/components/mem0)（条件引入长期记忆层；非主线参考：[Letta](/components/letta)）
 
 ::: info 扩展能力边界
 个人自治型超级智能体 [OpenClaw](/components/openclaw) 不纳入第 3 层共享门户基线，归入可选扩展能力，按单人或高信任小组独立沙箱实例模式按需引入，详见 [扩展升级](/extension-capabilities)。

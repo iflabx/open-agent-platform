@@ -16,7 +16,7 @@
 - **需单独审查的重点对象**：
   - **`Open core`**：`LiteLLM`、`LangFuse`
   - **自定义许可证**：`Dify`
-  - **强 copyleft**：`MinIO`、`Grafana`、`Loki`、`k6`
+  - **强 copyleft**：`Grafana`、`Loki`、`k6`（历史参考组件 `MinIO` 亦为 `AGPL-3.0` 且社区版已归档，不再默认选用）
   - **需锁版本**：`Redis`
   - **多重 / 混合许可证边界**：`Elasticsearch`
 - **企业复用能力边界**：企业既有 `SSO / IAM`、`KMS / 证书体系` 默认直接复用，不在本页开源许可证审计范围内。
@@ -36,10 +36,11 @@
 | `OpenClaw` | 标准开源 | `MIT` | 可选扩展能力，按独立沙箱实例模式按需引入，不纳入主方案共享门户基线 |
 | `APISIX` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `agentgateway` | 标准开源 | `Apache-2.0` | 可直接纳入 |
-| `LangGraph` | 标准开源 | `MIT` | 可直接纳入 |
-| `LangChain` | 标准开源 | `MIT` | 可直接纳入 |
+| `LangGraph` | 标准开源 | `MIT` | 可直接纳入，复杂自研编排的核心生产级 Agent Runtime |
+| `LangChain` | 标准开源 | `MIT` | 条件引入，收敛为 `LangGraph` 体系生态工具包与连接器，不作为核心业务编排支柱 |
 | `LlamaIndex` | 标准开源 | `MIT` | 可直接纳入 |
-| `Letta` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `Mem0` | 标准开源 | `Apache-2.0` | 条件引入，可插拔长期记忆层，易审计且无运行时锁定 |
+| `Letta` | 标准开源 | `Apache-2.0` | 非主线参考；操作系统级有状态运行时锁定较强，不作为默认长期记忆组件 |
 | `MCP` | 开放协议 | 协议仓库当前公开维护 | 更适合按开放协议规范理解 |
 | `A2A` | 开放协议 | `Apache-2.0` | 可直接纳入 |
 | `OpenMetadata` | 标准开源 | `Apache-2.0` | 可直接纳入 |
@@ -53,7 +54,9 @@
 | `Casbin` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `PostgreSQL` | 标准开源 | `PostgreSQL License` | 可直接纳入 |
 | `Redis` | 需锁版本 | 新版本许可证口径变化较大 | 实施时必须固定大版本 |
-| `MinIO` | 强 copyleft / 源码可得口径 | `AGPL-3.0`，官方仓库当前强调社区版为 source-only distribution | 当前可接受，但需明确许可证和交付边界 |
+| `SeaweedFS` | 标准开源 | `Apache-2.0` | 默认自建 S3 兼容对象存储底座（优先复用企业既有 S3 兼容对象存储） |
+| `RustFS` | 标准开源 | `Apache-2.0` | 轻量 S3 兼容对象存储替代参考，提供内置 Web 控制台 |
+| `MinIO` | 强 copyleft / 已归档 | `AGPL-3.0`，`minio/minio` 社区版仓库已归档只读且停止安全补丁维护 | 历史参考、不推荐新建；存量环境应规划向 `SeaweedFS` 或企业既有 S3 存储迁移 |
 | `Weaviate` | 标准开源 | `BSD-3-Clause` | 可直接纳入 |
 | `Milvus` | 标准开源 | `Apache-2.0` | 可作为条件演进项纳入 |
 | `Elasticsearch` | 多重 / 混合许可证边界 | `AGPL-3.0 / SSPLv1 / Elastic License 2.0` | 作为兼容项时需单独做许可证确认 |
@@ -91,10 +94,11 @@
 
 | 对象 | 公开来源 | 开源判定 |
 | --- | --- | --- |
-| `LangChain` | [官方仓库](https://github.com/langchain-ai/langchain) | 标准开源，`MIT` |
-| `LangGraph` | [官方仓库](https://github.com/langchain-ai/langgraph) | 标准开源，`MIT` |
+| `LangGraph` | [官方仓库](https://github.com/langchain-ai/langgraph) | 标准开源，`MIT`，复杂自研编排的核心生产级 Agent Runtime |
+| `LangChain` | [官方仓库](https://github.com/langchain-ai/langchain) | 标准开源，`MIT`，条件引入（`LangGraph` 体系生态工具包与连接器） |
 | `LlamaIndex` | [官方仓库](https://github.com/run-llama/llama_index) | 标准开源，`MIT` |
-| `Letta` | [官方仓库](https://github.com/letta-ai/letta) | 标准开源，`Apache-2.0` |
+| `Mem0` | [官方仓库](https://github.com/mem0ai/mem0) | 标准开源，`Apache-2.0`，条件引入，可插拔长期记忆层 |
+| `Letta` | [官方仓库](https://github.com/letta-ai/letta) | 标准开源，`Apache-2.0`，非主线参考（不作为默认长期记忆组件） |
 
 ### 4. 协议与互操作
 
@@ -130,7 +134,9 @@
 | --- | --- | --- |
 | `PostgreSQL` | [官方许可证页](https://www.postgresql.org/about/licence/) | `PostgreSQL License`，可直接纳入 |
 | `Redis` | [官方仓库](https://github.com/redis/redis) | 近年许可证口径调整明显，实施时必须锁定大版本 |
-| `MinIO` | [官方仓库](https://github.com/minio/minio) | `AGPL-3.0`，并需注意社区版当前交付口径 |
+| `SeaweedFS` | [官方仓库](https://github.com/seaweedfs/seaweedfs) | 标准开源，`Apache-2.0`，默认自建 S3 兼容对象存储底座 |
+| `RustFS` | [官方仓库](https://github.com/rustfs/rustfs) | 标准开源，`Apache-2.0`，轻量 S3 兼容对象存储替代参考 |
+| `MinIO` | [官方仓库](https://github.com/minio/minio) | `AGPL-3.0`，社区版仓库已归档只读且无安全补丁，仅作历史参考、不推荐新建 |
 | `Weaviate` | [官方仓库](https://github.com/weaviate/weaviate) | `BSD-3-Clause` |
 | `Milvus` | [官方仓库](https://github.com/milvus-io/milvus) | `Apache-2.0` |
 | `Elasticsearch` | [官方仓库](https://github.com/elastic/elasticsearch) | 多重 / 混合许可证边界，需单独确认 |
@@ -160,10 +166,10 @@
 - 不得仅标注“Redis”而不明确版本口径。
 - 实施时应在方案和部署文档中固定生产使用的具体大版本，并核对对应版本的许可证条款。
 
-### 4. `MinIO`、`Grafana`、`Loki`、`k6` 均采用强 copyleft 许可证
+### 4. `Grafana`、`Loki`、`k6` 采用强 copyleft 许可证；`MinIO` 社区版已归档不再默认选用
 
-- 四者主许可证均为 `AGPL-3.0`（且 `MinIO` 官方仓库当前强调社区版为 source-only distribution）。
-- 方案工程层面当前可接受，但在采购、法务与内控评审阶段须明确 `AGPL-3.0` 及交付方式的影响边界。
+- `Grafana`、`Loki`、`k6` 主许可证均为 `AGPL-3.0`，工程层面当前可接受，但在采购、法务与内控评审阶段须明确 `AGPL-3.0` 的影响边界。
+- `MinIO` 不仅采用 `AGPL-3.0`，且 `minio/minio` 社区版仓库已归档为只读状态、不再提供安全补丁；本方案已将默认自建 S3 兼容对象存储底座切换为标准 `Apache-2.0` 的 `SeaweedFS`（轻量替代参考 `RustFS`），`MinIO` 仅作存量历史参考。
 
 ### 5. `Elasticsearch` 需单独确认兼容项口径
 
@@ -185,7 +191,10 @@
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)
 - [LangSet 官方仓库](https://github.com/iflabx/langset)
 - [Redis 官方仓库](https://github.com/redis/redis)
-- [MinIO 官方仓库](https://github.com/minio/minio)
+- [SeaweedFS 官方仓库](https://github.com/seaweedfs/seaweedfs)
+- [RustFS 官方仓库](https://github.com/rustfs/rustfs)
+- [Mem0 官方仓库](https://github.com/mem0ai/mem0)
+- [MinIO 官方仓库（已归档）](https://github.com/minio/minio)
 - [Elasticsearch 官方仓库](https://github.com/elastic/elasticsearch)
 - [Grafana 官方仓库](https://github.com/grafana/grafana)
 - [Grafana Loki 官方仓库](https://github.com/grafana/loki)

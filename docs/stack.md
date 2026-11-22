@@ -21,9 +21,8 @@
 | 模型网关 | `LiteLLM` | 无额外正式替代项 | 所有模型请求统一经由同一网关 |
 | 主平台路线 | `Dify`、`RAGFlow` 二选一 | 不长期并行 | 通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`）；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
 | 门户与应用前台 | `AgentifUI` + 门户 / BFF / API 层 | 无额外共享门户替代项 | 统一承接企业多应用入口与会话上下文；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户 |
-| 复杂 Agent 运行时 | `LangGraph` | 复杂流程或长链路场景启用 | 仅在需要状态机、人工介入、回放时进入默认路径 |
-| 通用工程编排 | `LangChain` | 与 `LangGraph` 组合使用 | 负责工程适配，不单独充当平台底座 |
-| 长期记忆 Agent | `Letta` | 仅在长期记忆场景启用 | 非所有场景的默认组件 |
+| 复杂 Agent 运行时 | `LangGraph` | 复杂流程或长链路场景启用；生态连接器按需引入 `LangChain` | 复杂流程核心生产级 Runtime；简单调用优先使用原生 SDK，`LangChain` 仅作为可选工具包与连接器，不充当核心业务编排支柱 |
+| 可插拔长期记忆层 | `Mem0`（条件引入） | 仅在需要跨会话长期记忆时启用 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，非全平台默认组件 |
 | 知识工程 | `LlamaIndex` | 无 | 统一负责检索编排、切片和引用构建 |
 | 数据治理 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling` | 老旧 / 偏门格式兼容与元数据预路由条件引入 `Apache Tika` | 将原始数据治理为 AI 可消费资产；`Docling` 承担默认非结构化文档解析 |
 | 向量检索 | `Weaviate` | 数据规模和隔离要求显著上升时演进到 `Milvus` | 默认优先使用单一向量底座 |
@@ -32,7 +31,7 @@
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
-| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
+| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `SeaweedFS`（优先复用企业现有 S3 兼容对象存储） | 轻量自建对象存储可选 `RustFS`（`Apache-2.0`）平替；第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展；对象存储优先复用企业现有 S3 设施，自建默认选 `SeaweedFS`（`Apache-2.0`）；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
 
 ## 推荐组合
 
@@ -44,7 +43,7 @@
 - 一条主平台路线：`Dify` 或 `RAGFlow`
 - `LlamaIndex`
 - `LiteLLM` + `vLLM` + `Qwen`
-- `PostgreSQL` + `Redis` + `MinIO` + `Weaviate`
+- `PostgreSQL` + `Redis` + `SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）+ `Weaviate`
 - `LangFuse`
 
 ### 组合 B：生产化中台
@@ -54,7 +53,7 @@
 - `APISIX` + 企业现有 `SSO / IAM` + `Casbin`
 - `agentgateway`
 - 一条主平台路线
-- `LangGraph` + `LangChain`
+- `LangGraph`（按需搭配 `LangChain` 连接器工具包与 `Mem0` 长期记忆层）
 - `LlamaIndex`
 - `LiteLLM` + `vLLM`（多步 Agent 与代码负载条件优选 `SGLang`）+ `Qwen`
 - `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容）
@@ -74,8 +73,9 @@
 ### 2. 主平台路线与 `LangGraph` 的关系
 
 - 主平台路线负责标准场景、应用配置和知识平面。
-- `LangGraph` 负责复杂状态机、人工介入、长链路恢复和多步骤动作链路。
-- 两者为分层协作关系，而非二选一替代关系。
+- `LangGraph` 负责复杂状态机、人工介入、长链路恢复和多步骤动作链路，是复杂流程的核心生产级 Agent Runtime；简单模型调用优先直接使用原生 SDK，`LangChain` 仅作为 `LangGraph` 生态下的可选工具包与连接器按需引入。
+- 需要跨会话长期记忆时，按需引入 `Mem0`（`Apache-2.0`），与 `LangGraph` + `PostgreSQL` Checkpointer（会话级状态持久化）形成互补。
+- 主平台路线与 `LangGraph` 为分层协作关系，而非二选一替代关系。
 
 ### 3. `Weaviate`、`Milvus`、`Elasticsearch` 的关系
 
@@ -119,6 +119,11 @@
 - 第 9 层通过 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox`）为第 4 层 Agent 编排层的不可信代码、脚本与工具执行提供强隔离环境。
 - 默认采用 `gVisor` 承接常规隔离需求，兼顾冷启动速度与系统调用隔离；具备裸金属虚拟化条件且需要 KVM 级强隔离的场景启用 `Kata Containers`。
 - 无论采用哪种运行时，均须强制落实三项安全红线：独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
+
+### 10. 对象存储选型（优先复用企业 S3、`SeaweedFS` 与 `RustFS`）
+
+- 企业已有 S3 兼容对象存储时优先直接复用，不重复自建存储集群。
+- 需自建对象存储时，默认选用 `SeaweedFS`（`Apache-2.0`），提供稳定的 S3 兼容协议支持与良好的扩展性；轻量化单集群或资源受限场景可选用 `RustFS`（`Apache-2.0`）作为轻量平替。
 
 ## 应避免的选型做法
 

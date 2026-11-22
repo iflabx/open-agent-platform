@@ -30,9 +30,9 @@
 
 | 阶段 | 必选启用的核心组件 | 说明 |
 | --- | --- | --- |
-| 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
-| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph`；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入生产治理与复杂流程编排阶段 |
-| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch` 与 `LangSet` | 进入平台化与规模化阶段 |
+| 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`SeaweedFS`（优先复用企业既有 `S3` 兼容对象存储，轻量自建替代可选 `RustFS`）、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
+| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入核心生产 Agent Runtime `LangGraph`（按需配合 `LangChain` 生态连接器）；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入生产治理与复杂流程编排阶段 |
+| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch`、`Mem0`（可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 互补）与 `LangSet` | 进入平台化与规模化阶段 |
 
 ::: tip 门户前台与扩展能力阶段口径
 全阶段第 3 层共享门户均以 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层为主线，不引入第二套共享门户。面向少量高阶用户或研发团队的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）属于 [扩展升级](/extension-capabilities) 范畴，仅建议在平台治理、独立沙箱节点池与 `LiteLLM` / 审计基线完备后，按 Multi-Instance 独立沙箱隔离模式专项评估。
@@ -49,7 +49,7 @@
 - 选定一个高价值、低耦合、可量化的场景，优先考虑 [内部知识助手](/scenarios)。
 - 选择一条主平台路线：`Dify` 或 `RAGFlow` 二选一。
 - 打通 `APISIX` → `AgentifUI` / 门户 BFF → 主平台路线 → `LiteLLM` → `vLLM` 最小链路。
-- 搭建 `PostgreSQL`、`Redis`、`MinIO`、`Weaviate` 最小可用底座。
+- 搭建 `PostgreSQL`、`Redis`、`SeaweedFS`（优先复用企业既有 `S3` 兼容对象存储，轻量自建替代可选 `RustFS`）、`Weaviate` 最小可用底座。
 - 基于 `LlamaIndex` 建立可控的知识接入、检索与引用链路。
 - 引入最小审计能力与基础 `LangFuse` 观测能力。
 
@@ -116,7 +116,7 @@
 
 ### 建议任务
 
-- 固化主平台路线、`LangGraph`、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
+- 固化主平台路线、`LangGraph`（核心生产 Agent Runtime，`LangChain` 收敛为条件生态工具库与连接器；跨会话长期记忆按需引入 `Mem0` 与 `LangGraph` + `PostgreSQL` Checkpointer 互补）、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
 - 补齐 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling` 数据治理与非结构化文档解析链路（老旧 / 冷门格式按需兼容 `Apache Tika`），建立“先治理、后检索”的数据资产发布闭环。
 - 固化 [AgentifUI](/components/agentifui) + 门户 / BFF 的共享门户契约；如存在少量高阶用户或高信任小组的个人自治助手需求，再按 [扩展升级](/extension-capabilities) 专项评估独立沙箱多实例能力。
 - 将知识接入、索引发布、Prompt、工具与模型路由全部纳入统一发布管理。

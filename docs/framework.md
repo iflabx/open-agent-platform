@@ -29,9 +29,9 @@
 2. **数据先治后用**：结构化与非结构化数据须先进入统一数据治理层，再供给 RAG、搜索、查询与 Agent 消费。
 3. **知识平面收敛**：所有知识接入与检索统一收敛至企业知识平面。
 4. **主平台单轨收敛**：主平台中枢在 `Dify` 与 `RAGFlow` 中二选一，不长期并行建设多套主底座。
-5. **定制编排专责**：`LangChain` 负责复杂定制场景与核心业务编排。
+5. **定制运行时专责**：`LangGraph` 负责复杂定制场景与有状态长链路编排；简单调用优先采用原生 SDK，`LangChain` 仅作为其下的条件生态适配与连接器工具包。
 6. **知识工程专责**：`LlamaIndex` 负责知识工程、检索编排与复杂 RAG 能力。
-7. **长期记忆按需引入**：`Letta` 仅用于少量长期记忆型 Agent 场景，不作为全平台默认运行时。
+7. **长期记忆按需引入**：`Mem0` 仅作为条件引入的可插拔长期记忆层（与 `LangGraph` + `PostgreSQL` Checkpointer 互补），不作为全平台默认强依赖组件。
 8. **双协议互操作**：协议层采用 `MCP` + `A2A` 组合，分别承载 Agent-to-Tool 与 Agent-to-Agent 互操作。
 9. **门户层解耦**：门户层独立建设，不与模型层、RAG 层或编排层强耦合。
 10. **治理默认内建**：安全、审计、权限与评测从首期建设即纳入主链路，不作事后补丁。
@@ -70,12 +70,12 @@
 | | 基础模型组合 | `Qwen3.5 27B FP8`（企业通用主模型）、`Qwen3-Coder-Next`（代码模型）、`Qwen/Qwen3-Embedding-8B`（Embedding）、`Qwen/Qwen3-Reranker-8B`（Reranker）、`Qwen3Guard-Stream-8B`（安全审查模型） |
 | **主平台与门户** | 主平台中枢 | `Dify` / `RAGFlow`（二选一） |
 | | 门户与交互前台 | `AgentifUI` + 门户 / BFF / API 层（统一门户与应用目录） |
-| **高级 Agent 能力** | 运行时、编排、知识与记忆 | `LangGraph`（生产级 Agent Runtime）、`LangChain`（通用工程编排）、`LlamaIndex`（知识工程与复杂 RAG）、`Letta`（长期记忆 Agent，按需） |
+| **高级 Agent 能力** | 运行时、编排、知识与记忆 | `LangGraph`（生产级 Agent Runtime）、`LangChain`（条件引入，生态适配与连接器工具包）、`LlamaIndex`（知识工程与复杂 RAG）、`Mem0`（条件引入，可插拔长期记忆层） |
 | **协议与互操作** | 工具与 Agent 协作协议 | `MCP`（Agent-to-Tool / Context）、`A2A`（Agent-to-Agent） |
 | **数据治理与 AI 数据底座** | 元数据、采集、建模与解析 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（默认文档解析）、`Apache Tika`（条件兼容） |
 | **接入治理、评测与授权** | 网关、观测、评测、压测与授权 | `APISIX`（统一入口网关）、`agentgateway`（内部 AI 原生协议网关）、`LangFuse`（LLM 观测与评测）、`LangSet`（条件引入，评测数据集工程与离线回归评测）、`k6`（压测与容量验证）、`Casbin`（授权与策略裁决） |
-| **基础设施** | 存储、检索、运行与观测 | `PostgreSQL`、`Redis`、`MinIO`、`Weaviate`（默认向量检索）、`Milvus`（大规模向量检索演进）、`Elasticsearch`（全文 / 混合检索兼容）、`K3s`、`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`（Agent 执行沙箱）、`OpenTelemetry + Prometheus + Grafana + Loki` |
-| | 企业现有能力复用 | `SSO / IAM`、`KMS / 证书体系` |
+| **基础设施** | 存储、检索、运行与观测 | `PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、`Weaviate`（默认向量检索）、`Milvus`（大规模向量检索演进）、`Elasticsearch`（全文 / 混合检索兼容）、`K3s`、`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`（Agent 执行沙箱）、`OpenTelemetry + Prometheus + Grafana + Loki` |
+| | 企业现有能力复用 | `SSO / IAM`、`KMS / 证书体系`、企业现有 S3 兼容对象存储（优先复用） |
 
 ## 组件职责边界
 
@@ -128,17 +128,17 @@
   - **职责**：面向深度文档解析、复杂 RAG 检索编排，或对纯 `Apache-2.0` 开源许可证有严格合规要求的场景，作为主平台路线之一承载知识密集型应用交付。
   - **边界**：不作为企业全部核心流程引擎，不与 `Dify` 长期并行建设，不替代门户层与统一控制面。
 - **`LangGraph`**
-  - **职责**：作为生产级 Agent Runtime，承载长时运行、有状态工作流与失败恢复，支持人工介入、检查点、持久化执行与复杂状态控制，适合自研复杂 Agent 服务。
-  - **边界**：不替代主平台中枢的低代码交付能力，不直接替代知识工程与检索层。
-- **`LangChain`**
-  - **职责**：面向复杂场景的工程化开发框架，承载复杂工具编排、业务状态控制、异步任务与深度系统集成。
-  - **边界**：作为定制化业务编排能力，不替代主平台中枢；在复杂生产场景下通常与 `LangGraph` 组合使用，而非替代 `LangGraph`。
+  - **职责**：作为复杂流程的核心生产级 Agent Runtime，承载长时运行、有状态工作流与失败恢复，支持人工介入、基于 `PostgreSQL` Checkpointer 的持久化检查点与复杂状态控制，适合自研复杂 Agent 服务。
+  - **边界**：不替代主平台中枢的低代码交付能力，不直接替代知识工程与检索层；简单模型调用可直接使用原生 SDK，无需强制套壳。
+- **`LangChain`**（条件引入）
+  - **职责**：作为 `LangGraph` 生态下的可选工具包与连接器适配层，在需要快速复用社区文档加载器、文本切分器或第三方工具集成时按需引入。
+  - **边界**：不作为核心业务编排支柱，不替代 `LangGraph` 承担生产级状态机编排，简单调用场景不强制依赖。
 - **`LlamaIndex`**
   - **职责**：面向复杂知识源的接入、索引、查询与检索编排，承载复杂 RAG、结构化数据检索与知识工程能力。
   - **边界**：作为知识工程层，不承担门户层与统一应用发布职责。
-- **`Letta`**
-  - **职责**：承载长期记忆 Agent、个体化上下文与持续状态管理，适合高价值、长周期、多轮协作助手。
-  - **边界**：不作为全平台所有应用的统一运行基础。
+- **`Mem0`**（条件引入）
+  - **职责**：作为 `Apache-2.0` 可插拔长期记忆层，承载跨会话用户画像、语义记忆抽取与个体化上下文管理，与 `LangGraph` + `PostgreSQL` Checkpointer（会话级状态持久化）形成互补。
+  - **边界**：仅在需要跨会话长期记忆的场景按需启用，不替代知识库检索层，也不作为全平台所有应用的默认运行基础。
 
 ### 5. 协议与互操作层
 
@@ -196,8 +196,8 @@
 
 数据治理层与基础设施层不追求全量自建，而是优先复用企业现有能力，并对平台新增组件做最小收敛：
 
-- **优先复用企业现有能力**：身份认证复用企业现有 `SSO / IAM` 体系，密钥与证书复用企业现有 `KMS / 证书体系`；两者不作为新增自建组件设计重点，仅明确与平台的集成边界。
-- **平台新增标准底座**：数据治理采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）；检索底座按 `Weaviate`（默认）/ `Milvus`（大规模演进）/ `Elasticsearch`（全文与混合兼容）分层收敛；推理引擎以 `vLLM` 为通用默认，多步 Agent 与代码负载可条件优选 `SGLang`；基础与治理栈采用 `PostgreSQL`、`Redis`、`MinIO`、`K3s`、[Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox)、`APISIX`、`agentgateway`、`LangGraph`、`Casbin`、`k6`、`MCP + A2A` 及 `OpenTelemetry + Prometheus + Grafana + Loki`；有版本化评测数据集工程与离线回归评测需求时条件引入 `LangSet`。
+- **优先复用企业现有能力**：身份认证复用企业现有 `SSO / IAM` 体系，密钥与证书复用企业现有 `KMS / 证书体系`，对象存储优先复用企业现有 S3 兼容对象存储；上述能力均以明确集成边界为主，避免重复自建。
+- **平台新增标准底座**：数据治理采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）；检索底座按 `Weaviate`（默认）/ `Milvus`（大规模演进）/ `Elasticsearch`（全文与混合兼容）分层收敛；推理引擎以 `vLLM` 为通用默认，多步 Agent 与代码负载可条件优选 `SGLang`；基础与治理栈采用 `PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，轻量替代 `RustFS`）、`K3s`、[Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox)、`APISIX`、`agentgateway`、`LangGraph`、`Casbin`、`k6`、`MCP + A2A` 及 `OpenTelemetry + Prometheus + Grafana + Loki`；有版本化评测数据集工程与离线回归评测需求时条件引入 `LangSet`，有跨会话长期记忆需求时条件引入 `Mem0`。
 - **暂不纳入标准底座的能力**：消息总线与独立作业总线当前暂不选型，待异步任务与事件规模提升后再行评估。
 
 ## 数据治理与基础设施分工说明
@@ -214,7 +214,7 @@
 | | `agentgateway` | 内部 AI 原生协议网关，负责 `MCP`、`A2A` 及相关南向（Southbound）协议的统一接入、路由与治理。 |
 | **存储与检索** | `PostgreSQL` | 平台主数据库，承载配置、元数据、状态、权限映射、运营数据与平台后台数据。 |
 | | `Redis` | 运行时加速层，承载缓存、会话、短期状态、限流计数与幂等控制。 |
-| | `MinIO` | 对象存储，承载知识原文件、用户上传附件、导出结果与文件型中间产物。 |
+| | `SeaweedFS` | 默认自建 S3 兼容对象存储（`Apache-2.0`），承载知识原文件、用户上传附件、导出结果与文件型中间产物；轻量化部署可选 `RustFS`（`Apache-2.0`）替代，优先复用企业现有 S3 兼容对象存储。 |
 | | `Weaviate` | 默认向量检索与混合检索底座，支撑企业知识库与智能体检索场景。 |
 | | `Milvus` | 大规模阶段向量检索演进底座，适用于更高规模知识库、更高吞吐与更强隔离场景。 |
 | | `Elasticsearch` | 全文检索与混合检索兼容项，适用于全文搜索要求较高或特定主平台配套场景。 |
@@ -235,7 +235,7 @@
 4. **协议与互操作平面**：`MCP` + `A2A`，承担工具接入、上下文接入与远程 Agent 协作。
 5. **数据治理平面**：`OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容），承担数据源登记、采集同步、结构化治理、非结构化解析与资产发布。
 6. **知识服务平面**：`Dify` / `RAGFlow` + `Qwen/Qwen3-Embedding-8B` + `Qwen/Qwen3-Reranker-8B` + `Weaviate` / `Milvus` / `Elasticsearch`，承担基于治理后资产的切片、索引、检索与权限过滤。
-7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow`（二选一），生产级 Runtime 采用 `LangGraph`，定制编排采用 `LangChain`，知识工程采用 `LlamaIndex`，长期记忆场景按需引入 `Letta`。
+7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow`（二选一），复杂流程生产级 Runtime 采用 `LangGraph`（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包），知识工程采用 `LlamaIndex`，跨会话长期记忆场景按需引入 `Mem0`。
 8. **门户与应用发布平面**：`AgentifUI` + 门户 / BFF / API 层 + 企业 SSO + 应用中心、应用目录、会话入口与反馈运营后台。
 9. **评测、治理与验证平面**：`LangFuse` + `LangSet`（条件引入） + `k6` + `Qwen3Guard-Stream-8B` + `Casbin`，承担审计、在线观测、版本化离线回归评测、内容合规、质量回放与容量验证。
 
@@ -292,9 +292,9 @@
 | 部署分区 | 承载组件与能力 |
 | --- | --- |
 | **推理区** | GPU 节点、`vLLM`、`SGLang`（条件优选）、模型缓存与镜像仓库 |
-| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph`、自研 `LangChain` 服务、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、门户 BFF |
+| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph` 自研 Agent 服务（按需搭配 `LangChain` 连接器与 `Mem0` 长期记忆层）、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、门户 BFF |
 | **执行沙箱区** | 独立沙箱节点池、`Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），承接第 4 层不可信代码、脚本与工具执行 |
-| **数据区** | `PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`Milvus`、`Elasticsearch` |
+| **数据区** | `PostgreSQL`、`Redis`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）、`Weaviate`、`Milvus`、`Elasticsearch` |
 | **观测区** | `Prometheus`、`Grafana`、`Loki`、`OpenTelemetry Collector` |
 | **企业集成区** | 企业现有 `SSO / IAM`、企业现有 `KMS / 证书体系`、审计日志与安全审查服务 |
 
@@ -330,13 +330,13 @@
 | 潜在风险 | 应对策略 |
 | --- | --- |
 | **`Dify` / `RAGFlow` 职责重叠** | 按企业路线二选一，不并行建设多套主底座或主知识平面，编排与知识链路围绕单一主平台收敛。 |
-| **`LangChain` / `LlamaIndex` / `Letta` 叠加复杂度过高** | 严格分工：`LangChain` 负责通用编排，`LlamaIndex` 负责知识工程与复杂 RAG，`Letta` 限定于长期记忆 Agent，不将三者设为所有应用的默认路径。 |
+| **`LangGraph` / `LangChain` / `LlamaIndex` / `Mem0` 叠加复杂度过高** | 严格收敛边界：`LangGraph` 为复杂流程核心生产级 Runtime，简单调用优先原生 SDK，`LangChain` 仅作可选生态连接器；`LlamaIndex` 负责知识工程与复杂 RAG；`Mem0` 仅在跨会话长期记忆场景按需引入，与 `LangGraph` + `PostgreSQL` Checkpointer 互补。 |
 | **`MCP` 与 `A2A` 边界混淆** | `MCP` 专注 Agent-to-Tool / Context 接入，`A2A` 专注 Agent-to-Agent 协作，二者互补而不互替。 |
 | **`AgentifUI` 难以承载完整企业门户** | 将其定位为起步前端壳，核心控制点下沉至自研 BFF 与统一身份层，确保前端可替换、后端契约稳定；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户替代方案。 |
 | **`LangFuse` 无法覆盖全平台运维** | `LangFuse` 专注 LLM 级观测，必须叠加基础设施级可观测性（Observability）体系形成双层观测。 |
 | **基础设施过度建设** | 身份与密钥复用企业现有体系，入口收敛至 `APISIX`，消息总线与独立全文检索等非必要能力不前置建设。 |
 | **数据治理层过重导致运维复杂** | 采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 仅作老旧 / 偏门格式与元数据预路由条件兼容），先满足 RAG / 搜索 / 查询 / Agent 核心数据供给，再随规模演进。 |
-| **编排与检索组件全量并行** | `LangGraph`（生产级 Runtime）与 `LangChain`（工程框架）分层协作；检索以 `Weaviate` 为默认，`Milvus` 为大规模演进，`Elasticsearch` 仅作兼容项。 |
+| **编排与检索组件全量并行** | 复杂编排以 `LangGraph` 为核心生产级 Runtime，`LangChain` 仅按需提供连接器适配；检索以 `Weaviate` 为默认，`Milvus` 为大规模演进，`Elasticsearch` 仅作兼容项。 |
 | **`Elasticsearch` 许可证边界风险** | 将其严格限定为兼容项而非默认主底座；如企业对许可证边界敏感，须在正式落地前结合法务口径单独确认。 |
 
 ## 实施路线
@@ -354,7 +354,7 @@
 - **推理与模型网关**：`vLLM`（通用高吞吐默认）+ `SGLang`（条件优选，多步 Agent 与代码负载）+ `Qwen` 模型族构成推理底座，`LiteLLM` 构成唯一模型网关。
 - **入口与协议治理**：`APISIX` 构成北向统一入口网关与流量治理层，`agentgateway` 承担内部 AI 协议治理，`MCP + A2A` 构成互操作协议层。
 - **数据与知识底座**：`OpenMetadata + SeaTunnel + dbt Core + Docling`（`Apache Tika` 条件兼容）构成企业 AI 数据治理底座；`Weaviate` 为默认检索底座，`Milvus` 为大规模演进，`Elasticsearch` 为全文 / 混合检索兼容项。
-- **主平台与 Agent 能力**：`Dify` 或 `RAGFlow`（二选一）构成主平台中枢；`LangGraph + LangChain` 构成生产级 Agent 运行与定制编排层；`LlamaIndex` 负责知识工程与复杂 RAG；`Letta` 承担长期记忆 Agent 场景。
+- **主平台与 Agent 能力**：`Dify` 或 `RAGFlow`（二选一）构成主平台中枢；`LangGraph` 构成复杂流程核心生产级 Agent Runtime（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包）；`LlamaIndex` 负责知识工程与复杂 RAG；`Mem0` 作为条件引入的可插拔长期记忆层。
 - **门户与交互层**：`AgentifUI` + 门户 / BFF / API 层构成统一门户前台与应用发布入口。
-- **运行、观测与治理**：`PostgreSQL + Redis + MinIO + K3s` 与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + 平台观测体系` 构成观测评测与企业治理层。
+- **运行、观测与治理**：`PostgreSQL + Redis + SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）`+ K3s` 与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + 平台观测体系` 构成观测评测与企业治理层。
 :::

@@ -17,12 +17,12 @@
 | 1. 用户与渠道层 | [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints) | 通过企业现有入口复用能力说明页承载，统一覆盖 Web、IM、工单、邮件、CRM / ERP 和 Webhook 等入口 |
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
 | 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 承接企业多用户统一 AI 工作台、应用目录、会话入口与 BFF / API 聚合边界 |
-| 4. Agent 编排层 | `Dify`、`RAGFlow`、`LangGraph`、`LangChain`、`Letta` | 主平台路线（二选一）与复杂运行时 |
+| 4. Agent 编排层 | `Dify`、`RAGFlow`、`LangGraph`、`LangChain`（条件生态连接器）、`Mem0`（条件长期记忆） | 主平台路线（二选一）、复杂运行时与条件扩展 |
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika` | 数据采集、标准化、非结构化解析、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
 | 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
-| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO`、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化和对象存储 |
+| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化和对象存储 |
 
 ## 1. 用户与渠道层
 
@@ -77,18 +77,21 @@
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
 
-### 配套运行时
+### 核心生产级运行时
 
 - [LangGraph](/components/langgraph)
+
+### 条件组件
+
 - [LangChain](/components/langchain)
-- [Letta](/components/letta)
+- [Mem0](/components/mem0)
 
 ### 说明
 
 - `Dify` / `RAGFlow` 负责标准场景中的平台中枢能力（通用多应用 / 低代码工作流交付选 `Dify`，对齐 `PostgreSQL + Weaviate + LangSet`；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow`）；[Coze Studio](/components/coze-studio) 因异构中间件依赖栈（`MySQL + Milvus + Elasticsearch + NSQ`）较重且开源迭代节奏相对偏慢，不纳入默认主平台候选池。
-- `LangGraph` 负责复杂流程、状态机、人工介入和长链路恢复。
-- `LangChain` 负责工程适配和通用编排辅助。
-- `Letta` 是长期记忆场景的条件组件，非所有场景默认启用。
+- `LangGraph` 是复杂流程的核心生产级 Agent Runtime，负责有状态工作流、人工介入、基于 `PostgreSQL` Checkpointer 的检查点持久化与长链路恢复；简单模型调用优先使用原生 SDK。
+- `LangChain` 定位为 `LangGraph` 生态下的条件工具包与连接器适配层，按需引入，不作为核心业务编排支柱。
+- `Mem0` 是 `Apache-2.0` 可插拔长期记忆层的条件组件，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，仅在跨会话长期记忆场景按需启用。
 
 ## 5. 数据治理层
 
@@ -105,14 +108,14 @@
 
 ### 配套底座
 
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)
 - [PostgreSQL](/components/postgresql)
 
 ### 说明
 
 - 本层负责将原始数据治理为 AI 可消费资产。
 - `Docling` 是默认非结构化文档解析组件，承担 PDF、Office、HTML 等复杂版面与表格文档的高保真结构化解析；`Apache Tika` 保留为条件兼容项，用于老旧 / 偏门文件格式兼容抽取与轻量元数据预路由。
-- `MinIO` 和 `PostgreSQL` 在主归属上属于基础设施层，但在数据治理场景中承担关键配套作用。
+- `SeaweedFS`（优先复用企业现有 S3 兼容对象存储，轻量替代 `RustFS`）和 `PostgreSQL` 在主归属上属于基础设施层，但在数据治理场景中承担关键配套作用。
 
 ## 6. 知识与检索层
 
@@ -184,17 +187,18 @@
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)
 
 ### 复用能力
 
 - `KMS / 证书体系`
+- 企业现有 S3 兼容对象存储（优先复用）
 
 ### 说明
 
 - `K3s` 提供容器运行底座。
 - [Agent 执行沙箱](/components/agent-sandbox) 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），为第 4 层不可信代码、脚本与工具执行提供强隔离环境，并强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
-- `PostgreSQL`、`Redis`、`MinIO` 提供持久化、缓存、会话和对象存储能力。
+- `PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`，轻量替代 `RustFS`）提供持久化、缓存、会话和对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用。
 - 企业现有 `KMS / 证书体系` 作为复用能力，不作为新增组件。
 
 ## 跨层协议与标准
@@ -224,9 +228,11 @@
 | `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |
 | `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
 | `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |
-| `Letta` | 条件引入 | 仅在长期记忆 Agent 场景需要时使用 |
+| `SeaweedFS` / `RustFS` | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储；企业已有 S3 设施时优先直接复用 |
+| `LangChain` | 条件引入 | 作为 `LangGraph` 生态下的可选工具包与连接器适配层按需引入；简单调用优先原生 SDK |
+| `Mem0` | 条件引入 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，仅在跨会话长期记忆场景启用 |
 | `LangSet` | 条件引入 | 负责团队协作评测数据集工程与离线回归评测，与 `LangFuse` 互补 |
-| `LangGraph` | 复杂流程默认启用 | 标准场景可先以主平台路线为主 |
+| `LangGraph` | 复杂流程默认启用 | 复杂流程核心生产级 Agent Runtime；标准场景可先以主平台路线为主 |
 | `OpenClaw` | 可选扩展能力 | 不纳入主方案共享门户基线，按单人 / 高信任小组独立沙箱实例模式按需引入 |
 
 ## 阅读导航

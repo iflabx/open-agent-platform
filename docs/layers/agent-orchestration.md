@@ -2,7 +2,7 @@
 
 > 定位：负责应用工作流、工具调用、状态管理、人工介入与多 Agent 协作。
 >
-> 当前承载组件：`Dify`、`RAGFlow`、`LangGraph`、`LangChain`、`Letta`。
+> 当前承载组件：`Dify`、`RAGFlow`（主平台路线二选一）、`LangGraph`（核心生产 Agent Runtime），以及条件引入的 `LangChain`（`LangGraph` 生态工具库与连接器）与 `Mem0`（可插拔长期记忆层，`Apache-2.0`）。
 
 相关文档：
 
@@ -10,7 +10,7 @@
 - [RAGFlow](/components/ragflow)
 - [LangGraph](/components/langgraph)
 - [LangChain](/components/langchain)
-- [Letta](/components/letta)
+- [Mem0](/components/mem0)
 
 ## 本层定义
 
@@ -30,14 +30,17 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
 
-配套运行时组件：
+核心生产 Agent Runtime：
 
-- [LangGraph](/components/langgraph)
-- [LangChain](/components/langchain)
-- [Letta](/components/letta)
+- [LangGraph](/components/langgraph)（承载复杂状态机、人工介入及基于 `PostgreSQL` Checkpointer 的任务持久化与断点恢复）
+
+条件配套组件：
+
+- [LangChain](/components/langchain)（收敛为 `LangGraph` 体系下的条件生态工具库与连接器，仅按需复用模型适配器、工具封装与生态集成，不作为独立生产编排框架）
+- [Mem0](/components/mem0)（条件引入的可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 的短中期状态持久化形成互补）
 
 ::: tip 收敛约束
-`Dify` 与 `RAGFlow` 作为主平台路线采取二选一单轨收敛（通用多应用 / 低代码工作流交付优选 `Dify`，对齐 `PostgreSQL + Weaviate + LangSet`；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 许可证要求优选 `RAGFlow`），不长期并行部署；`LangGraph`、`LangChain`、`Letta` 按业务复杂度与场景需求条件配合引入。
+`Dify` 与 `RAGFlow` 作为主平台路线采取二选一单轨收敛（通用多应用 / 低代码工作流交付优选 `Dify`，对齐 `PostgreSQL + Weaviate + LangSet`；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 许可证要求优选 `RAGFlow`），不长期并行部署；复杂多步任务与生产级状态编排统一收敛至核心生产 Agent Runtime `LangGraph`，`LangChain` 仅作为 `LangGraph` 下的条件生态工具库与连接器按需复用，`Mem0` 按需作为可插拔长期记忆层（`Apache-2.0`）与 `LangGraph` + `PostgreSQL` Checkpointer 互补引入。
 :::
 
 ## 上下游关系
@@ -80,9 +83,9 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 
 ### 2. 长链路任务链路
 
-1. 编排层创建状态化长任务实例。
-2. 任务在工具调用、人工介入与事件等待之间按状态机切换。
-3. 任务恢复时沿既定状态图继续推进。
+1. 核心生产 Agent Runtime `LangGraph` 创建状态化长任务实例，并通过 `PostgreSQL` Checkpointer 持久化执行检查点。
+2. 任务在工具调用、人工介入与事件等待之间按状态图切换；跨会话或跨任务长期记忆按需经 `Mem0` 可插拔记忆层读写。
+3. 任务恢复时沿既定状态图与持久化检查点继续推进。
 
 ## 治理要求
 
@@ -119,4 +122,4 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 - [RAGFlow](https://ragflow.io/)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [LangChain Documentation](https://docs.langchain.com/)
-- [Letta Documentation](https://docs.letta.com/)
+- [Mem0 Documentation](https://docs.mem0.ai/)

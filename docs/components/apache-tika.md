@@ -24,7 +24,7 @@
 ## 与其他组件关系
 
 - **与 [Docling](/components/docling) 分工协作**：`Docling` 是默认非结构化文档结构化解析引擎，负责高保真版面与表格还原；`Apache Tika` 作为条件引入的前置嗅探与兼容辅助层，与 `Docling` 配合处理老旧或生僻文件。
-- **与 [MinIO](/components/minio)、[OpenMetadata](/components/openmetadata) 协同**：从 `MinIO` 读取待检文件对象，并将探测到的基础格式与文件元数据同步登记至 `OpenMetadata`。
+- **与 [SeaweedFS](/components/seaweedfs)、[OpenMetadata](/components/openmetadata) 协同**：从 `SeaweedFS`（或企业既有 S3 兼容对象存储）读取待检文件对象，并将探测到的基础格式与文件元数据同步登记至 `OpenMetadata`。
 - **与 [SeaTunnel](/components/seatunnel) 互补**：`SeaTunnel` 负责文件与对象数据采集同步，`Apache Tika` 负责采集后的格式探测、路由与兼容提取。
 - **向下游供数边界**：仅将兜底提取的文本与基础元数据交付后续清洗与治理流程，不作为高精度 RAG 复杂版面文档的主解析来源。
 

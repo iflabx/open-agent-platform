@@ -129,7 +129,7 @@ export default defineConfig({
               { text: 'RAGFlow', link: '/components/ragflow' },
               { text: 'LangGraph', link: '/components/langgraph' },
               { text: 'LangChain', link: '/components/langchain' },
-              { text: 'Letta', link: '/components/letta' }
+              { text: 'Mem0', link: '/components/mem0' }
             ]
           },
           {
@@ -185,7 +185,7 @@ export default defineConfig({
               { text: 'Agent Sandbox', link: '/components/agent-sandbox' },
               { text: 'PostgreSQL', link: '/components/postgresql' },
               { text: 'Redis', link: '/components/redis' },
-              { text: 'MinIO', link: '/components/minio' }
+              { text: 'SeaweedFS', link: '/components/seaweedfs' }
             ]
           },
           {

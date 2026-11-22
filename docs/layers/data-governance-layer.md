@@ -43,7 +43,7 @@
 关键配套底座：
 
 - [PostgreSQL](/components/postgresql)
-- [MinIO](/components/minio)
+- [SeaweedFS](/components/seaweedfs)（默认自建 `S3` 兼容对象存储，`Apache-2.0`；轻量即插替代可选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用）
 
 ## 上下游关系
 

@@ -26,7 +26,7 @@
 - 上游连接数据库、数据仓库、业务系统和文件类数据源。
 - 向下将采集结果交付给 [dbt Core](/components/dbt-core)、[Docling](/components/docling) 等治理组件进一步处理。
 - 与 [OpenMetadata](/components/openmetadata) 协同登记数据源、任务来源和数据资产上下文。
-- 与 [MinIO](/components/minio)、[PostgreSQL](/components/postgresql) 等基础设施能力配套使用。
+- 与 [SeaweedFS](/components/seaweedfs)（或企业既有 S3 兼容对象存储）、[PostgreSQL](/components/postgresql) 等基础设施能力配套使用。
 
 ## 适合场景
 

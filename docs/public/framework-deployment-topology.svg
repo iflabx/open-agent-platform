@@ -41,7 +41,7 @@
     <text x="838" y="334" fill="#C2410C" font-size="28" font-weight="700">平台服务区</text>
     <text x="838" y="370" fill="#1F2937" font-size="18">AgentifUI / 门户 BFF / 统一 API</text>
     <text x="838" y="396" fill="#1F2937" font-size="18">Dify / RAGFlow</text>
-    <text x="838" y="422" fill="#1F2937" font-size="18">LangGraph / LangChain / LlamaIndex</text>
+    <text x="838" y="422" fill="#1F2937" font-size="18">LangGraph 核心运行时 / LlamaIndex</text>
     <text x="838" y="450" fill="#475569" font-size="16">统一门户、门户 BFF 与业务 API 聚合</text>
     <text x="838" y="474" fill="#475569" font-size="16">业务编排、运营治理和前台会话集中区</text>
 
@@ -53,7 +53,7 @@
 
     <rect x="410" y="530" width="352" height="212" rx="24" fill="#F0F9FF"/>
     <text x="444" y="578" fill="#0369A1" font-size="28" font-weight="700">数据区</text>
-    <text x="444" y="616" fill="#1F2937" font-size="18">PostgreSQL / Redis / MinIO</text>
+    <text x="444" y="616" fill="#1F2937" font-size="18">PostgreSQL / Redis / SeaweedFS</text>
     <text x="444" y="642" fill="#1F2937" font-size="18">Weaviate / Milvus / Elasticsearch</text>
     <text x="444" y="668" fill="#475569" font-size="17">有状态组件独立存储、备份、恢复与高可用</text>
     <text x="444" y="694" fill="#475569" font-size="17">检索底座按规模演进，不默认长期全量并行</text>

@@ -49,7 +49,7 @@
 
 门户 / 企业 IM → `APISIX` → `AgentifUI` / 门户 BFF → 主平台路线 → `LlamaIndex` → `Weaviate` → `LiteLLM` → `vLLM`
 
-如需更复杂的问答状态控制，可在编排层补充 `LangGraph`。
+如需更复杂的问答状态控制，可在编排层补充 `LangGraph`（简单调用优先原生 SDK，`LangChain` 按需作为连接器工具包）；如涉及跨会话用户画像与长期记忆，可按需挂载 `Mem0` 长期记忆层。
 
 ### 关键能力
 
