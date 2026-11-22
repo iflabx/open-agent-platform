@@ -2,13 +2,14 @@
 
 > 定位：提供细粒度授权、审计、追踪、评测、压测与发布门槛能力。
 >
-> 当前承载组件：`Casbin`、`LangFuse`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`。
+> 当前承载组件：`Casbin`、`LangFuse`、`LangSet`（条件组件）、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`。
 
 相关文档：
 
 - [安全与治理](/governance)
 - [Casbin](/components/casbin)
 - [LangFuse](/components/langfuse)
+- [LangSet](/components/langset)
 - [k6](/components/k6)
 - [OpenTelemetry](/standards/opentelemetry)
 
@@ -22,13 +23,14 @@
 
 - **细粒度授权裁决**：统一执行应用、工具与数据维度的细粒度授权与策略裁决。
 - **全链路观测采集**：采集分布式链路追踪、系统与业务指标、结构化日志及调用成本数据。
-- **LLM 评测与回放**：承接 LLM 调用观测、样本回放与质量评测数据集管理。
+- **LLM 评测与回放**：承接 LLM 调用观测、样本回放、版本化评测数据集工程与离线回归评测。
 - **性能与发布门禁**：承接压力测试、性能基线对比与上线前发布门槛验证。
 
 ## 当前承载组件
 
 - [Casbin](/components/casbin)
 - [LangFuse](/components/langfuse)
+- [LangSet](/components/langset)（条件组件）
 - [k6](/components/k6)
 - [OpenTelemetry](/standards/opentelemetry)
 - [Prometheus](/components/prometheus)
@@ -77,8 +79,12 @@
 
 ### 3. 发布门槛链路
 
-1. 候选版本在发布前先执行 `k6` 压测与关键质量指标验证。
-2. 结合评测得分、SLO 达标情况与错误率共同决策是否放量。
+发布前验证沿三段式分工协同推进（`LangSet` → `LangFuse` → `k6`）：
+
+1. **`LangSet`（条件引入）**：负责测试数据集工程、不可变版本血缘管理与离线回归评测触发。
+2. **`LangFuse`**：负责在线 Trace、Prompt 观测、评分沉淀与线上样本回放。
+3. **`k6`**：负责入口、编排、检索与模型链路的压力测试与容量基线验证。
+4. 结合离线回归得分、在线观测反馈、SLO 达标情况与错误率共同决策是否放量。
 
 ## 治理要求
 
@@ -111,6 +117,7 @@
 
 - [Casbin Documentation](https://casbin.org/docs/overview)
 - [Langfuse Documentation](https://langfuse.com/docs)
+- [LangSet GitHub Repository](https://github.com/iflabx/langset)
 - [Grafana k6 Documentation](https://grafana.com/docs/k6/latest/)
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
 - [Prometheus Documentation](https://prometheus.io/docs/)

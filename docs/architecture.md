@@ -32,7 +32,7 @@
 | 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 不直接承担终端交互 |
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM` + `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
-| 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
+| 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
 | 9. 基础设施层 | 提供运行底座、持久化、对象存储、网络与密钥体系 | `K3s`、`PostgreSQL`、`Redis`、`MinIO`、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
@@ -57,7 +57,7 @@
 
 配套治理链：
 
-`Casbin` + `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `k6`
+`Casbin` + `LangFuse` + `LangSet`（条件组件） + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `k6`
 
 适用场景：
 
@@ -98,7 +98,7 @@
 
 - **北向接入与流量治理**：由 `APISIX` 承担认证接入、限流、路由与审计前置。
 - **细粒度动作授权**：由 `Casbin` 承担应用内与动作级策略裁决。
-- **AI 级观测与评测**：由 `LangFuse` 承担 LLM Trace、Prompt 版本与离线评测。
+- **AI 级观测与评测**：由 `LangFuse` 承担在线 LLM Trace、Prompt 版本、评分沉淀与回放；需要协同构建版本化评测数据集与离线回归评测时，按需引入 `LangSet`（条件组件），与 `LangFuse` 及 `k6` 形成互补。
 - **平台级可观测性**：由 `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 承担指标、日志与全链路追踪。
 - **发布前容量基线**：由 `k6` 承担关键链路性能压测与容量验证。
 
@@ -147,7 +147,7 @@
 | 知识与检索服务 | 切片、索引、召回、重排、引用输出 | 不绕过权限过滤直接向模型供数 |
 | `LiteLLM` | 模型统一接入、路由、回退、配额治理 | 不承接业务状态和应用编排 |
 | `Casbin` | 细粒度授权裁决 | 不承担入口认证接入 |
-| `LangFuse` 与平台观测体系 | AI 级和平台级双层观测、评测、回放 | 不直接替代运维控制面或业务入口 |
+| `LangFuse`、`LangSet`（条件组件）与平台观测体系 | AI 级与平台级双层观测、版本化离线回归评测、回放与审计 | 不直接替代运维控制面或业务入口 |
 
 ## 架构演进边界
 

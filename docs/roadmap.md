@@ -31,8 +31,8 @@
 | 阶段 | 必选启用的核心组件 | 说明 |
 | --- | --- | --- |
 | 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
-| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph` | 进入生产治理与复杂流程编排阶段 |
-| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` 全链路治理，以及条件启用 `Milvus` / `Elasticsearch` | 进入平台化与规模化阶段 |
+| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph`；有版本化评测集与持续回归需求时可条件引入 `LangSet` | 进入生产治理与复杂流程编排阶段 |
+| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` 全链路治理，以及条件启用 `Milvus` / `Elasticsearch` 与 `LangSet` | 进入平台化与规模化阶段 |
 
 ::: tip 门户前台与扩展能力阶段口径
 全阶段第 3 层共享门户均以 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层为主线，不引入第二套共享门户。面向少量高阶用户或研发团队的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）属于 [扩展升级](/extension-capabilities) 范畴，仅建议在平台治理、独立沙箱节点池与 `LiteLLM` / 审计基线完备后，按 Multi-Instance 独立沙箱隔离模式专项评估。
@@ -86,6 +86,7 @@
 - 引入第二个业务场景并复用既有底座，不复制独立系统。
 - 将高风险工具动作纳入人工确认与审计流程。
 - 基于 `k6` 建立关键链路容量基线。
+- 若团队需要协同构建版本化黄金测试集并建立持续回归评测，可条件引入 [LangSet](/components/langset)，与 `LangFuse` 和 `LiteLLM` 集成联动。
 
 ### 阶段交付物
 
@@ -117,7 +118,7 @@
 - 固化主平台路线、`LangGraph`、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
 - 固化 [AgentifUI](/components/agentifui) + 门户 / BFF 的共享门户契约；如存在少量高阶用户或高信任小组的个人自治助手需求，再按 [扩展升级](/extension-capabilities) 专项评估独立沙箱多实例能力。
 - 将知识接入、索引发布、Prompt、工具与模型路由全部纳入统一发布管理。
-- 建立跨部门评测集、审计抽样与例行复盘机制。
+- 建立跨部门评测集、审计抽样与例行复盘机制；对多业务线协同维护版本化黄金测试集与持续回归评测的团队，可条件引入或扩展 [LangSet](/components/langset)，与 `LangFuse` 和 `LiteLLM` 联动形成评测闭环。
 - 将入口层、检索层、模型层与治理层按负载独立扩容。
 - 根据向量数据规模与隔离需求，评估是否从 `Weaviate` 演进至 `Milvus`。
 

@@ -71,6 +71,7 @@
 ### [8. 治理与观测层](/layers/governance-observability)
 
 - [LangFuse](/components/langfuse)
+- [LangSet](/components/langset)
 - [k6](/components/k6)
 - [Casbin](/components/casbin)
 - [OpenTelemetry](/standards/opentelemetry)

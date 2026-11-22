@@ -49,6 +49,7 @@
 - 默认以 `x86_64 Linux` 私有化部署为口径；若使用云托管数据库、对象存储或 GPU 池，服务器数量可相应下降，但部署单元不会消失。
 - 以下分级以 `AgentifUI` + `Dify` 作为默认起步路线展开；若主平台路线调整为 `RAGFlow` 或 `Coze Studio`，服务器数量通常不变，但知识链路和运营链路的瓶颈位置会有所差异。
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
+- 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`MinIO`、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` 或观测节点，不改变各档位服务器数量基线。
 
 ### 1. 1 台：最小验证版
 
@@ -234,7 +235,7 @@
 | 数据治理单元 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 负责采集、清洗、元数据和资产发布 |
 | 知识检索单元 | `LlamaIndex` + `Weaviate` | 负责索引编排、召回、重排和引用 |
 | 模型服务单元 | `LiteLLM` + `vLLM` + `Qwen` | 负责模型路由和推理执行 |
-| 治理观测单元 | `Casbin`、`LangFuse`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、评测和发布验证 |
+| 治理观测单元 | `Casbin`、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`LangSet` 直接复用既有 `PostgreSQL`、`MinIO`、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不新增数据库或存储引擎 |
 | 基础设施单元 | `K3s`、`PostgreSQL`、`Redis`、`MinIO` | 负责运行底座和持久化能力 |
 
 ## 有状态组件与持久化

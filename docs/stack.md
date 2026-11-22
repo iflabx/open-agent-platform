@@ -30,7 +30,7 @@
 | 全文 / 混合检索 | `Elasticsearch` | 仅在确有全文检索需求时启用 | 不作为默认长期三套并行的一部分 |
 | 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 无 | 入口认证、流量治理和细粒度授权分层负责 |
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
-| 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 无 | 平台级与 AI 级观测均需具备 |
+| 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
 | 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展 |
 
@@ -82,11 +82,12 @@
 - 当向量规模、隔离要求或性能要求显著提升时，再评估演进到 `Milvus`。
 - `Elasticsearch` 用于全文或混合检索兼容，不作为默认长期并行底座。
 
-### 4. `LangFuse` 与平台观测体系的关系
+### 4. `LangFuse`、`LangSet` 与平台观测体系的关系
 
-- `LangFuse` 负责 LLM Trace、Prompt、评测样本和回放。
+- `LangFuse` 负责在线 LLM Trace、Prompt 观测、评分沉淀与样本回放。
+- `LangSet`（条件引入）专注评测数据集工程、不可变版本血缘管理与离线回归评测触发，负责将业务语料与线上样本沉淀为可追溯的黄金测试集；其模型与评测调用统一经由 `LiteLLM` 接入，也可面向 `Dify` 等主平台工作流执行版本化离线回归验证，不替代 `LangFuse` 的在线可观测性，也不替代 `Dify` 的应用编排或 `LiteLLM` 的模型网关职责。
 - `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 负责平台级指标、日志和追踪。
-- 两者承担不同观测维度，不能互相替代。
+- 三者承担不同观测与验证维度，互补而不互相替代。
 
 ### 5. `APISIX`、企业 `SSO / IAM`、`Casbin` 的关系
 

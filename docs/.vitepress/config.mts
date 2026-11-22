@@ -168,6 +168,7 @@ export default defineConfig({
             items: [
               { text: 'Casbin', link: '/components/casbin' },
               { text: 'LangFuse', link: '/components/langfuse' },
+              { text: 'LangSet', link: '/components/langset' },
               { text: 'k6', link: '/components/k6' },
               { text: 'OpenTelemetry', link: '/standards/opentelemetry' },
               { text: 'Prometheus', link: '/components/prometheus' },

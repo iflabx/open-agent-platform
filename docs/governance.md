@@ -5,7 +5,7 @@
 
 - **身份与授权分层**：优先复用企业现有 `SSO / IAM`，由 `APISIX` 负责北向入口认证接入，`Casbin` 负责应用内与动作级细粒度裁决。
 - **高风险动作兜底**：涉及写入、外发、权限变更或生产操作的高风险动作，强制引入人工确认与 `Maker-Checker` 复核节点。
-- **双层观测与发布门槛**：结合平台级（`OpenTelemetry` 栈）与 AI 级（`LangFuse`）双层可观测性（Observability），并以 `k6` 压测与离线评测作为上线准入门槛。
+- **双层观测与发布门槛**：结合平台级（`OpenTelemetry` 栈）与 AI 级（`LangFuse`）双层可观测性（Observability），按需引入 `LangSet` 承接可追溯的版本化评测数据集工程与离线回归评测，并以 `k6` 压测作为上线容量门槛。
 :::
 
 ## 治理目标
@@ -26,9 +26,9 @@
 | 身份与组织 | 谁能进入系统、主体身份、所属租户与部门 | 企业现有 `SSO / IAM`、`APISIX` | 入口身份可信、组织属性可传递 |
 | 授权与动作控制 | 谁能看、谁能调、谁能执行高风险动作 | `Casbin`、应用内审批与 `Maker-Checker` 规范 | 最小权限、动作可裁决 |
 | 数据与知识安全 | 哪些数据可入库、可检索、可进入 Prompt | 数据治理链路、权限标签、检索过滤 | 严禁越权数据进入模型上下文 |
-| 模型与 Prompt 治理 | 使用何种模型、何时切换、何时允许升级 | `LiteLLM`、Prompt 版本化、评测门槛 | 模型与配置可控、可审计 |
+| 模型与 Prompt 治理 | 使用何种模型、何时切换、何时允许升级 | `LiteLLM`、Prompt 版本化、离线评测门槛（按需引入 `LangSet`） | 模型与配置可控、可审计 |
 | 观测与审计 | 发生了什么、原因是什么、能否复盘 | `LangFuse`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 关键链路留痕完整 |
-| 发布与运行治理 | 变更何时可上线、异常如何回滚 | 评测、灰度、`k6` 基线、发布流程 | 有准入门槛，有回滚路径 |
+| 发布与运行治理 | 变更何时可上线、异常如何回滚 | 离线回归评测（`LangSet` 条件引入）、在线评测与回放（`LangFuse`）、灰度、`k6` 基线、发布流程 | 有准入门槛，有回滚路径 |
 
 ## 核心组件承载关系
 
@@ -38,7 +38,8 @@
 | 细粒度授权 | `Casbin` | 负责应用内动作级裁决和策略执行 |
 | 知识权限过滤 | `OpenMetadata` + `LlamaIndex` | 负责标签治理、可见范围和检索前过滤 |
 | 模型调用治理 | `LiteLLM` | 负责模型路由、配额、留痕和切换控制 |
-| LLM 观测与评测 | `LangFuse` | 负责 Prompt、Trace、评测样本和回放 |
+| LLM 观测与评测 | `LangFuse` | 负责在线 Prompt 观测、Trace、评分沉淀和样本回放 |
+| 评测数据集工程与离线回归 | `LangSet`（条件引入） | 负责可追溯的版本化评测数据集准备、不可变版本血缘与离线回归评测触发，与 `LangFuse`、`k6` 互补 |
 | 平台级观测 | `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 负责指标、日志和全链路追踪 |
 | 发布前容量门槛 | `k6` | 负责入口、编排、检索和模型链路压测 |
 
@@ -179,7 +180,7 @@ Prompt 组装与模型输出至少须满足以下约束：
 任何影响平台运行行为的变更，上线前至少须依次通过以下七个环节：
 
 1. 变更登记与责任人确认
-2. 离线评测或回归样本集验证
+2. 离线评测或回归样本集验证（需要协同维护可追溯、版本化黄金测试集与持续离线回归评测时，可条件引入 `LangSet`，并与 `LangFuse` 在线观测评分联动）
 3. 安全规则与权限策略校验
 4. `k6` 基线压测与关键链路容量验证
 5. `staging` 环境集成验证
@@ -234,3 +235,4 @@ Prompt 组装与模型输出至少须满足以下约束：
 - [RFC 7644: SCIM Protocol](https://www.rfc-editor.org/rfc/rfc7644)
 - [OpenTelemetry GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
 - [Casbin Docs](https://www.casbin.org/docs)
+- [LangSet GitHub Repository](https://github.com/iflabx/langset)

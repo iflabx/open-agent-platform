@@ -21,7 +21,7 @@
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 数据采集、标准化、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`Qwen` 模型族 | 模型统一接入与推理执行 |
-| 8. 治理与观测层 | `Casbin`、`LangFuse`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测、观测、压测和发布门槛 |
+| 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
 | 9. 基础设施层 | `K3s`、`PostgreSQL`、`Redis`、`MinIO`、企业现有 `KMS / 证书体系` | 运行底座、持久化和对象存储 |
 
 ## 1. 用户与渠道层
@@ -155,10 +155,15 @@
 - [Grafana](/components/grafana)
 - [Loki](/components/loki)
 
+### 条件组件
+
+- [LangSet](/components/langset)
+
 ### 说明
 
 - `Casbin` 负责细粒度授权裁决。
 - `LangFuse` 负责 LLM 观测、评测样本和回放。
+- `LangSet` 是条件引入的评测数据集工程与离线回归评测工作台，与 `LangFuse` 互补协作。
 - `k6` 负责发布前容量和性能基线验证。
 - `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 负责平台级观测和追踪语义。
 
@@ -206,6 +211,7 @@
 | `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
 | `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |
 | `Letta` | 条件引入 | 仅在长期记忆 Agent 场景需要时使用 |
+| `LangSet` | 条件引入 | 负责团队协作评测数据集工程与离线回归评测，与 `LangFuse` 互补 |
 | `LangGraph` | 复杂流程默认启用 | 标准场景可先以主平台路线为主 |
 | `OpenClaw` | 可选扩展能力 | 不纳入主方案共享门户基线，按单人 / 高信任小组独立沙箱实例模式按需引入 |
 

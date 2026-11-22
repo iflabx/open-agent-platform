@@ -46,6 +46,7 @@
 | `dbt Core` | 标准开源 | `Apache-2.0` | 仅指 `dbt Core` 本身 |
 | `Apache Tika` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `LangFuse` | Open core | 核心为 `MIT`，企业目录另有许可证 | 当前可接受，但需区分社区核心与企业扩展 |
+| `LangSet` | 标准开源 | `Apache-2.0` | 治理与观测层条件引入组件，负责评测数据集工程与离线回归评测 |
 | `k6` | 强 copyleft | `AGPL-3.0` | 可作为压测工具纳入，但需明确 AGPL 影响 |
 | `Casbin` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `PostgreSQL` | 标准开源 | `PostgreSQL License` | 可直接纳入 |
@@ -112,6 +113,7 @@
 | `APISIX` | [官方仓库](https://github.com/apache/apisix) | 标准开源，`Apache-2.0` |
 | `agentgateway` | [官方仓库](https://github.com/agentgateway/agentgateway) | 标准开源，`Apache-2.0` |
 | `LangFuse` | [官方仓库](https://github.com/langfuse/langfuse) | 核心为 `MIT`，企业目录另有许可证，按 `Open core` 理解 |
+| `LangSet` | [官方仓库](https://github.com/iflabx/langset) | 标准开源，`Apache-2.0`，治理与观测层条件引入组件，负责评测数据集工程与离线回归评测 |
 | `k6` | [官方仓库](https://github.com/grafana/k6) | `AGPL-3.0` |
 | `Casbin` | [官方仓库](https://github.com/apache/casbin) | 标准开源，`Apache-2.0` |
 
@@ -171,6 +173,7 @@
 - [agentgateway 官方仓库](https://github.com/agentgateway/agentgateway)
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)
+- [LangSet 官方仓库](https://github.com/iflabx/langset)
 - [Redis 官方仓库](https://github.com/redis/redis)
 - [MinIO 官方仓库](https://github.com/minio/minio)
 - [Elasticsearch 官方仓库](https://github.com/elastic/elasticsearch)
