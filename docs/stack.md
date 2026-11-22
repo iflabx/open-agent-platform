@@ -17,7 +17,7 @@
 
 | 能力域 | 主选组件 | 条件引入 / 演进 | 取舍判断 |
 | --- | --- | --- | --- |
-| 模型推理 | `vLLM` + `Qwen` 模型族 | 按业务负载扩充模型池 | 生产环境优先统一推理与模型版本治理 |
+| 模型推理 | `vLLM` + `Qwen` 模型族 | 多步 Agent 与代码负载条件优选 [SGLang](/components/sglang)（`RadixAttention` 前缀 KV-Cache 复用） | `vLLM` 为通用高吞吐默认引擎；`SGLang` 按模型池分工条件启用，均统一经由 `LiteLLM` 纳管 |
 | 模型网关 | `LiteLLM` | 无额外正式替代项 | 所有模型请求统一经由同一网关 |
 | 主平台路线 | `Dify`、`RAGFlow`、`Coze Studio` 三选一 | 不长期并行 | 标准场景需要统一主底座 |
 | 门户与应用前台 | `AgentifUI` + 门户 / BFF / API 层 | 无额外共享门户替代项 | 统一承接企业多应用入口与会话上下文；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户 |
@@ -25,14 +25,14 @@
 | 通用工程编排 | `LangChain` | 与 `LangGraph` 组合使用 | 负责工程适配，不单独充当平台底座 |
 | 长期记忆 Agent | `Letta` | 仅在长期记忆场景启用 | 非所有场景的默认组件 |
 | 知识工程 | `LlamaIndex` | 无 | 统一负责检索编排、切片和引用构建 |
-| 数据治理 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 无 | 将原始数据治理为 AI 可消费资产 |
+| 数据治理 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling` | 老旧 / 偏门格式兼容与元数据预路由条件引入 `Apache Tika` | 将原始数据治理为 AI 可消费资产；`Docling` 承担默认非结构化文档解析 |
 | 向量检索 | `Weaviate` | 数据规模和隔离要求显著上升时演进到 `Milvus` | 默认优先使用单一向量底座 |
 | 全文 / 混合检索 | `Elasticsearch` | 仅在确有全文检索需求时启用 | 不作为默认长期三套并行的一部分 |
 | 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 无 | 入口认证、流量治理和细粒度授权分层负责 |
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
-| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展 |
+| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `MinIO` | 第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
 
 ## 推荐组合
 
@@ -56,8 +56,9 @@
 - 一条主平台路线
 - `LangGraph` + `LangChain`
 - `LlamaIndex`
-- `LiteLLM` + `vLLM` + `Qwen`
-- `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Apache Tika`
+- `LiteLLM` + `vLLM`（多步 Agent 与代码负载条件优选 `SGLang`）+ `Qwen`
+- `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容）
+- [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`，承接第 4 层不可信代码、脚本与工具执行）
 - `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `LangFuse`
 - `k6`
 
@@ -101,6 +102,23 @@
 - `agentgateway` 负责内部 `MCP` / `A2A` / 南向（Southbound）协议接入与治理。
 - `LiteLLM` 负责默认模型入口、模型路由和配额治理。
 - 三者分层协同，不应彼此替代。
+
+### 7. `vLLM` 与 `SGLang` 的关系
+
+- `vLLM` 保留为通用高吞吐默认推理引擎，承载标准问答、通用推理与批量服务。
+- [SGLang](/components/sglang) 作为条件优选推理引擎，通过 `RadixAttention` 实现前缀 KV-Cache 复用，优先用于多步 Agent 推理、工具调用循环与代码生成负载。
+- 两者按 GPU 模型池分工部署并统一挂接在 `LiteLLM` 之后，对上层应用保持透明。
+
+### 8. `Docling` 与 `Apache Tika` 的关系
+
+- `Docling` 作为第 5 层默认非结构化文档解析组件，负责 PDF、Office、HTML 等复杂版面与表格文档的高保真结构化解析。
+- `Apache Tika` 保留为条件兼容项，用于老旧 / 偏门文件格式兼容抽取与轻量元数据预路由。
+
+### 9. Agent 执行沙箱选型（`gVisor` 与 `Kata Containers`）
+
+- 第 9 层通过 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox`）为第 4 层 Agent 编排层的不可信代码、脚本与工具执行提供强隔离环境。
+- 默认采用 `gVisor` 承接常规隔离需求，兼顾冷启动速度与系统调用隔离；具备裸金属虚拟化条件且需要 KVM 级强隔离的场景启用 `Kata Containers`。
+- 无论采用哪种运行时，均须强制落实三项安全红线：独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 
 ## 应避免的选型做法
 

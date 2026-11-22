@@ -9,3 +9,4 @@
 当前包含：
 
 - [K3s](/components/k3s)
+- [Agent Sandbox（agent-sandbox + gVisor / Kata）](/components/agent-sandbox)

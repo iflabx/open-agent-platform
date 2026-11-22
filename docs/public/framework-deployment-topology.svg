@@ -47,9 +47,9 @@
 
     <rect x="1218" y="286" width="342" height="202" rx="24" fill="#FFFBEB"/>
     <text x="1252" y="334" fill="#B45309" font-size="28" font-weight="700">推理区</text>
-    <text x="1252" y="372" fill="#1F2937" font-size="18">LiteLLM / vLLM / Qwen 模型池</text>
-    <text x="1252" y="398" fill="#1F2937" font-size="18">通用池 / 代码池 / 安全审查池</text>
-    <text x="1252" y="424" fill="#475569" font-size="17">GPU 节点独立扩容，避免与业务服务抢资源</text>
+    <text x="1252" y="370" fill="#1F2937" font-size="17">LiteLLM / vLLM / SGLang</text>
+    <text x="1252" y="396" fill="#1F2937" font-size="17">Qwen 通用池 / 代码池 / 安全审查池</text>
+    <text x="1252" y="424" fill="#475569" font-size="16">GPU 节点独立扩容，避免与业务服务抢资源</text>
 
     <rect x="410" y="530" width="352" height="212" rx="24" fill="#F0F9FF"/>
     <text x="444" y="578" fill="#0369A1" font-size="28" font-weight="700">数据区</text>
@@ -61,7 +61,7 @@
     <rect x="804" y="530" width="372" height="212" rx="24" fill="#F5F3FF"/>
     <text x="828" y="574" fill="#6D28D9" font-size="28" font-weight="700">数据治理与协议区</text>
     <text x="828" y="608" fill="#1F2937" font-size="15.5">OpenMetadata / SeaTunnel / dbt Core</text>
-    <text x="828" y="630" fill="#1F2937" font-size="15.5">Apache Tika / agentgateway</text>
+    <text x="828" y="630" fill="#1F2937" font-size="15.5">Docling / agentgateway</text>
     <text x="828" y="652" fill="#1F2937" font-size="15.5">MCP Server / A2A Client-Server</text>
     <text x="828" y="684" fill="#475569" font-size="15.5">离线治理链路与 southbound 协议能力分区</text>
     <text x="828" y="708" fill="#475569" font-size="15.5">避免治理任务与在线推理链路争抢资源</text>

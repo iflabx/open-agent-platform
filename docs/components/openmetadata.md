@@ -25,7 +25,7 @@
 
 - 与 [SeaTunnel](/components/seatunnel) 配合，承接采集后的数据源和元数据登记。
 - 与 [dbt Core](/components/dbt-core) 协同沉淀结构化建模结果、血缘和资产口径。
-- 与 [Apache Tika](/components/apache-tika) 配合管理非结构化内容相关元数据。
+- 与 [Docling](/components/docling) 配合管理非结构化内容相关元数据。
 - 为知识层、查询层和 Agent 场景提供统一资产目录和治理上下文。
 
 ## 适合场景

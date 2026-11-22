@@ -22,9 +22,10 @@
 
 ## 与其他组件关系
 
-- 上游统一由 `LiteLLM` 调度
-- 下游承载 `Qwen` 模型族
-- 不直接暴露给业务应用
+- 上游统一由 [LiteLLM](/components/litellm) 调度。
+- 下游承载 [Qwen 模型族](/components/qwen-model-family)。
+- 与 [SGLang](/components/sglang) 形成推理引擎互补：`vLLM` 作为平台默认通用推理底座，覆盖常规在线问答与广泛模型生态；当业务出现多步 Agent 循环、高频共享前缀 KV-Cache 复用、代码生成或大规模 PD 分离优化需求时，可在 `LiteLLM` 下游按需引入 `SGLang` 推理池协同承接。
+- 不直接暴露给业务应用。
 
 ## 适合场景
 
@@ -41,6 +42,7 @@
 ## 采用规则
 
 - 默认以 `vLLM` 作为主要推理执行引擎，由 [LiteLLM](/components/litellm) 统一向上暴露能力。
+- 面向多步 Agent 工具调用、长共享前缀 KV-Cache 复用与代码生成等高并发前缀密集负载，可按需条件引入 [SGLang](/components/sglang) 作为互补推理池，由 `LiteLLM` 按场景统一路由。
 - 业务应用、门户和编排层不应直接调用 `vLLM` 作为业务接口。
 - 模型层切换、扩容和发布优先在网关与推理层内部完成，对上游保持稳定接口。
 
@@ -55,6 +57,7 @@
 
 - [7. 模型网关与推理层](/layers/model-gateway-inference)
 - [LiteLLM](/components/litellm)
+- [SGLang](/components/sglang)
 - [Qwen 模型族](/components/qwen-model-family)
 - [部署与发布](/deployment)
 

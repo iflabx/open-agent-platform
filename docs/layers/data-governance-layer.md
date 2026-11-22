@@ -2,7 +2,7 @@
 
 > 定位：将原始企业数据治理为可被智能体、检索与查询消费的标准数据资产。
 >
-> 当前承载组件：`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika`。
+> 当前承载组件：`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（默认非结构化文档解析），条件兼容 `Apache Tika`（老旧 / 冷门格式与元数据预路由）。
 
 相关文档：
 
@@ -10,6 +10,7 @@
 - [OpenMetadata](/components/openmetadata)
 - [SeaTunnel](/components/seatunnel)
 - [dbt Core](/components/dbt-core)
+- [Docling](/components/docling)
 - [Apache Tika](/components/apache-tika)
 
 ## 本层定义
@@ -21,17 +22,23 @@
 ## 本层功能
 
 - **多源数据采集**：采集企业结构化与非结构化数据。
-- **文档内容解析**：解析文档正文、元数据与附件信息。
+- **文档内容解析**：基于版面理解还原标题层级、表格与正文结构，并抽取元数据与附件信息。
 - **清洗与标准化建模**：执行数据清洗、口径标准化、分层建模与质量控制。
 - **元数据与血缘治理**：维护元数据、分类分级标签、责任人、数据血缘与资产目录。
 - **标准资产发布**：对外发布可供检索、查询与 Agent 直接消费的数据资产。
 
 ## 当前承载组件
 
+默认承载组件：
+
 - [OpenMetadata](/components/openmetadata)
 - [SeaTunnel](/components/seatunnel)
 - [dbt Core](/components/dbt-core)
-- [Apache Tika](/components/apache-tika)
+- [Docling](/components/docling)（默认非结构化文档解析）
+
+条件兼容组件：
+
+- [Apache Tika](/components/apache-tika)（老旧 / 冷门格式兼容与元数据预路由）
 
 关键配套底座：
 
@@ -81,7 +88,7 @@
 ### 2. 非结构化数据链路
 
 1. 文档先进入对象存储或受控文件域。
-2. `Apache Tika` 负责文本与元数据抽取。
+2. 默认由 `Docling` 执行版面理解、标题层级与表格结构还原及正文抽取；面向老旧 / 冷门格式兼容或文件类型识别与元数据预路由时，由 `Apache Tika` 辅助前置处理。
 3. 治理后的文档内容与元数据登记至 `OpenMetadata`。
 4. 下游再执行切片、索引与知识构建。
 
@@ -117,4 +124,5 @@
 - [OpenMetadata Documentation](https://docs.open-metadata.org/)
 - [Apache SeaTunnel](https://seatunnel.apache.org/)
 - [dbt Documentation](https://docs.getdbt.com/)
+- [Docling Documentation](https://docling-project.github.io/docling/)
 - [Apache Tika](https://tika.apache.org/)

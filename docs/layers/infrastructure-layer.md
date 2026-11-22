@@ -1,8 +1,8 @@
 # 9. 基础设施层
 
-> 定位：为整个平台提供运行底座、持久化、缓存、对象存储与密钥证书支撑。
+> 定位：为整个平台提供运行底座、持久化、缓存、对象存储、Agent 强隔离执行沙箱与密钥证书支撑。
 >
-> 当前承载组件：`K3s`、`PostgreSQL`、`Redis`、`MinIO`、企业现有 `KMS` / 证书体系。
+> 当前承载组件：`K3s`、`PostgreSQL`、`Redis`、`MinIO`、Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）、企业现有 `KMS` / 证书体系。
 
 相关文档：
 
@@ -10,11 +10,12 @@
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
 - [MinIO](/components/minio)
+- [Agent 执行沙箱](/components/agent-sandbox)
 - [部署与发布](/deployment)
 
 ## 本层定义
 
-基础设施层是智能体平台的共享底座，负责计算资源、容器编排、状态持久化、缓存、对象存储与密钥证书体系。
+基础设施层是智能体平台的共享底座，负责计算资源、容器编排、状态持久化、缓存、对象存储、Agent 强隔离执行沙箱与密钥证书体系。
 
 本层并非外围环境细节，而是决定平台能否长期稳定运行、弹性扩容以及满足企业安全基线的核心根基。
 
@@ -22,6 +23,7 @@
 
 - **容器与集群调度**：提供轻量级容器运行与集群编排调度能力。
 - **多模态数据底座**：提供关系型数据持久化、内存缓存与对象存储能力。
+- **Agent 强隔离执行沙箱**：为 AI 生成代码、不可信脚本与高敏工具提供瞬时隔离运行、出向网络管控与凭据剥离能力。
 - **基础安全与网络支撑**：提供配置管理、密钥与证书管理及基础网络隔离能力。
 - **高可用与容灾保障**：为上层各层级提供高可用部署、数据备份、恢复与容量扩展支撑。
 
@@ -31,6 +33,7 @@
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
 - [MinIO](/components/minio)
+- [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）
 - 企业现有 `KMS` / 证书体系
 
 ## 上下游关系
@@ -75,6 +78,12 @@
 1. 密钥、证书与加密材料由企业现有 `KMS` / 证书体系统一托管。
 2. 上层服务通过标准机制动态获取凭证并定期完成轮转。
 
+### 4. Agent 隔离执行链路
+
+1. 编排层或工具链路触发 AI 生成代码、不可信脚本或高敏文件处理任务时，经由 `Kubernetes agent-sandbox` 在专属沙箱节点池拉起瞬时隔离实例（默认 `gVisor`，裸金属 KVM 高安全场景采用 `Kata Containers`）。
+2. 沙箱实例在只读根文件系统、受限工作区、默认拒绝出向白名单与凭据剥离（Secret Stripping）约束下执行任务。
+3. 任务完成后即刻销毁回收沙箱实例，仅将受控结果与执行审计记录回传上层。
+
 ## 治理要求
 
 - **容灾与容量基线**：明确备份周期、RPO / RTO 恢复目标、容灾方案与容量规划基线。
@@ -82,11 +91,18 @@
 - **存储职责清晰**：明确关系型数据库、缓存与对象存储的适用边界，避免职责混用。
 - **监控上下游联动**：基础资源监控须与上层业务及 LLM 监控联动，避免彼此割裂。
 
+::: warning Agent 沙箱安全红线
+启用 [Agent 执行沙箱](/components/agent-sandbox) 时必须同时落实以下三项硬性约束：
+1. **专属沙箱节点池**：沙箱工作负载通过污点（Taint）与标签强制调度至独立节点池，严禁与控制面、数据库或核心业务服务混布。
+2. **默认拒绝出向白名单**：沙箱网络策略默认拒绝全部出向访问（Default-Deny Egress），仅按显式白名单放行受控目标地址，阻断内网横向渗透与元数据探测。
+3. **凭据剥离（Secret Stripping）**：严禁将系统级密钥、云凭证、数据库密码或长期 Token 注入沙箱环境变量或挂载卷，受控外部调用须经外置代理网关代签。
+:::
+
 ## 部署与发布要求
 
 - **多环境强隔离**：至少区分 `dev`、`staging` 与 `prod` 环境，严禁跨环境共享关键状态。
 - **有状态服务优先保障**：优先确保数据库、缓存与对象存储的高可用架构、定期备份与恢复演练。
-- **异构资源分池调度**：GPU 算力、通用计算与离线数据处理资源建议按池隔离调度。
+- **异构资源分池调度**：GPU 算力、通用计算、离线数据处理与 Agent 执行沙箱节点池应按池隔离调度。
 - **容量统筹规划**：对象存储、数据库与缓存容量须结合数据治理规模、知识索引体量与观测保留周期统一测算。
 
 ## 风险与取舍
@@ -108,3 +124,6 @@
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Redis Documentation](https://redis.io/docs/latest/)
 - [MinIO Documentation](https://min.io/docs/minio/linux/index.html)
+- [Kubernetes Agent Sandbox](https://github.com/kubernetes-sigs/agent-sandbox)
+- [gVisor Documentation](https://gvisor.dev/docs/)
+- [Kata Containers](https://katacontainers.io/)

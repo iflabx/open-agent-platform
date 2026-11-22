@@ -18,11 +18,11 @@
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
 | 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 承接企业多用户统一 AI 工作台、应用目录、会话入口与 BFF / API 聚合边界 |
 | 4. Agent 编排层 | `Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta` | 主平台路线与复杂运行时 |
-| 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 数据采集、标准化、元数据与资产发布 |
+| 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika` | 数据采集、标准化、非结构化解析、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
-| 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`Qwen` 模型族 | 模型统一接入与推理执行 |
+| 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
 | 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
-| 9. 基础设施层 | `K3s`、`PostgreSQL`、`Redis`、`MinIO`、企业现有 `KMS / 证书体系` | 运行底座、持久化和对象存储 |
+| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO`、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化和对象存储 |
 
 ## 1. 用户与渠道层
 
@@ -98,6 +98,10 @@
 - [OpenMetadata](/components/openmetadata)
 - [SeaTunnel](/components/seatunnel)
 - [dbt Core](/components/dbt-core)
+- [Docling](/components/docling)
+
+### 条件组件
+
 - [Apache Tika](/components/apache-tika)
 
 ### 配套底座
@@ -108,6 +112,7 @@
 ### 说明
 
 - 本层负责将原始数据治理为 AI 可消费资产。
+- `Docling` 是默认非结构化文档解析组件，承担 PDF、Office、HTML 等复杂版面与表格文档的高保真结构化解析；`Apache Tika` 保留为条件兼容项，用于老旧 / 偏门文件格式兼容抽取与轻量元数据预路由。
 - `MinIO` 和 `PostgreSQL` 在主归属上属于基础设施层，但在数据治理场景中承担关键配套作用。
 
 ## 6. 知识与检索层
@@ -137,10 +142,15 @@
 - [vLLM](/components/vllm)
 - [Qwen 模型族](/components/qwen-model-family)
 
+### 条件组件
+
+- [SGLang](/components/sglang)
+
 ### 说明
 
 - `LiteLLM` 负责统一模型入口、路由和配额治理。
-- `vLLM` 负责推理执行。
+- `vLLM` 为通用高吞吐默认推理引擎。
+- `SGLang` 为条件优选推理引擎，基于 `RadixAttention` 实现前缀 KV-Cache 复用，优先用于多步 Agent 推理与代码负载，与 `vLLM` 统一挂接在 `LiteLLM` 之后。
 - `Qwen` 模型族承担主模型、代码模型、Embedding、Reranker 和安全模型能力。
 
 ## 8. 治理与观测层
@@ -172,6 +182,7 @@
 ### 主组件
 
 - [K3s](/components/k3s)
+- [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 - [PostgreSQL](/components/postgresql)
 - [Redis](/components/redis)
 - [MinIO](/components/minio)
@@ -183,6 +194,7 @@
 ### 说明
 
 - `K3s` 提供容器运行底座。
+- [Agent 执行沙箱](/components/agent-sandbox) 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），为第 4 层不可信代码、脚本与工具执行提供强隔离环境，并强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - `PostgreSQL`、`Redis`、`MinIO` 提供持久化、缓存、会话和对象存储能力。
 - 企业现有 `KMS / 证书体系` 作为复用能力，不作为新增组件。
 
@@ -208,6 +220,9 @@
 | 组件组 | 采用规则 | 说明 |
 | --- | --- | --- |
 | `Dify` / `RAGFlow` / `Coze Studio` | 三选一 | 主平台路线不应长期并行 |
+| `Docling` / `Apache Tika` | 默认 `Docling`，条件兼容 `Apache Tika` | `Docling` 承担默认非结构化文档解析；`Apache Tika` 保留用于老旧 / 偏门格式兼容抽取与轻量元数据预路由 |
+| `vLLM` / `SGLang` | 默认 `vLLM`，条件优选 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载 |
+| `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |
 | `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
 | `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |
 | `Letta` | 条件引入 | 仅在长期记忆 Agent 场景需要时使用 |

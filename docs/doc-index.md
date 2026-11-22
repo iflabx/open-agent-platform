@@ -53,6 +53,7 @@
 - [OpenMetadata](/components/openmetadata)
 - [SeaTunnel](/components/seatunnel)
 - [dbt Core](/components/dbt-core)
+- [Docling](/components/docling)
 - [Apache Tika](/components/apache-tika)
 
 ### [6. 知识与检索层](/layers/knowledge-retrieval)
@@ -65,6 +66,7 @@
 ### [7. 模型网关与推理层](/layers/model-gateway-inference)
 
 - [vLLM](/components/vllm)
+- [SGLang](/components/sglang)
 - [LiteLLM](/components/litellm)
 - [Qwen 模型族](/components/qwen-model-family)
 
@@ -85,6 +87,7 @@
 - [Redis](/components/redis)
 - [MinIO](/components/minio)
 - [K3s](/components/k3s)
+- [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 
 ### 10. 跨层协议与标准
 

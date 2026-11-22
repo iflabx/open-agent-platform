@@ -140,6 +140,7 @@ export default defineConfig({
               { text: 'OpenMetadata', link: '/components/openmetadata' },
               { text: 'SeaTunnel', link: '/components/seatunnel' },
               { text: 'dbt Core', link: '/components/dbt-core' },
+              { text: 'Docling', link: '/components/docling' },
               { text: 'Apache Tika', link: '/components/apache-tika' }
             ]
           },
@@ -159,6 +160,7 @@ export default defineConfig({
             items: [
               { text: 'LiteLLM', link: '/components/litellm' },
               { text: 'vLLM', link: '/components/vllm' },
+              { text: 'SGLang', link: '/components/sglang' },
               { text: 'Qwen 模型族', link: '/components/qwen-model-family' }
             ]
           },
@@ -181,6 +183,7 @@ export default defineConfig({
             link: '/layers/infrastructure-layer',
             items: [
               { text: 'K3s', link: '/components/k3s' },
+              { text: 'Agent Sandbox', link: '/components/agent-sandbox' },
               { text: 'PostgreSQL', link: '/components/postgresql' },
               { text: 'Redis', link: '/components/redis' },
               { text: 'MinIO', link: '/components/minio' }

@@ -2,12 +2,13 @@
 
 > 定位：负责模型统一入口、模型路由、配额治理与推理执行。
 >
-> 当前承载组件：`LiteLLM`、`vLLM`、`Qwen` 模型族。
+> 当前承载组件：`LiteLLM`、`vLLM`（通用高吞吐默认）、`SGLang`（多步 Agent 与代码负载条件优选）、`Qwen` 模型族。
 
 相关文档：
 
 - [LiteLLM](/components/litellm)
 - [vLLM](/components/vllm)
+- [SGLang](/components/sglang)
 - [Qwen 模型族](/components/qwen-model-family)
 - [技术选型](/stack)
 
@@ -27,11 +28,12 @@
 ## 当前承载组件
 
 - [LiteLLM](/components/litellm)
-- [vLLM](/components/vllm)
+- [vLLM](/components/vllm)（通用对话与高吞吐默认推理引擎）
+- [SGLang](/components/sglang)（条件引入 / 多步 Agent 与代码负载优选，基于 RadixAttention 实现自动前缀 KV-Cache 复用）
 - [Qwen 模型族](/components/qwen-model-family)
 
 ::: tip 选型收敛
-以 `LiteLLM` 作为统一模型网关入口，以 `vLLM` 作为主要推理执行引擎，以 `Qwen` 模型族承担核心模型能力。
+以 `LiteLLM` 作为统一模型网关入口，以 `vLLM` 作为通用高吞吐默认推理执行引擎，面向多步 Agent 与代码推理负载按需引入 `SGLang`（基于 RadixAttention 复用长前缀 KV-Cache 降低 TTFT），以 `Qwen` 模型族承担核心模型能力。
 :::
 
 ## 上下游关系
@@ -49,7 +51,7 @@
 
 推荐链路为：
 
-`编排 / 检索请求 → LiteLLM → vLLM → Qwen 模型 → 观测与配额记录`
+`编排 / 检索请求 → LiteLLM → vLLM / SGLang → Qwen 模型 → 观测与配额记录`
 
 ## 边界
 
@@ -65,8 +67,8 @@
 ### 1. 生成式推理链路
 
 1. 编排层向统一模型入口发起调用请求。
-2. `LiteLLM` 依据模型目录、路由策略与配额规则选择下游推理节点。
-3. `vLLM` 执行模型推理并返回生成结果。
+2. `LiteLLM` 依据模型目录、路由策略、负载特征与配额规则选择下游推理节点（通用对话与高吞吐请求路由至 `vLLM`，多步 Agent 与长前缀代码推理优先路由至 `SGLang`）。
+3. `vLLM` 或 `SGLang` 执行模型推理并返回生成结果。
 4. 观测层记录本次调用的 Token 成本、时延与质量指标。
 
 ### 2. 检索辅助链路
@@ -85,7 +87,7 @@
 ## 部署与发布要求
 
 - **网关与推理分离**：模型网关与推理执行引擎建议分层部署，避免控制面与计算面职责混杂。
-- **算力资源分池**：GPU 算力应区分在线交互请求与离线批量任务，分别进行容量规划。
+- **算力资源分池**：GPU 算力应区分在线交互请求、多步 Agent / 代码推理池（优先部署 `SGLang`）与离线批量任务，分别进行容量规划；大规模集群场景可进一步演进为 PD 分离（Disaggregated Prefill and Decode）架构。
 - **灰度与容量预估**：模型发布需支持灰度切流、快速回退与并发容量预估。
 - **协议接口解耦**：保持对外调用协议统一，避免上层应用强依赖特定推理后端实现细节。
 
@@ -106,4 +108,5 @@
 
 - [LiteLLM Documentation](https://docs.litellm.ai/)
 - [vLLM Documentation](https://docs.vllm.ai/)
+- [SGLang Documentation](https://docs.sglang.ai/)
 - [Qwen](https://qwenlm.github.io/)

@@ -26,7 +26,7 @@
 - 上游通常接收 [SeaTunnel](/components/seatunnel) 接入后的结构化数据。
 - 与 [OpenMetadata](/components/openmetadata) 协同沉淀血缘、口径和数据资产目录。
 - 下游为查询型 Agent、知识层或业务分析场景提供治理后结构化数据。
-- 与非结构化解析组件 [Apache Tika](/components/apache-tika) 互补，不承担文档解析职责。
+- 与非结构化解析组件 [Docling](/components/docling) 互补，不承担文档解析职责。
 
 ## 适合场景
 

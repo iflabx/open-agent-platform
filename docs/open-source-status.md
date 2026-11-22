@@ -26,6 +26,7 @@
 | 对象 | 开源判定 | 许可证 / 模式 | 实施备注 |
 | --- | --- | --- | --- |
 | `vLLM` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `SGLang` | 标准开源 | `Apache-2.0` | 条件引入 / 多步 Agent 与代码负载优选推理引擎，与 `vLLM` 互补 |
 | `LiteLLM` | Open core | 核心为 `MIT`，仓库中企业目录另有单独许可证 | 当前可接受，但不能按“全仓库纯 MIT”理解 |
 | `Qwen` 模型族 | 开放权重 / 模型卡开源口径 | 当前方案中采用的模型卡标注为 `Apache-2.0` | 落地前仍需固定实际模型 ID |
 | `Dify` | 自定义许可证 | `Dify Open Source License` | 带额外限制，不应等同标准 `Apache-2.0` |
@@ -44,7 +45,8 @@
 | `OpenMetadata` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `SeaTunnel` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `dbt Core` | 标准开源 | `Apache-2.0` | 仅指 `dbt Core` 本身 |
-| `Apache Tika` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `Docling` | 标准开源 | `MIT` | 可直接纳入，数据治理层默认非结构化文档解析引擎 |
+| `Apache Tika` | 标准开源 | `Apache-2.0` | 条件引入，用于老旧 / 生僻格式检测、元数据嗅探与前置路由兼容 |
 | `LangFuse` | Open core | 核心为 `MIT`，企业目录另有许可证 | 当前可接受，但需区分社区核心与企业扩展 |
 | `LangSet` | 标准开源 | `Apache-2.0` | 治理与观测层条件引入组件，负责评测数据集工程与离线回归评测 |
 | `k6` | 强 copyleft | `AGPL-3.0` | 可作为压测工具纳入，但需明确 AGPL 影响 |
@@ -56,6 +58,9 @@
 | `Milvus` | 标准开源 | `Apache-2.0` | 可作为条件演进项纳入 |
 | `Elasticsearch` | 多重 / 混合许可证边界 | `AGPL-3.0 / SSPLv1 / Elastic License 2.0` | 作为兼容项时需单独做许可证确认 |
 | `K3s` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `Kubernetes agent-sandbox` | 标准开源 | `Apache-2.0` | 可直接纳入，基础设施层 Agent 沙箱编排与生命周期管理组件 |
+| `gVisor` | 标准开源 | `Apache-2.0` | 可直接纳入，默认沙箱用户态内核运行时，无需嵌套虚拟化 |
+| `Kata Containers` | 标准开源 | `Apache-2.0` | 条件引入，面向具备裸金属 KVM 节点的硬件级 / MicroVM 强隔离场景 |
 | `OpenTelemetry` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `Prometheus` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `Grafana` | 强 copyleft | 仓库主许可证为 `AGPL-3.0` | 当前可接受，但需明确 AGPL 影响 |
@@ -68,6 +73,7 @@
 | 对象 | 公开来源 | 开源判定 |
 | --- | --- | --- |
 | `vLLM` | [官方仓库](https://github.com/vllm-project/vllm) | 标准开源，`Apache-2.0` |
+| `SGLang` | [官方仓库](https://github.com/sgl-project/sglang) | 标准开源，`Apache-2.0`，条件引入，面向多步 Agent 与代码负载的互补推理引擎 |
 | `LiteLLM` | [LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE) | 核心代码为 `MIT`，企业目录另有许可证，按 `Open core` 理解 |
 | `Qwen` 模型族 | [Qwen 官方模型页](https://huggingface.co/Qwen) | 当前方案采用的模型卡标注为 `Apache-2.0`，实施时应锁定具体模型 ID |
 
@@ -104,7 +110,8 @@
 | `OpenMetadata` | [官方仓库](https://github.com/open-metadata/OpenMetadata) | 标准开源，`Apache-2.0` |
 | `SeaTunnel` | [官方仓库](https://github.com/apache/seatunnel) | 标准开源，`Apache-2.0` |
 | `dbt Core` | [官方仓库](https://github.com/dbt-labs/dbt-core) | 标准开源，`Apache-2.0`，仅指 `dbt Core` |
-| `Apache Tika` | [官方仓库](https://github.com/apache/tika) | 标准开源，`Apache-2.0` |
+| `Docling` | [官方仓库](https://github.com/docling-project/docling) | 标准开源，`MIT`，默认非结构化文档解析引擎 |
+| `Apache Tika` | [官方仓库](https://github.com/apache/tika) | 标准开源，`Apache-2.0`，条件引入，老旧 / 生僻格式检测与兼容路由 |
 
 ### 6. 接入治理、评测与授权
 
@@ -128,6 +135,9 @@
 | `Milvus` | [官方仓库](https://github.com/milvus-io/milvus) | `Apache-2.0` |
 | `Elasticsearch` | [官方仓库](https://github.com/elastic/elasticsearch) | 多重 / 混合许可证边界，需单独确认 |
 | `K3s` | [官方仓库](https://github.com/k3s-io/k3s) | `Apache-2.0` |
+| `Kubernetes agent-sandbox` | [官方仓库](https://github.com/kubernetes-sigs/agent-sandbox) | 标准开源，`Apache-2.0` |
+| `gVisor` | [官方仓库](https://github.com/google/gvisor) | 标准开源，`Apache-2.0`，默认沙箱运行时 |
+| `Kata Containers` | [官方仓库](https://github.com/kata-containers/kata-containers) | 标准开源，`Apache-2.0`，条件引入硬件级强隔离运行时 |
 | `OpenTelemetry` | [官方仓库](https://github.com/open-telemetry/opentelemetry-collector) | `Apache-2.0` |
 | `Prometheus` | [官方仓库](https://github.com/prometheus/prometheus) | `Apache-2.0` |
 | `Grafana` | [官方仓库](https://github.com/grafana/grafana) | 主仓库 `AGPL-3.0` |
@@ -180,3 +190,8 @@
 - [Grafana 官方仓库](https://github.com/grafana/grafana)
 - [Grafana Loki 官方仓库](https://github.com/grafana/loki)
 - [Grafana k6 官方仓库](https://github.com/grafana/k6)
+- [Docling 官方仓库](https://github.com/docling-project/docling)
+- [SGLang 官方仓库](https://github.com/sgl-project/sglang)
+- [Kubernetes agent-sandbox 官方仓库](https://github.com/kubernetes-sigs/agent-sandbox)
+- [gVisor 官方仓库](https://github.com/google/gvisor)
+- [Kata Containers 官方仓库](https://github.com/kata-containers/kata-containers)

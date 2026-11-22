@@ -23,7 +23,7 @@
 ## 与其他组件关系
 
 - 文件元数据由 [PostgreSQL](/components/postgresql) 管理。
-- 文档解析和知识接入链路通常由 [Apache Tika](/components/apache-tika)、知识层或主平台进一步处理。
+- 文档解析和知识接入链路通常由 [Docling](/components/docling)、知识层或主平台进一步处理。
 - 检索索引由主平台与 [Weaviate](/components/weaviate) 等检索底座承担。
 - 可与企业现有 KMS / 证书体系配合完成加密和凭证治理。
 
@@ -55,7 +55,7 @@
 ## 关联文档
 
 - [9. 基础设施层](/layers/infrastructure-layer)
-- [Apache Tika](/components/apache-tika)
+- [Docling](/components/docling)
 - [部署与发布](/deployment)
 - [开源状态与许可证说明](/open-source-status)
 

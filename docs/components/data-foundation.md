@@ -11,4 +11,5 @@
 - [OpenMetadata](/components/openmetadata)
 - [SeaTunnel](/components/seatunnel)
 - [dbt Core](/components/dbt-core)
-- [Apache Tika](/components/apache-tika)
+- [Docling](/components/docling)（默认非结构化文档解析）
+- [Apache Tika](/components/apache-tika)（条件引入，老旧 / 生僻格式检测与兼容路由）

@@ -4,7 +4,7 @@
 数据治理层位于企业原始业务系统与 AI 消费层之间，负责将结构化、非结构化与半结构化数据转化为**可治理、可授权、可复用、可追溯**的 AI 可消费数据服务。
 
 - **治理前置**：数据须先经登记、分层清洗、元数据建档与权限打标，再进入知识索引与 Agent 消费。
-- **统一底座**：核心组合收敛为 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika`、`MinIO`、`PostgreSQL`、`LlamaIndex` 与 `Weaviate`（`Milvus` 与 `Elasticsearch` 按条件演进兼容）。
+- **统一底座**：核心组合收敛为 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）、`MinIO`、`PostgreSQL`、`LlamaIndex` 与 `Weaviate`（`Milvus` 与 `Elasticsearch` 按条件演进兼容）。
 - **关联阅读**：[总体架构](/architecture) · [技术选型](/stack) · [组件](/components) · [安全与治理](/governance) · [企业智能体能力与规范体系](/capability-framework)
 :::
 
@@ -109,7 +109,7 @@
 - 结构化字段标准化
 - 业务实体与分类标签对齐
 
-方案落点：`Apache Tika` 负责非结构化文档解析；`dbt Core` 负责结构化数据标准化与建模。
+方案落点：`Docling` 负责非结构化文档默认高保真解析（版面理解与表格还原），`Apache Tika` 保留为老旧 / 偏门格式兼容抽取与轻量元数据预路由条件项；`dbt Core` 负责结构化数据标准化与建模。
 
 ### 5. 元数据、血缘与责任归属
 
@@ -208,7 +208,7 @@ AI 平台不得仅在检索阶段临时判断权限，权限标签须在数据�
 | --- | --- | --- |
 | Source Registry | 数据源登记、owner、分级、接入配置 | `OpenMetadata` |
 | Ingestion Service | 批量、增量、CDC、API、文件采集 | `SeaTunnel` |
-| Processing Pipeline | 文档解析、清洗、标准化、建模 | `Apache Tika`、`dbt Core` |
+| Processing Pipeline | 文档解析、清洗、标准化、建模 | `Docling`（默认）、`Apache Tika`（条件兼容）、`dbt Core` |
 | Metadata Catalog | 元数据、标签、血缘、责任人 | `OpenMetadata` |
 | Policy Tagging | ACL、数据域、敏感级别、生命周期标签 | 数据治理流程 + 元数据体系 |
 | Indexing Service | 向量索引、检索编排、引用构建 | `LlamaIndex` + `Weaviate` |
@@ -221,7 +221,7 @@ AI 平台不得仅在检索阶段临时判断权限，权限标签须在数据�
 - `OpenMetadata`
 - `SeaTunnel`
 - `dbt Core`
-- `Apache Tika`
+- `Docling`
 - `MinIO`
 - `PostgreSQL`
 - `LlamaIndex`
@@ -229,6 +229,7 @@ AI 平台不得仅在检索阶段临时判断权限，权限标签须在数据�
 
 条件演进与兼容边界：
 
+- **`Apache Tika`**：保留为条件兼容项，用于老旧 / 偏门文件格式兼容抽取与轻量元数据预路由。
 - **`Milvus`**：数据规模、多租户隔离或检索性能要求显著上升后的条件演进底座。
 - **`Elasticsearch`**：全文与混合检索场景的兼容项，不作为默认长期并行底座。
 

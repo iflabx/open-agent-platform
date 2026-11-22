@@ -31,8 +31,8 @@
 | 阶段 | 必选启用的核心组件 | 说明 |
 | --- | --- | --- |
 | 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
-| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph`；有版本化评测集与持续回归需求时可条件引入 `LangSet` | 进入生产治理与复杂流程编排阶段 |
-| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` 全链路治理，以及条件启用 `Milvus` / `Elasticsearch` 与 `LangSet` | 进入平台化与规模化阶段 |
+| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入 `LangGraph`；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入生产治理与复杂流程编排阶段 |
+| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch` 与 `LangSet` | 进入平台化与规模化阶段 |
 
 ::: tip 门户前台与扩展能力阶段口径
 全阶段第 3 层共享门户均以 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层为主线，不引入第二套共享门户。面向少量高阶用户或研发团队的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）属于 [扩展升级](/extension-capabilities) 范畴，仅建议在平台治理、独立沙箱节点池与 `LiteLLM` / 审计基线完备后，按 Multi-Instance 独立沙箱隔离模式专项评估。
@@ -85,7 +85,8 @@
 - 补齐 `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `LangFuse` 双层观测体系。
 - 引入第二个业务场景并复用既有底座，不复制独立系统。
 - 将高风险工具动作纳入人工确认与审计流程。
-- 基于 `k6` 建立关键链路容量基线。
+- 若涉及 AI 生成代码、不可信脚本或高敏文件处理工具执行，启用第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），划设专属沙箱节点池并落实默认拒绝出向白名单与凭据剥离（Secret Stripping）。
+- 基于 `k6` 建立关键链路容量基线；若多步 Agent 与代码推理负载的前缀复用收益显著，可条件引入 [SGLang](/components/sglang) 与 `vLLM` 配合以降低首字延迟（TTFT）。
 - 若团队需要协同构建版本化黄金测试集并建立持续回归评测，可条件引入 [LangSet](/components/langset)，与 `LangFuse` 和 `LiteLLM` 集成联动。
 
 ### 阶段交付物
@@ -116,10 +117,11 @@
 ### 建议任务
 
 - 固化主平台路线、`LangGraph`、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
+- 补齐 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling` 数据治理与非结构化文档解析链路（老旧 / 冷门格式按需兼容 `Apache Tika`），建立“先治理、后检索”的数据资产发布闭环。
 - 固化 [AgentifUI](/components/agentifui) + 门户 / BFF 的共享门户契约；如存在少量高阶用户或高信任小组的个人自治助手需求，再按 [扩展升级](/extension-capabilities) 专项评估独立沙箱多实例能力。
 - 将知识接入、索引发布、Prompt、工具与模型路由全部纳入统一发布管理。
 - 建立跨部门评测集、审计抽样与例行复盘机制；对多业务线协同维护版本化黄金测试集与持续回归评测的团队，可条件引入或扩展 [LangSet](/components/langset)，与 `LangFuse` 和 `LiteLLM` 联动形成评测闭环。
-- 将入口层、检索层、模型层与治理层按负载独立扩容。
+- 将入口层、检索层、模型层与治理层按负载独立扩容；模型层按场景拆分 `vLLM` 通用高吞吐池与 `SGLang` 多步 Agent / 代码推理池并视集群规模演进 PD 分离，高安全隔离场景将沙箱节点池升级为 `Kata Containers` 裸金属 KVM 强隔离。
 - 根据向量数据规模与隔离需求，评估是否从 `Weaviate` 演进至 `Milvus`。
 
 ### 阶段交付物

@@ -31,12 +31,14 @@
     <rect x="1374" y="218" width="400" height="290" rx="28" fill="#FFFBEB" stroke="#F3D38C" stroke-width="2"/>
     <text x="1412" y="270" fill="#B45309" font-size="30" font-weight="700">2x GPU Nodes</text>
     <text x="1412" y="306" fill="#64748B" font-size="18">32-64 vCPU / 128-256 GiB / 2 x 80 GiB GPU class</text>
-    <rect x="1412" y="346" width="148" height="116" rx="22" fill="#FEF3C7"/>
-    <rect x="1578" y="346" width="148" height="116" rx="22" fill="#FEF3C7"/>
-    <text x="1458" y="388" fill="#92400E" font-size="22" font-weight="700">G1</text>
-    <text x="1432" y="420" fill="#92400E" font-size="16">vLLM / Qwen pool</text>
-    <text x="1624" y="388" fill="#92400E" font-size="22" font-weight="700">G2</text>
-    <text x="1598" y="420" fill="#92400E" font-size="16">vLLM / Qwen pool</text>
+    <rect x="1408" y="346" width="156" height="116" rx="22" fill="#FEF3C7"/>
+    <rect x="1580" y="346" width="156" height="116" rx="22" fill="#FEF3C7"/>
+    <text x="1486" y="382" text-anchor="middle" fill="#92400E" font-size="22" font-weight="700">G1</text>
+    <text x="1486" y="412" text-anchor="middle" fill="#92400E" font-size="15">vLLM / SGLang</text>
+    <text x="1486" y="436" text-anchor="middle" fill="#92400E" font-size="15">Qwen pool</text>
+    <text x="1658" y="382" text-anchor="middle" fill="#92400E" font-size="22" font-weight="700">G2</text>
+    <text x="1658" y="412" text-anchor="middle" fill="#92400E" font-size="15">vLLM / SGLang</text>
+    <text x="1658" y="436" text-anchor="middle" fill="#92400E" font-size="15">Qwen pool</text>
 
     <rect x="84" y="570" width="620" height="300" rx="28" fill="#F0F9FF" stroke="#CFE4F3" stroke-width="2"/>
     <text x="122" y="622" fill="#0369A1" font-size="30" font-weight="700">2x Data / Retrieval Nodes</text>
@@ -65,10 +67,12 @@
     <text x="1272" y="684" fill="#64748B" font-size="18">or ingestion volume outgrow the baseline.</text>
     <rect x="1272" y="698" width="214" height="126" rx="22" fill="#E9D5FF"/>
     <rect x="1510" y="698" width="214" height="126" rx="22" fill="#E9D5FF"/>
-    <text x="1330" y="742" fill="#5B21B6" font-size="22" font-weight="700">DG-1</text>
-    <text x="1300" y="774" fill="#5B21B6" font-size="16">OpenMetadata / SeaTunnel / dbt / Tika</text>
-    <text x="1584" y="742" fill="#5B21B6" font-size="22" font-weight="700">OBJ-1</text>
-    <text x="1548" y="774" fill="#5B21B6" font-size="16">Object storage or backup expansion</text>
+    <text x="1379" y="736" text-anchor="middle" fill="#5B21B6" font-size="22" font-weight="700">DG-1</text>
+    <text x="1379" y="768" text-anchor="middle" fill="#5B21B6" font-size="15">OpenMetadata / SeaTunnel</text>
+    <text x="1379" y="794" text-anchor="middle" fill="#5B21B6" font-size="15">dbt Core / Docling</text>
+    <text x="1617" y="736" text-anchor="middle" fill="#5B21B6" font-size="22" font-weight="700">OBJ-1</text>
+    <text x="1617" y="768" text-anchor="middle" fill="#5B21B6" font-size="15">Object storage or</text>
+    <text x="1617" y="794" text-anchor="middle" fill="#5B21B6" font-size="15">backup expansion</text>
 
     <path d="M844 364H894" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
     <path d="M1324 364H1374" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>

@@ -65,7 +65,7 @@
     <rect x="516" y="910" width="116" height="44" rx="14" fill="#E9D5FF"/>
     <rect x="648" y="910" width="110" height="44" rx="14" fill="#E9D5FF"/>
     <text x="544" y="939" fill="#5B21B6" font-size="16" font-weight="700">dbt Core</text>
-    <text x="680" y="939" fill="#5B21B6" font-size="16" font-weight="700">Apache Tika</text>
+    <text x="703" y="939" text-anchor="middle" fill="#5B21B6" font-size="16" font-weight="700">Docling</text>
 
     <rect x="872" y="720" width="352" height="250" rx="28" fill="#F8FAFC" stroke="#D7DEE5" stroke-width="2"/>
     <text x="910" y="776" fill="#334155" font-size="30" font-weight="700">S7 Observability</text>
@@ -80,10 +80,10 @@
     <rect x="1266" y="720" width="468" height="250" rx="28" fill="#FFFBEB" stroke="#F3D38C" stroke-width="2"/>
     <text x="1304" y="776" fill="#B45309" font-size="30" font-weight="700">S8 GPU Inference</text>
     <text x="1304" y="812" fill="#64748B" font-size="18">32 vCPU / 128 GiB / 1-2 x GPU</text>
-    <rect x="1304" y="846" width="144" height="52" rx="16" fill="#FEF3C7"/>
-    <rect x="1464" y="846" width="120" height="52" rx="16" fill="#FEF3C7"/>
-    <text x="1346" y="880" fill="#92400E" font-size="20" font-weight="700">vLLM</text>
-    <text x="1498" y="880" fill="#92400E" font-size="20" font-weight="700">Qwen</text>
+    <rect x="1304" y="846" width="206" height="52" rx="16" fill="#FEF3C7"/>
+    <rect x="1526" y="846" width="120" height="52" rx="16" fill="#FEF3C7"/>
+    <text x="1407" y="880" text-anchor="middle" fill="#92400E" font-size="20" font-weight="700">vLLM / SGLang</text>
+    <text x="1586" y="880" text-anchor="middle" fill="#92400E" font-size="20" font-weight="700">Qwen</text>
     <text x="1304" y="930" fill="#475569" font-size="16">Dedicated self-hosted model path for production traffic.</text>
 
     <path d="M1144 444H1206" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 8"/>

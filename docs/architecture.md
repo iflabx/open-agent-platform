@@ -29,11 +29,11 @@
 | 2. 统一接入与流量治理层 | 北向统一入口、认证接入、路由、限流、灰度、审计前置，以及 AI 原生协议南向（Southbound）接入治理 | `APISIX` + `agentgateway` + 企业现有 `SSO / IAM` | 不替代模型网关，不替代细粒度授权 |
 | 3. 门户与应用层 | 负责工作台、BFF、会话上下文和应用入口 | `AgentifUI` + 门户 / BFF / API 层 | 不持有底层检索索引和策略引擎逻辑 |
 | 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify`、`RAGFlow` 或 `Coze Studio` 三选一；复杂流程由 `LangGraph` 承接；通用工程编排采用 `LangChain`；长期记忆场景按需使用 `Letta` | 不绕过治理直接访问原始数据源 |
-| 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika` | 不直接承担终端交互 |
+| 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容） | 不直接承担终端交互 |
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
-| 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM` + `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
+| 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
 | 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
-| 9. 基础设施层 | 提供运行底座、持久化、对象存储、网络与密钥体系 | `K3s`、`PostgreSQL`、`Redis`、`MinIO`、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
+| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO`、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 
@@ -53,7 +53,7 @@
 
 ### 2. 复杂流程主链
 
-`APISIX` → `AgentifUI` / 门户-BFF → `LangGraph` → `agentgateway` → `MCP` / `A2A` → 工具服务或远程 Agent → `LiteLLM` → `vLLM` → `Qwen`
+`APISIX` → `AgentifUI` / 门户-BFF → `LangGraph` → `agentgateway` → `MCP` / `A2A` → 工具服务 / 执行沙箱 / 远程 Agent → `LiteLLM` → `vLLM` / `SGLang` → `Qwen`
 
 配套治理链：
 
@@ -88,7 +88,7 @@
 
 数据与知识面覆盖从原始业务系统到 AI 可消费资产的治理链路：
 
-业务系统 / 文档源 → `SeaTunnel` / `Apache Tika` → `OpenMetadata` / `dbt Core` → `LlamaIndex` → 向量 / 搜索底座
+业务系统 / 文档源 → `SeaTunnel` / `Docling`（`Apache Tika` 条件兼容） → `OpenMetadata` / `dbt Core` → `LlamaIndex` → 向量 / 搜索底座
 
 该视图聚焦数据质量、权限标签、索引发布与引用可追溯性。
 
@@ -112,7 +112,7 @@
 4. 主平台路线或 `LangGraph` 判断请求类型（纯问答、带检索问答或工具型任务）。
 5. `LlamaIndex` 调用知识与检索层，按权限标签执行召回、过滤、重排与引用构建。
 6. 编排层将受控上下文与任务指令发送至 `LiteLLM`。
-7. `LiteLLM` 将请求路由至 `vLLM` 上托管的目标 `Qwen` 模型。
+7. `LiteLLM` 将请求路由至 `vLLM`（或面向多步 Agent / 代码负载条件优选的 `SGLang`）上托管的目标 `Qwen` 模型。
 8. 结果返回前由治理层完成留痕、评测记录及必要的输出审查。
 9. 最终结果返回门户，同时沉淀链路追踪、审计与质量数据。
 
@@ -122,13 +122,13 @@
 2. 编排层将任务拆分为状态化步骤，并识别是否涉及高风险动作。
 3. `Casbin` 根据角色、租户、数据标签与工具权限执行动作级裁决。
 4. 高风险步骤进入人工确认或 `Maker-Checker` 复核节点。
-5. 校验通过后，编排层调用工具服务或外部业务系统。
+5. 校验通过后，编排层调用工具服务或外部业务系统；涉及不可信代码、脚本或工具执行时，须落入第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（独立沙箱节点池、默认拒绝出网白名单、凭据隔离 Secret Stripping）隔离运行。
 6. 执行结果与异常信息写回观测与审计体系，支持全链路回放与复盘。
 
 ### 3. 数据入库与知识发布链路
 
 1. 结构化与非结构化数据从源系统进入数据治理链路。
-2. `SeaTunnel` 负责数据采集同步，`Apache Tika` 负责非结构化文档解析。
+2. `SeaTunnel` 负责数据采集同步，`Docling` 负责非结构化文档默认深度解析（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）。
 3. `dbt Core` 与 `OpenMetadata` 负责标准化建模、元数据、血缘与数据资产管理。
 4. 治理后的数据资产交由 `LlamaIndex` 执行切片、索引与检索配置构建。
 5. 向量索引与检索配置发布至 `Weaviate` 或演进检索底座。
@@ -148,6 +148,7 @@
 | `LiteLLM` | 模型统一接入、路由、回退、配额治理 | 不承接业务状态和应用编排 |
 | `Casbin` | 细粒度授权裁决 | 不承担入口认证接入 |
 | `LangFuse`、`LangSet`（条件组件）与平台观测体系 | AI 级与平台级双层观测、版本化离线回归评测、回放与审计 | 不直接替代运维控制面或业务入口 |
+| [Agent 执行沙箱](/components/agent-sandbox) | 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），隔离第 4 层不可信代码、脚本与工具执行，强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） | 不承载业务编排逻辑，不直接持有生产凭据或开放默认出网 |
 
 ## 架构演进边界
 
@@ -173,6 +174,7 @@
 - **网关职责混叠**：由 `APISIX` 同时承担北向入口治理与模型网关职责，或将公网入口治理与内部 AI 协议南向治理混为一体。
 - **绕过数据治理直连**：允许 Agent 绕过数据治理层直接访问原始业务数据库。
 - **权限控制下沉前端**：将权限校验逻辑集中在前端页面或单个业务应用内部。
+- **不可信代码裸跑**：在业务容器或共享工作节点直接执行 Agent 生成的不可信代码与脚本，绕过第 9 层 Agent 执行沙箱与安全红线。
 - **单一观测替代双层观测**：将 LLM Trace 工具等同于整个平台的可观测性（Observability）体系。
 :::
 

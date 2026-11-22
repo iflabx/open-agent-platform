@@ -54,7 +54,7 @@
     <rect x="84" y="702" width="1432" height="104" rx="24" fill="#F0F9FF"/>
     <rect x="104" y="727" width="218" height="54" rx="16" fill="#CCEAFE"/>
     <text x="130" y="763" fill="#0369A1" font-size="28" font-weight="700">5. 数据治理层</text>
-    <text x="360" y="749" fill="#1F2937" font-size="21">OpenMetadata / SeaTunnel / dbt Core / Apache Tika</text>
+    <text x="360" y="749" fill="#1F2937" font-size="21">OpenMetadata / SeaTunnel / dbt Core / Docling</text>
     <text x="360" y="775" fill="#475569" font-size="17">数据源登记、采集同步、结构化治理、非结构化解析与发布</text>
 
     <rect x="84" y="826" width="1432" height="104" rx="24" fill="#F5F3FF"/>
@@ -67,11 +67,11 @@
     <rect x="104" y="975" width="298" height="54" rx="16" fill="#FDE68A"/>
     <text x="130" y="1011" fill="#B45309" font-size="28" font-weight="700">7. 模型网关与推理层</text>
     <rect x="440" y="975" width="166" height="54" rx="16" fill="#FEF3C7"/>
-    <rect x="624" y="975" width="230" height="54" rx="16" fill="#FEF3C7"/>
+    <rect x="624" y="975" width="304" height="54" rx="16" fill="#FEF3C7"/>
     <text x="486" y="1011" fill="#92400E" font-size="24" font-weight="600">LiteLLM</text>
-    <text x="680" y="1011" fill="#92400E" font-size="22" font-weight="600">vLLM + Qwen</text>
-    <text x="894" y="997" fill="#1F2937" font-size="20">统一模型入口、路由、配额</text>
-    <text x="894" y="1021" fill="#475569" font-size="17">故障切换、推理执行与 GPU 资源承载</text>
+    <text x="776" y="1010" text-anchor="middle" fill="#92400E" font-size="21" font-weight="600">vLLM / SGLang + Qwen</text>
+    <text x="964" y="997" fill="#1F2937" font-size="20">统一模型入口、路由、配额</text>
+    <text x="964" y="1021" fill="#475569" font-size="17">故障切换、推理执行与 GPU 资源承载</text>
 
     <rect x="84" y="1074" width="1432" height="96" rx="24" fill="#F1F5F9"/>
     <rect x="104" y="1095" width="246" height="54" rx="16" fill="#DDE7F2"/>
@@ -82,7 +82,7 @@
     <rect x="84" y="1190" width="1432" height="50" rx="24" fill="#111827"/>
     <rect x="110" y="1200" width="206" height="30" rx="15" fill="#1F2937"/>
     <text x="132" y="1221" fill="#F9FAFB" font-size="18" font-weight="600">9. 基础设施层</text>
-    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / PostgreSQL / Redis / MinIO / GPU 节点 / 企业 SSO / KMS</text>
+    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / agent-sandbox / PostgreSQL / Redis / MinIO / GPU 节点 / 企业 SSO / KMS</text>
   </g>
 
   <path d="M800 284V304" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>

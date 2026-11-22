@@ -40,14 +40,14 @@
 | 治理与责任归属 | 有平台 owner、数据 owner、应用 owner、发布责任链 | 没有 owner 的能力不进入生产 | 平台团队 + 业务团队 + 数据团队 + 安全团队协作 |
 | 身份与组织上下文 | 统一身份、组织属性、租户与渠道上下文 | 认证与授权分离 | 企业现有 `SSO / IAM` + `APISIX` + `Casbin` |
 | 门户与应用管理 | 统一入口、应用目录、反馈闭环 | 门户不承载底层智能逻辑 | `AgentifUI` + 门户 / BFF / API 层 |
-| 运行时与编排 | 多步任务、状态持久化、人工介入、失败恢复 | 高风险动作不能走无审计直写 | 主平台路线 + `LangGraph` + `LangChain` |
+| 运行时与编排 | 多步任务、状态持久化、人工介入、失败恢复 | 高风险动作不能走无审计直写；不可信代码、脚本与工具执行须落入独立执行沙箱 | 主平台路线 + `LangGraph` + `LangChain` + [Agent 执行沙箱](/components/agent-sandbox) |
 | 工具与协议互操作 | 工具有统一接入、参数契约和调用留痕 | 协议优先于私有耦合 | `MCP`、`A2A`、`OpenAPI`、`JSON Schema` |
-| 模型服务与治理 | 统一模型入口、路由、配额、留痕和回滚 | 上层不直接耦合底层推理实现 | `LiteLLM` + `vLLM` + `Qwen` |
-| 数据治理与知识供给 | 数据先治理，再进入检索、查询和 Agent | AI 不直接连原始源系统 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika`、`LlamaIndex` |
+| 模型服务与治理 | 统一模型入口、路由、配额、留痕和回滚 | 上层不直接耦合底层推理实现 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` |
+| 数据治理与知识供给 | 数据先治理，再进入检索、查询和 Agent | AI 不直接连原始源系统 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容）、`LlamaIndex` |
 | 检索与答案质量 | 权限感知检索、引用、增量更新、失效治理 | 禁止默认将全量原文直接注入模型上下文 | `LlamaIndex` + `Weaviate` |
 | 授权与动作治理 | 动作级授权、审批、人工接管、审计 | 写操作和外发动作必须可裁决 | `Casbin` + 规范页体系 |
 | 观测、评测与发布 | 全链路追踪、离线评测、灰度、回滚、容量验证 | 禁止直接在生产环境手工修改关键行为配置 | `LangFuse` + `OpenTelemetry` + `k6` |
-| 运行与 SRE | 多环境、备份恢复、容量规划、故障处理 | 生产环境必须可恢复 | `K3s`、`PostgreSQL`、`Redis`、`MinIO` |
+| 运行与 SRE | 多环境、备份恢复、容量规划、故障处理 | 生产环境必须可恢复；执行沙箱落实独立节点池、默认拒绝出网白名单与凭据隔离 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO` |
 
 ## 详细能力要求
 
@@ -122,6 +122,7 @@
 - 高风险动作必须进入审批或双人复核模式。
 - 长链路任务必须支持中断与断点恢复。
 - 编排逻辑、工具 Schema 与上下文模板均须版本化管理。
+- 不可信代码、脚本与工具执行必须落入第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（独立沙箱节点池、默认拒绝出网白名单、凭据隔离 Secret Stripping），禁止在业务容器或共享工作节点直接运行。
 
 方案落点：
 
@@ -129,6 +130,7 @@
 - **复杂状态流程**：`LangGraph`
 - **工程编排与适配**：`LangChain`
 - **长期记忆场景**：`Letta`
+- **不可信执行隔离**：第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）
 
 ### 5. 工具与协议互操作
 
@@ -166,7 +168,7 @@
 - 禁止上层应用直接绑定底层推理引擎实现。
 - 模型切换必须经过离线评测与灰度验证。
 
-方案落点：`LiteLLM`、`vLLM`、`Qwen` 模型族。
+方案落点：`LiteLLM`、`vLLM`（通用高吞吐默认）、[SGLang](/components/sglang)（多步 Agent 与代码负载条件优选）、`Qwen` 模型族。
 
 ### 7. 数据治理与知识供给
 
@@ -185,7 +187,7 @@
 - 权限标签须贯穿至检索与查询链路。
 - AI 应用优先消费经治理发布的数据服务。
 
-方案落点：`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Apache Tika`、`MinIO`、`PostgreSQL`。
+方案落点：`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）、`MinIO`、`PostgreSQL`。
 
 ### 8. 检索与答案质量
 
@@ -261,8 +263,9 @@
 - 生产环境必须具备可验证的恢复能力。
 - 持久化数据必须定期执行备份与恢复演练。
 - 模型层、检索层与治理层须支持分别独立扩缩容。
+- 承载第 4 层不可信代码、脚本与工具执行的沙箱须独立划分节点池，并强制落实默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 
-方案落点：`K3s`、`PostgreSQL`、`Redis`、`MinIO`。
+方案落点：`K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）、`PostgreSQL`、`Redis`、`MinIO`。
 
 ## 企业生产基线清单
 
@@ -272,6 +275,7 @@
 - **身份与审计**：身份认证、动作授权与审计留痕链路是否完整贯通。
 - **版本化发布**：模型、知识、工具与安全策略是否全部纳入版本与发布流程。
 - **高风险兜底**：高风险动作是否配置了审批、人工确认与人工接管节点。
+- **执行沙箱隔离**：不可信代码、脚本与工具执行是否已落入独立沙箱节点池，并启用默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - **检索安全**：知识检索是否具备权限过滤与来源引用能力。
 - **发布门槛**：上线前是否完成离线评测、灰度验证与容量基线压测。
 - **容灾恢复**：生产环境是否可回滚、可恢复、可复盘。

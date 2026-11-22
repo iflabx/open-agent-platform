@@ -9,5 +9,6 @@
 包含组件：
 
 - [vLLM](/components/vllm)
+- [SGLang](/components/sglang)（条件引入，多步 Agent 与代码负载优选）
 - [LiteLLM](/components/litellm)
 - [Qwen 模型族](/components/qwen-model-family)

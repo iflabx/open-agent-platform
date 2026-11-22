@@ -55,10 +55,11 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 - [知识与检索层](/layers/knowledge-retrieval)
 - [模型网关与推理层](/layers/model-gateway-inference)
 - [治理与观测层](/layers/governance-observability)
+- [基础设施层](/layers/infrastructure-layer)（不可信代码、脚本与高敏工具统一调度至第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 运行）
 
 推荐链路为：
 
-`门户请求 → 编排层 → 检索 / 模型 / 策略 → 结果回写门户`
+`门户请求 → 编排层 → 检索 / 模型 / 策略 / 沙箱 → 结果回写门户`
 
 ## 边界
 
@@ -66,6 +67,7 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 
 - **门户与入口替代**：不替代门户工作台与统一北向接入层。
 - **源数据直连**：不得绕过 [数据治理层](/layers/data-governance-layer) 直接读取原始业务数据。
+- **不可信代码直跑**：编排运行时本身不得在主容器内直接执行 AI 生成的不可信代码、脚本或高敏文件处理工具，须统一下沉至第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 隔离运行。
 - **治理规则私有化**：不将细粒度授权与平台级审计收敛为各编排工具的私有规则。
 - **多控制面并行**：不将多条主平台路线长期并行部署为重复的控制面。
 
@@ -88,6 +90,7 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 
 - **资产版本化**：工作流、提示词、工具清单与外部连接配置必须纳入版本管理。
 - **工具调用受控**：工具调用须具备白名单与审批边界，防止任意应用越权调用。
+- **沙箱隔离执行**：涉及 AI 生成代码、不可信脚本与高敏工具的执行动作，必须统一路由至第 9 层 [Agent 执行沙箱](/components/agent-sandbox)，落实专属沙箱节点池、默认拒绝出向白名单与凭据剥离（Secret Stripping）安全红线。
 - **容错与回滚机制**：人工介入、回滚、超时控制与失败补偿需具备清晰机制。
 - **执行全链路可观测**：编排过程与结果须接入统一观测链路，避免形成黑盒执行。
 
@@ -109,6 +112,7 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 - [门户与应用层](/layers/portal-application)
 - [知识与检索层](/layers/knowledge-retrieval)
 - [模型网关与推理层](/layers/model-gateway-inference)
+- [Agent 执行沙箱](/components/agent-sandbox)
 - [典型场景](/scenarios)
 
 ## 参考资料
