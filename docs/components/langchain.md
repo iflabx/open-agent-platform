@@ -2,7 +2,7 @@
 
 > 类型：定制化业务编排框架
 >
-> 复用规则：稳定复用的组件说明页
+> 采用定位：条件引入（复杂场景工程化补位框架）
 >
 > 所属层：Agent 编排层
 >
@@ -25,7 +25,7 @@
 
 - 常与 [LangGraph](/components/langgraph) 组合，由 `LangChain` 负责应用开发、工具集成和链路组织。
 - 向下通过 [LiteLLM](/components/litellm) 接入模型，通过知识层接入检索能力。
-- 与主平台路线的关系是工程化补位，不建议把 `LangChain` 单独当作企业统一平台中枢。
+- 与主平台路线的关系是工程化补位，避免将 `LangChain` 单独作为企业统一平台中枢。
 - 与 [Casbin](/components/casbin)、[LangFuse](/components/langfuse) 配合纳入授权和观测链路。
 
 ## 适合场景

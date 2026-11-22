@@ -118,8 +118,7 @@ export default defineConfig({
             text: '3. 门户与应用层',
             link: '/layers/portal-application',
             items: [
-              { text: 'AgentifUI', link: '/components/agentifui' },
-              { text: 'OpenClaw', link: '/components/openclaw' }
+              { text: 'AgentifUI', link: '/components/agentifui' }
             ]
           },
           {
@@ -195,6 +194,13 @@ export default defineConfig({
               { text: 'JSON Schema', link: '/standards/json-schema' },
               { text: 'OpenAI 兼容 API', link: '/standards/openai-compatible-api' },
               { text: 'OpenTelemetry', link: '/standards/opentelemetry' }
+            ]
+          },
+          {
+            text: '可选扩展能力',
+            link: '/extension-capabilities',
+            items: [
+              { text: 'OpenClaw', link: '/components/openclaw' }
             ]
           }
         ]

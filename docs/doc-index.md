@@ -1,16 +1,16 @@
 # 文档索引
 
-> 角色：当前站点总索引页
->
-> 维护规则：主方案页始终对应当前公开方案；组件页、协议页、标准页、规范页保持稳定路径复用。
+::: info 索引说明
+本页汇总企业级智能体开源系统方案的全部文档入口，按核心入口、方案专题、九层架构组件、协议、标准与治理规范分类组织；各专题文档底部均附有对应的权威参考资料链接。
+:::
 
-## 一、主入口
+## 核心入口
 
 - [方案](/framework)
 - [组件](/components)
 - [开源状态与许可证说明](/open-source-status)
 
-## 二、方案文档
+## 方案专题
 
 - [方案综述](/guide/)
 - [企业智能体能力与规范体系](/capability-framework)
@@ -24,7 +24,7 @@
 - [实施路线图](/roadmap)
 - [扩展升级](/extension-capabilities)
 
-## 三、组件说明页
+## 组件说明
 
 ### [1. 用户与渠道层](/layers/user-channel)
 
@@ -38,7 +38,6 @@
 ### [3. 门户与应用层](/layers/portal-application)
 
 - [AgentifUI](/components/agentifui)
-- [OpenClaw](/components/openclaw)
 
 ### [4. Agent 编排层](/layers/agent-orchestration)
 
@@ -94,7 +93,11 @@
 - [JSON Schema](/standards/json-schema)
 - [OpenAI 兼容 API](/standards/openai-compatible-api)
 
-## 四、协议说明页
+### [可选扩展能力](/extension-capabilities)
+
+- [OpenClaw](/components/openclaw)（个人自治型超级智能体，单人 / 高信任小组独立沙箱实例模式，不纳入主方案共享门户基线）
+
+## 协议说明
 
 - [协议页总览](/protocols/)
 - [MCP 协议](/protocols/mcp)
@@ -102,24 +105,16 @@
 - [身份接入协议（OIDC / OAuth2 / SAML / SCIM）](/protocols/identity-access)
 - [OpenAPI](/protocols/openapi)
 
-## 五、标准说明页
+## 标准说明
 
 - [标准页总览](/standards/)
 - [JSON Schema](/standards/json-schema)
 - [OpenAI 兼容 API](/standards/openai-compatible-api)
 - [OpenTelemetry](/standards/opentelemetry)
 
-## 六、规范说明页
+## 规范说明
 
 - [规范页总览](/norms/)
 - [RBAC + ABAC](/norms/rbac-abac)
 - [Policy as Code](/norms/policy-as-code)
 - [Maker-Checker](/norms/maker-checker)
-
-## 七、维护规则
-
-- 公开站点始终只展示当前方案与当前组件状态。
-- 主方案入口固定为 [方案](/framework)，组件入口固定为 [组件](/components)。
-- 组件页、协议页、标准页、规范页采用稳定路径复用。
-- 页面标题、导航名称和正文说明保持无编号名称。
-- 参考的权威资料链接统一放在对应文档底部的 `参考资料` 一节。

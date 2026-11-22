@@ -2,7 +2,7 @@
 
 > 类型：门户、应用分发与应用目录层
 >
-> 复用规则：稳定复用的组件说明页
+> 采用定位：默认采用（统一门户前台）
 >
 > 所属层：门户与应用层
 >
@@ -12,9 +12,9 @@
 
 ## 当前定位
 
-`AgentifUI` 是当前方案统一的默认门户前台，负责把应用目录、聊天入口、工作台和多应用入口收敛到同一用户界面层。
+`AgentifUI` 是本方案统一的默认门户前台，负责将应用目录、聊天入口、工作台和多应用入口收敛至同一用户界面层。
 
-在当前方案里，它是第 3 层的默认承载对象；当业务需要一个成品化的超级智能体产品前台时，可与 [OpenClaw](/components/openclaw) 形成条件互补，但不改变 `AgentifUI` 作为默认统一门户的基线定位。
+在第 3 层架构中，它与门户 / BFF / API 层共同构成企业多用户共享工作台基线。个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）不纳入本层共享门户基线，而是作为可选扩展能力按单人或高信任小组独立沙箱实例模式按需引入，详见 [扩展升级](/extension-capabilities)。
 
 ## 主要职责
 
@@ -26,7 +26,7 @@
 ## 与其他组件关系
 
 - 上游由 [APISIX](/components/apisix) 承接统一入口和认证接入。
-- 与 [OpenClaw](/components/openclaw) 的关系是层内互补：`AgentifUI` 负责默认统一门户、应用目录和多应用分发，`OpenClaw` 只在需要旗舰超级智能体产品前台时条件引入。
+- 与 [OpenClaw](/components/openclaw) 属于不同交付边界：`AgentifUI` 负责企业多用户共享统一门户、应用目录与多应用分发；`OpenClaw` 属于可选扩展能力，按单人或高信任小组独立沙箱实例模式按需引入，不纳入第 3 层共享门户基线。
 - 通过 `BFF` 或 API 层对接 [Dify](/components/dify)、[RAGFlow](/components/ragflow)、[Coze Studio](/components/coze-studio) 和自研服务。
 - 与企业现有身份体系联动，决定用户可见应用目录和入口。
 - 向下游编排层传递用户上下文、会话上下文和反馈信息。
@@ -45,11 +45,11 @@
 
 ## 采用规则
 
-- 当前方案默认以 `AgentifUI` 作为统一门户前台。
-- 当需要一个自带多渠道、持续会话和成品化助手体验的前台时，可条件引入 [OpenClaw](/components/openclaw)；这不改变 `AgentifUI` 的默认门户基线地位。
-- 门户层只承接前台交互和应用分发，业务流程、模型调用和知识检索放在下游层处理。
-- 新应用优先通过统一目录和统一入口接入，不建议形成分散前台。
-- 不建议每个业务线各自再造一套门户前台，导致身份、审计和应用目录口径再次分裂。
+- 本方案默认以 `AgentifUI` 作为统一门户前台。
+- 不将个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）作为共享门户基线的替代方案；如需引入，按 [扩展升级](/extension-capabilities) 中的独立沙箱实例模式与治理边界单独部署。
+- 门户层只承接前台交互和应用分发，业务流程、模型调用和知识检索统一交由下游层处理。
+- 新应用优先通过统一目录和统一入口接入，避免形成分散前台。
+- 避免各业务线独立自建门户前台，防止身份、审计和应用目录口径分裂。
 
 ## 治理注意点
 
@@ -61,6 +61,7 @@
 ## 关联文档
 
 - [3. 门户与应用层](/layers/portal-application)
+- [扩展升级](/extension-capabilities)
 - [OpenClaw](/components/openclaw)
 - [2. 统一接入与流量治理层](/layers/access-traffic-governance)
 - [4. Agent 编排层](/layers/agent-orchestration)
@@ -70,5 +71,3 @@
 
 - [AgentifUI](https://agentifui.com/)
 - [AgentifUI GitHub Repository](https://github.com/iflabx/agentifui)
-- [OpenClaw 官网](https://openclaw.ai/)
-- [OpenClaw GitHub Repository](https://github.com/openclaw/openclaw)
