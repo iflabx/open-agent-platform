@@ -126,7 +126,7 @@
 
 方案落点：
 
-- **标准场景**：`Dify`、`RAGFlow`、`Coze Studio` 三选一
+- **标准场景**：`Dify`、`RAGFlow` 二选一
 - **复杂状态流程**：`LangGraph`
 - **工程编排与适配**：`LangChain`
 - **长期记忆场景**：`Letta`

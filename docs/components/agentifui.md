@@ -27,7 +27,7 @@
 
 - 上游由 [APISIX](/components/apisix) 承接统一入口和认证接入。
 - 与 [OpenClaw](/components/openclaw) 属于不同交付边界：`AgentifUI` 负责企业多用户共享统一门户、应用目录与多应用分发；`OpenClaw` 属于可选扩展能力，按单人或高信任小组独立沙箱实例模式按需引入，不纳入第 3 层共享门户基线。
-- 通过 `BFF` 或 API 层对接 [Dify](/components/dify)、[RAGFlow](/components/ragflow)、[Coze Studio](/components/coze-studio) 和自研服务。
+- 通过 BFF 或 API 层对接 [Dify](/components/dify)、[RAGFlow](/components/ragflow) 和自研服务。
 - 与企业现有身份体系联动，决定用户可见应用目录和入口。
 - 向下游编排层传递用户上下文、会话上下文和反馈信息。
 

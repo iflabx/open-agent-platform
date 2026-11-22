@@ -43,7 +43,6 @@
 
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
-- [Coze Studio](/components/coze-studio)
 - [LangGraph](/components/langgraph)
 - [LangChain](/components/langchain)
 - [Letta](/components/letta)

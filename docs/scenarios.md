@@ -34,7 +34,7 @@
 
 | 场景 | 前台形态 | 主控组件 | 知识 / 数据组件 | 模型与治理组件 |
 | --- | --- | --- | --- | --- |
-| 内部知识助手 | `AgentifUI` + 门户 / BFF | `Dify` / `RAGFlow` / `Coze Studio` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
+| 内部知识助手 | `AgentifUI` + 门户 / BFF | `Dify` / `RAGFlow` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
 | 服务台智能分诊 | `AgentifUI` / 工单前台 + 门户 / BFF | 主平台路线 + `LangGraph` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`Casbin`、`OpenTelemetry` |
 | 流程自动化 Agent | `AgentifUI` + 门户 / BFF | `LangGraph` | `OpenMetadata`、`dbt Core`、`LlamaIndex` | `LiteLLM`、`Casbin`、`LangFuse` |
 | 数据分析助手 | `AgentifUI` / 业务门户 | `LangGraph` | `OpenMetadata`、`dbt Core`、`PostgreSQL` | `LiteLLM`、`Casbin`、`LangFuse` |
@@ -201,7 +201,7 @@
 | 场景 | 主要依赖能力 | 关键组件 |
 | --- | --- | --- |
 | 内部知识助手 | 知识接入、检索、引用、权限过滤 | `LlamaIndex`、`Weaviate`、`LiteLLM`、`LangFuse` |
-| 服务台智能分诊 | 编排、工具调用、审计、人工确认 | `Dify` / `RAGFlow` / `Coze Studio`、`LangGraph`、`Casbin` |
+| 服务台智能分诊 | 编排、工具调用、审计、人工确认 | `Dify` / `RAGFlow`、`LangGraph`、`Casbin` |
 | 流程自动化 Agent | 有状态执行、回放、补偿、审批 | `LangGraph`、`APISIX`、`Casbin`、`OpenTelemetry` |
 | 数据分析助手 | 元数据治理、受控查询、结果解释 | `LangGraph`、`OpenMetadata`、`dbt Core`、`PostgreSQL`、`LiteLLM` |
 

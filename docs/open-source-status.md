@@ -31,7 +31,7 @@
 | `Qwen` 模型族 | 开放权重 / 模型卡开源口径 | 当前方案中采用的模型卡标注为 `Apache-2.0` | 落地前仍需固定实际模型 ID |
 | `Dify` | 自定义许可证 | `Dify Open Source License` | 带额外限制，不应等同标准 `Apache-2.0` |
 | `RAGFlow` | 标准开源 | `Apache-2.0` | 可直接纳入 |
-| `Coze Studio` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `Coze Studio` | 标准开源 | `Apache-2.0` | 非主路线观察参考；因底层依赖 MySQL / Milvus / ES / NSQ 异构中间件且开源迭代放缓，不纳入默认主平台候选 |
 | `AgentifUI` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `OpenClaw` | 标准开源 | `MIT` | 可选扩展能力，按独立沙箱实例模式按需引入，不纳入主方案共享门户基线 |
 | `APISIX` | 标准开源 | `Apache-2.0` | 可直接纳入 |
@@ -83,7 +83,7 @@
 | --- | --- | --- |
 | `Dify` | [官方仓库](https://github.com/langgenius/dify) | 自定义许可证，不应简单视为标准 `Apache-2.0` |
 | `RAGFlow` | [官方仓库](https://github.com/infiniflow/ragflow) | 标准开源，`Apache-2.0` |
-| `Coze Studio` | [官方仓库](https://github.com/coze-dev/coze-studio) | 标准开源，`Apache-2.0` |
+| `Coze Studio` | [官方仓库](https://github.com/coze-dev/coze-studio) | 标准开源，`Apache-2.0`，非主路线观察参考（不纳入默认主平台候选） |
 | `AgentifUI` | [官方仓库](https://github.com/iflabx/agentifui) | 标准开源，`Apache-2.0` |
 | `OpenClaw` | [官方仓库](https://github.com/openclaw/openclaw) | 标准开源，`MIT`，可选扩展能力，按独立沙箱实例模式按需引入，不纳入主方案共享门户基线 |
 

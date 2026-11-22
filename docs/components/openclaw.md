@@ -44,7 +44,7 @@
 ## 边界
 
 - **不作为第 3 层共享门户**：不替代 [AgentifUI](/components/agentifui)、企业统一应用目录与共享 BFF 控制面，不承接全员多租户流量。
-- **不按主平台路线定位**：不替代 `Dify`、`RAGFlow`、`Coze Studio` 或 `LangGraph` 等企业级编排与运行时底座。
+- **不按主平台路线定位**：不替代 `Dify`、`RAGFlow` 或 `LangGraph` 等企业级编排与运行时底座。
 - **不替代网关组件**：不替代 [APISIX](/components/apisix) 的北向统一入口职责，也不替代 [agentgateway](/components/agentgateway) 的内部 AI 原生协议网关职责。
 - **不形成治理孤岛**：严禁绕过企业统一身份、模型网关（`LiteLLM`）、权限体系与审计观测链路独立运行。
 

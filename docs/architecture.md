@@ -28,7 +28,7 @@
 | 1. 用户与渠道层 | 承接员工、运营、业务系统和外部渠道请求 | Web 门户、管理后台、企业 IM、工单系统、邮件、Webhook | 不直接承载模型调用和权限裁决 |
 | 2. 统一接入与流量治理层 | 北向统一入口、认证接入、路由、限流、灰度、审计前置，以及 AI 原生协议南向（Southbound）接入治理 | `APISIX` + `agentgateway` + 企业现有 `SSO / IAM` | 不替代模型网关，不替代细粒度授权 |
 | 3. 门户与应用层 | 负责工作台、BFF、会话上下文和应用入口 | `AgentifUI` + 门户 / BFF / API 层 | 不持有底层检索索引和策略引擎逻辑 |
-| 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify`、`RAGFlow` 或 `Coze Studio` 三选一；复杂流程由 `LangGraph` 承接；通用工程编排采用 `LangChain`；长期记忆场景按需使用 `Letta` | 不绕过治理直接访问原始数据源 |
+| 4. Agent 编排层 | 管理任务状态、工作流、工具调用、人工介入和多 Agent 协作 | `Dify` 或 `RAGFlow` 二选一；复杂流程由 `LangGraph` 承接；通用工程编排采用 `LangChain`；长期记忆场景按需使用 `Letta` | 不绕过治理直接访问原始数据源 |
 | 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容） | 不直接承担终端交互 |
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
@@ -43,7 +43,7 @@
 
 ### 1. 标准场景主链
 
-`APISIX` → `AgentifUI` / 门户-BFF → `Dify` / `RAGFlow` / `Coze Studio` → `LlamaIndex` → `Weaviate` → `LiteLLM` → `vLLM` → `Qwen`
+`APISIX` → `AgentifUI` / 门户-BFF → `Dify` / `RAGFlow` → `LlamaIndex` → `Weaviate` → `LiteLLM` → `vLLM` → `Qwen`
 
 适用场景：
 
@@ -141,7 +141,7 @@
 | `APISIX` | 北向统一入口、认证接入、路由、限流、灰度、审计前置 | 不承担模型路由，不承担细粒度授权裁决 |
 | `agentgateway` | 内部 `MCP / A2A / LLM` 协议接入、南向（Southbound）路由与治理 | 不替代 `APISIX` 作为公网入口，不承接业务应用模型 |
 | 门户 / BFF | 用户会话、前端体验、应用入口、接口聚合 | 不直接持有检索索引和策略规则 |
-| 主平台路线 | 标准场景工作流、知识平面、应用配置 | 三条候选路线长期只保留一条主底座 |
+| 主平台路线 | 标准场景工作流、知识平面、应用配置 | 两条候选路线（`Dify` / `RAGFlow`）长期只保留一条主底座 |
 | `LangGraph` | 复杂状态机、人工介入、长链路恢复 | 不替代门户层，不直接承接 IAM |
 | 数据治理服务 | 数据采集、标准化、元数据、数据产品发布 | 不直接承担用户会话和页面逻辑 |
 | 知识与检索服务 | 切片、索引、召回、重排、引用输出 | 不绕过权限过滤直接向模型供数 |

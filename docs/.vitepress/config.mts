@@ -127,7 +127,6 @@ export default defineConfig({
             items: [
               { text: 'Dify', link: '/components/dify' },
               { text: 'RAGFlow', link: '/components/ragflow' },
-              { text: 'Coze Studio', link: '/components/coze-studio' },
               { text: 'LangGraph', link: '/components/langgraph' },
               { text: 'LangChain', link: '/components/langchain' },
               { text: 'Letta', link: '/components/letta' }

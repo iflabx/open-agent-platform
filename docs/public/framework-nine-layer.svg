@@ -35,21 +35,19 @@
     <rect x="84" y="544" width="1432" height="138" rx="24" fill="#FDF2F8"/>
     <rect x="104" y="586" width="246" height="54" rx="16" fill="#F8CFE1"/>
     <text x="130" y="622" fill="#BE185D" font-size="28" font-weight="700">4. Agent 编排层</text>
-    <rect x="390" y="566" width="212" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="620" y="566" width="170" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="808" y="566" width="214" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="1040" y="566" width="150" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="390" y="624" width="212" height="46" rx="14" fill="#FCE0EC"/>
-    <rect x="620" y="624" width="170" height="46" rx="14" fill="#FCE0EC"/>
-    <text x="438" y="596" fill="#9D174D" font-size="18" font-weight="600">Dify / RAGFlow</text>
-    <text x="653" y="596" fill="#9D174D" font-size="18" font-weight="600">Coze Studio</text>
-    <text x="852" y="596" fill="#9D174D" font-size="18" font-weight="600">LangGraph</text>
-    <text x="1086" y="596" fill="#9D174D" font-size="18" font-weight="600">Letta</text>
-    <text x="446" y="654" fill="#9D174D" font-size="18" font-weight="600">LangChain</text>
-    <text x="651" y="654" fill="#9D174D" font-size="18" font-weight="600">LlamaIndex</text>
-    <text x="1224" y="591" fill="#1F2937" font-size="19">标准平台交付</text>
-    <text x="1224" y="617" fill="#1F2937" font-size="19">复杂流程与自研 Agent Runtime</text>
-    <text x="1224" y="643" fill="#475569" font-size="17">长期记忆与知识工程按需接入</text>
+    <rect x="390" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="648" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="906" y="566" width="240" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="390" y="624" width="240" height="46" rx="14" fill="#FCE0EC"/>
+    <rect x="648" y="624" width="240" height="46" rx="14" fill="#FCE0EC"/>
+    <text x="510" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Dify / RAGFlow</text>
+    <text x="768" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LangGraph</text>
+    <text x="1026" y="596" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LangChain</text>
+    <text x="510" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">LlamaIndex</text>
+    <text x="768" y="654" text-anchor="middle" fill="#9D174D" font-size="18" font-weight="600">Letta</text>
+    <text x="1184" y="591" fill="#1F2937" font-size="19">标准平台交付</text>
+    <text x="1184" y="617" fill="#1F2937" font-size="19">复杂流程与自研 Agent Runtime</text>
+    <text x="1184" y="643" fill="#475569" font-size="17">长期记忆与知识工程按需接入</text>
 
     <rect x="84" y="702" width="1432" height="104" rx="24" fill="#F0F9FF"/>
     <rect x="104" y="727" width="218" height="54" rx="16" fill="#CCEAFE"/>

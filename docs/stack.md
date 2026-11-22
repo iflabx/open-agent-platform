@@ -19,7 +19,7 @@
 | --- | --- | --- | --- |
 | 模型推理 | `vLLM` + `Qwen` 模型族 | 多步 Agent 与代码负载条件优选 [SGLang](/components/sglang)（`RadixAttention` 前缀 KV-Cache 复用） | `vLLM` 为通用高吞吐默认引擎；`SGLang` 按模型池分工条件启用，均统一经由 `LiteLLM` 纳管 |
 | 模型网关 | `LiteLLM` | 无额外正式替代项 | 所有模型请求统一经由同一网关 |
-| 主平台路线 | `Dify`、`RAGFlow`、`Coze Studio` 三选一 | 不长期并行 | 标准场景需要统一主底座 |
+| 主平台路线 | `Dify`、`RAGFlow` 二选一 | 不长期并行 | 通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`）；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
 | 门户与应用前台 | `AgentifUI` + 门户 / BFF / API 层 | 无额外共享门户替代项 | 统一承接企业多应用入口与会话上下文；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户 |
 | 复杂 Agent 运行时 | `LangGraph` | 复杂流程或长链路场景启用 | 仅在需要状态机、人工介入、回放时进入默认路径 |
 | 通用工程编排 | `LangChain` | 与 `LangGraph` 组合使用 | 负责工程适配，不单独充当平台底座 |
@@ -41,7 +41,7 @@
 适合 4 到 8 周内完成知识问答或服务台试点：
 
 - `APISIX`
-- 一条主平台路线：`Dify`、`RAGFlow` 或 `Coze Studio`
+- 一条主平台路线：`Dify` 或 `RAGFlow`
 - `LlamaIndex`
 - `LiteLLM` + `vLLM` + `Qwen`
 - `PostgreSQL` + `Redis` + `MinIO` + `Weaviate`
@@ -64,12 +64,12 @@
 
 ## 关键取舍
 
-### 1. `Dify`、`RAGFlow`、`Coze Studio` 选型取舍
+### 1. `Dify` 与 `RAGFlow` 选型取舍
 
-- 若首要目标是快速验证通用场景，优先选择最易落地且团队熟悉度高的一条路线。
-- 若场景以知识密集型问答为主，`RAGFlow` 的知识主链路更贴合需求。
-- 若更偏向通用工作流、应用配置且需要业务运营人员参与配置，`Dify` 或 `Coze Studio` 更适合作为主平台路线。
+- 若场景以通用多应用交付、低代码工作流编排及业务运营人员协作配置为主，且希望与平台默认 `PostgreSQL + Weaviate + LangSet` 栈天然对齐，优先选择 `Dify`。
+- 若场景以深度文档解析、复杂 RAG 检索编排为主，或企业法务对纯 `Apache-2.0` 开源许可证有严格合规要求，优先选择 `RAGFlow`。
 - 无论选择哪一条路线，均只保留一条主底座，不长期并行。
+- 补充说明：[Coze Studio](/components/coze-studio) 因异构中间件依赖栈（`MySQL + Milvus + Elasticsearch + NSQ`）较重且开源迭代节奏相对偏慢，不纳入默认主平台候选池。
 
 ### 2. 主平台路线与 `LangGraph` 的关系
 

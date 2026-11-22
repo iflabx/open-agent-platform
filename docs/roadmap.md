@@ -47,7 +47,7 @@
 ### 建议任务
 
 - 选定一个高价值、低耦合、可量化的场景，优先考虑 [内部知识助手](/scenarios)。
-- 选择一条主平台路线：`Dify`、`RAGFlow` 或 `Coze Studio` 三选一。
+- 选择一条主平台路线：`Dify` 或 `RAGFlow` 二选一。
 - 打通 `APISIX` → `AgentifUI` / 门户 BFF → 主平台路线 → `LiteLLM` → `vLLM` 最小链路。
 - 搭建 `PostgreSQL`、`Redis`、`MinIO`、`Weaviate` 最小可用底座。
 - 基于 `LlamaIndex` 建立可控的知识接入、检索与引用链路。

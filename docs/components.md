@@ -17,7 +17,7 @@
 | 1. 用户与渠道层 | [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints) | 通过企业现有入口复用能力说明页承载，统一覆盖 Web、IM、工单、邮件、CRM / ERP 和 Webhook 等入口 |
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
 | 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 承接企业多用户统一 AI 工作台、应用目录、会话入口与 BFF / API 聚合边界 |
-| 4. Agent 编排层 | `Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta` | 主平台路线与复杂运行时 |
+| 4. Agent 编排层 | `Dify`、`RAGFlow`、`LangGraph`、`LangChain`、`Letta` | 主平台路线（二选一）与复杂运行时 |
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika` | 数据采集、标准化、非结构化解析、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
@@ -72,11 +72,10 @@
 
 ### 主平台路线
 
-以下三项属于互斥候选，实施时只选择一条主平台路线：
+以下两项属于互斥候选，实施时只选择一条主平台路线：
 
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
-- [Coze Studio](/components/coze-studio)
 
 ### 配套运行时
 
@@ -86,7 +85,7 @@
 
 ### 说明
 
-- `Dify` / `RAGFlow` / `Coze Studio` 负责标准场景中的平台中枢能力。
+- `Dify` / `RAGFlow` 负责标准场景中的平台中枢能力（通用多应用 / 低代码工作流交付选 `Dify`，对齐 `PostgreSQL + Weaviate + LangSet`；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow`）；[Coze Studio](/components/coze-studio) 因异构中间件依赖栈（`MySQL + Milvus + Elasticsearch + NSQ`）较重且开源迭代节奏相对偏慢，不纳入默认主平台候选池。
 - `LangGraph` 负责复杂流程、状态机、人工介入和长链路恢复。
 - `LangChain` 负责工程适配和通用编排辅助。
 - `Letta` 是长期记忆场景的条件组件，非所有场景默认启用。
@@ -219,7 +218,7 @@
 
 | 组件组 | 采用规则 | 说明 |
 | --- | --- | --- |
-| `Dify` / `RAGFlow` / `Coze Studio` | 三选一 | 主平台路线不应长期并行 |
+| `Dify` / `RAGFlow` | 二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
 | `Docling` / `Apache Tika` | 默认 `Docling`，条件兼容 `Apache Tika` | `Docling` 承担默认非结构化文档解析；`Apache Tika` 保留用于老旧 / 偏门格式兼容抽取与轻量元数据预路由 |
 | `vLLM` / `SGLang` | 默认 `vLLM`，条件优选 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载 |
 | `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |

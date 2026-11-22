@@ -2,13 +2,12 @@
 
 > 定位：负责应用工作流、工具调用、状态管理、人工介入与多 Agent 协作。
 >
-> 当前承载组件：`Dify`、`RAGFlow`、`Coze Studio`、`LangGraph`、`LangChain`、`Letta`。
+> 当前承载组件：`Dify`、`RAGFlow`、`LangGraph`、`LangChain`、`Letta`。
 
 相关文档：
 
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
-- [Coze Studio](/components/coze-studio)
 - [LangGraph](/components/langgraph)
 - [LangChain](/components/langchain)
 - [Letta](/components/letta)
@@ -26,11 +25,10 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 
 ## 当前承载组件
 
-主平台路线（三选一互斥候选）：
+主平台路线（二选一互斥候选）：
 
 - [Dify](/components/dify)
 - [RAGFlow](/components/ragflow)
-- [Coze Studio](/components/coze-studio)
 
 配套运行时组件：
 
@@ -39,7 +37,7 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 - [Letta](/components/letta)
 
 ::: tip 收敛约束
-`Dify`、`RAGFlow`、`Coze Studio` 作为主平台路线采取单轨收敛，不长期并行部署；`LangGraph`、`LangChain`、`Letta` 按业务复杂度与场景需求条件配合引入。
+`Dify` 与 `RAGFlow` 作为主平台路线采取二选一单轨收敛（通用多应用 / 低代码工作流交付优选 `Dify`，对齐 `PostgreSQL + Weaviate + LangSet`；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 许可证要求优选 `RAGFlow`），不长期并行部署；`LangGraph`、`LangChain`、`Letta` 按业务复杂度与场景需求条件配合引入。
 :::
 
 ## 上下游关系
@@ -119,7 +117,6 @@ Agent 编排层是平台承载 Agent Runtime 的核心执行层，负责将应�
 
 - [Dify Documentation](https://docs.dify.ai/)
 - [RAGFlow](https://ragflow.io/)
-- [Coze Studio](https://github.com/coze-dev/coze-studio)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [LangChain Documentation](https://docs.langchain.com/)
 - [Letta Documentation](https://docs.letta.com/)

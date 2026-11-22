@@ -28,7 +28,7 @@
 1. **唯一模型入口**：所有模型调用统一经由 `LiteLLM`，禁止业务系统直连推理服务。
 2. **数据先治后用**：结构化与非结构化数据须先进入统一数据治理层，再供给 RAG、搜索、查询与 Agent 消费。
 3. **知识平面收敛**：所有知识接入与检索统一收敛至企业知识平面。
-4. **主平台单轨收敛**：主平台中枢在 `Dify`、`RAGFlow`、`Coze Studio` 中三选一，不长期并行建设多套主底座。
+4. **主平台单轨收敛**：主平台中枢在 `Dify` 与 `RAGFlow` 中二选一，不长期并行建设多套主底座。
 5. **定制编排专责**：`LangChain` 负责复杂定制场景与核心业务编排。
 6. **知识工程专责**：`LlamaIndex` 负责知识工程、检索编排与复杂 RAG 能力。
 7. **长期记忆按需引入**：`Letta` 仅用于少量长期记忆型 Agent 场景，不作为全平台默认运行时。
@@ -68,7 +68,7 @@
 | --- | --- | --- |
 | **模型与推理** | 推理服务与模型网关 | `vLLM`（通用高吞吐默认）、`SGLang`（条件优选，多步 Agent 与代码负载）、`LiteLLM` |
 | | 基础模型组合 | `Qwen3.5 27B FP8`（企业通用主模型）、`Qwen3-Coder-Next`（代码模型）、`Qwen/Qwen3-Embedding-8B`（Embedding）、`Qwen/Qwen3-Reranker-8B`（Reranker）、`Qwen3Guard-Stream-8B`（安全审查模型） |
-| **主平台与门户** | 主平台中枢 | `Dify` / `RAGFlow` / `Coze Studio`（三选一） |
+| **主平台与门户** | 主平台中枢 | `Dify` / `RAGFlow`（二选一） |
 | | 门户与交互前台 | `AgentifUI` + 门户 / BFF / API 层（统一门户与应用目录） |
 | **高级 Agent 能力** | 运行时、编排、知识与记忆 | `LangGraph`（生产级 Agent Runtime）、`LangChain`（通用工程编排）、`LlamaIndex`（知识工程与复杂 RAG）、`Letta`（长期记忆 Agent，按需） |
 | **协议与互操作** | 工具与 Agent 协作协议 | `MCP`（Agent-to-Tool / Context）、`A2A`（Agent-to-Agent） |
@@ -122,11 +122,11 @@
 ### 4. 编排层
 
 - **`Dify`**
-  - **职责**：面向业务团队快速交付低代码 Agent、Chatflow 与 Workflow，适合知识助手、服务台助手、流程助手等标准场景。
+  - **职责**：面向业务团队快速交付通用多应用、低代码 Agent、Chatflow 与 Workflow，与平台默认 `PostgreSQL + Weaviate + LangSet` 栈天然对齐，适合知识助手、服务台助手、流程助手等标准场景。
   - **边界**：不作为企业全部核心流程引擎，不独占知识底座，不承载所有复杂企业逻辑。
-- **`Coze Studio`**
-  - **职责**：快速构建 Agent、工作流与面向业务的智能应用，作为主平台路线之一承载标准化场景交付。
-  - **边界**：不作为企业全部核心流程引擎，不与其他主平台路线长期并行建设，不替代门户层与统一控制面。
+- **`RAGFlow`**
+  - **职责**：面向深度文档解析、复杂 RAG 检索编排，或对纯 `Apache-2.0` 开源许可证有严格合规要求的场景，作为主平台路线之一承载知识密集型应用交付。
+  - **边界**：不作为企业全部核心流程引擎，不与 `Dify` 长期并行建设，不替代门户层与统一控制面。
 - **`LangGraph`**
   - **职责**：作为生产级 Agent Runtime，承载长时运行、有状态工作流与失败恢复，支持人工介入、检查点、持久化执行与复杂状态控制，适合自研复杂 Agent 服务。
   - **边界**：不替代主平台中枢的低代码交付能力，不直接替代知识工程与检索层。
@@ -163,7 +163,7 @@
 
 ### 7. 知识与 RAG 层
 
-- **主平台中枢（`Dify`、`RAGFlow` 或 `Coze Studio`）**
+- **主平台中枢（`Dify` 或 `RAGFlow`，二选一）**
   - **职责**：承载标准化场景应用、知识接入与检索主链路，统一知识源生命周期管理、检索编排与应用发布主路径。应将其定位为企业知识与应用主平面，而非单个应用的私有知识库工具。
   - **边界**：不与其他主平台路线长期并行建设，不承担门户层全部控制面职责。
 - **检索底座分层收敛策略**
@@ -176,7 +176,7 @@
 
 - **`AgentifUI`**
   - **职责**：作为企业统一 AI 门户，提供多应用入口、聊天入口、工作台、应用目录、会话交互、应用分发与反馈提交。
-  - **边界**：不持有核心编排逻辑，不直接耦合底层模型；通过统一 BFF / API 层对接 `Dify`、`RAGFlow`、`Coze Studio`、自研服务及协议层能力。
+  - **边界**：不持有核心编排逻辑，不直接耦合底层模型；通过统一 BFF / API 层对接 `Dify`、`RAGFlow`、自研服务及协议层能力。
 
 > 若后续门户层能力不足，演进方向仍应保持“独立自建门户壳 + 稳定 BFF 契约”，避免与底层引擎耦合。面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享门户基线，归入 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 
@@ -234,8 +234,8 @@
 3. **模型网关平面**：`LiteLLM`，承担统一 API、路由、配额、熔断与调用审计。
 4. **协议与互操作平面**：`MCP` + `A2A`，承担工具接入、上下文接入与远程 Agent 协作。
 5. **数据治理平面**：`OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容），承担数据源登记、采集同步、结构化治理、非结构化解析与资产发布。
-6. **知识服务平面**：`Dify` / `RAGFlow` / `Coze Studio` + `Qwen/Qwen3-Embedding-8B` + `Qwen/Qwen3-Reranker-8B` + `Weaviate` / `Milvus` / `Elasticsearch`，承担基于治理后资产的切片、索引、检索与权限过滤。
-7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow` / `Coze Studio`，生产级 Runtime 采用 `LangGraph`，定制编排采用 `LangChain`，知识工程采用 `LlamaIndex`，长期记忆场景按需引入 `Letta`。
+6. **知识服务平面**：`Dify` / `RAGFlow` + `Qwen/Qwen3-Embedding-8B` + `Qwen/Qwen3-Reranker-8B` + `Weaviate` / `Milvus` / `Elasticsearch`，承担基于治理后资产的切片、索引、检索与权限过滤。
+7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow`（二选一），生产级 Runtime 采用 `LangGraph`，定制编排采用 `LangChain`，知识工程采用 `LlamaIndex`，长期记忆场景按需引入 `Letta`。
 8. **门户与应用发布平面**：`AgentifUI` + 门户 / BFF / API 层 + 企业 SSO + 应用中心、应用目录、会话入口与反馈运营后台。
 9. **评测、治理与验证平面**：`LangFuse` + `LangSet`（条件引入） + `k6` + `Qwen3Guard-Stream-8B` + `Casbin`，承担审计、在线观测、版本化离线回归评测、内容合规、质量回放与容量验证。
 
@@ -292,7 +292,7 @@
 | 部署分区 | 承载组件与能力 |
 | --- | --- |
 | **推理区** | GPU 节点、`vLLM`、`SGLang`（条件优选）、模型缓存与镜像仓库 |
-| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow` / `Coze Studio`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph`、自研 `LangChain` 服务、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、门户 BFF |
+| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph`、自研 `LangChain` 服务、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、门户 BFF |
 | **执行沙箱区** | 独立沙箱节点池、`Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），承接第 4 层不可信代码、脚本与工具执行 |
 | **数据区** | `PostgreSQL`、`Redis`、`MinIO`、`Weaviate`、`Milvus`、`Elasticsearch` |
 | **观测区** | `Prometheus`、`Grafana`、`Loki`、`OpenTelemetry Collector` |
@@ -329,7 +329,7 @@
 
 | 潜在风险 | 应对策略 |
 | --- | --- |
-| **`Dify` / `RAGFlow` / `Coze Studio` 职责重叠** | 按企业路线三选一，不并行建设多套主底座或主知识平面，编排与知识链路围绕单一主平台收敛。 |
+| **`Dify` / `RAGFlow` 职责重叠** | 按企业路线二选一，不并行建设多套主底座或主知识平面，编排与知识链路围绕单一主平台收敛。 |
 | **`LangChain` / `LlamaIndex` / `Letta` 叠加复杂度过高** | 严格分工：`LangChain` 负责通用编排，`LlamaIndex` 负责知识工程与复杂 RAG，`Letta` 限定于长期记忆 Agent，不将三者设为所有应用的默认路径。 |
 | **`MCP` 与 `A2A` 边界混淆** | `MCP` 专注 Agent-to-Tool / Context 接入，`A2A` 专注 Agent-to-Agent 协作，二者互补而不互替。 |
 | **`AgentifUI` 难以承载完整企业门户** | 将其定位为起步前端壳，核心控制点下沉至自研 BFF 与统一身份层，确保前端可替换、后端契约稳定；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户替代方案。 |
@@ -343,7 +343,7 @@
 
 | 阶段 | 核心目标 | 关键交付与动作 |
 | --- | --- | --- |
-| **阶段一：PoC** | 验证核心问答链路价值 | 搭建 `vLLM + LiteLLM + 主平台（Dify / RAGFlow / Coze Studio） + MCP + LangFuse`；打通企业知识助手，接入 1–2 个业务部门，建立基础权限与审计。 |
+| **阶段一：PoC** | 验证核心问答链路价值 | 搭建 `vLLM + LiteLLM + 主平台（Dify / RAGFlow） + MCP + LangFuse`；打通企业知识助手，接入 1–2 个业务部门，建立基础权限与审计。 |
 | **阶段二：试点生产** | 补齐入口治理与发布门槛 | 对接企业 `SSO / IAM`；引入 `APISIX` 收敛统一入口与灰度；建统一门户入口；引入 `Qwen3Guard-Stream-8B`；建设评测集、运营看板与 `k6` 压测基线；扩展服务台场景。 |
 | **阶段三：平台化** | 支撑多业务线规模复用 | 引入自研 BFF；收敛知识平面与应用发布规范；支持多业务线、多租户与多应用目录；拓展研发助手、数据助手等专业应用。 |
 | **阶段四：规模化治理** | 降本增效与精细化运营 | 推进模型路由优化、成本治理、安全审查闭环、更细粒度权限与数据治理，建立常态化平台运营体系。 |
@@ -354,7 +354,7 @@
 - **推理与模型网关**：`vLLM`（通用高吞吐默认）+ `SGLang`（条件优选，多步 Agent 与代码负载）+ `Qwen` 模型族构成推理底座，`LiteLLM` 构成唯一模型网关。
 - **入口与协议治理**：`APISIX` 构成北向统一入口网关与流量治理层，`agentgateway` 承担内部 AI 协议治理，`MCP + A2A` 构成互操作协议层。
 - **数据与知识底座**：`OpenMetadata + SeaTunnel + dbt Core + Docling`（`Apache Tika` 条件兼容）构成企业 AI 数据治理底座；`Weaviate` 为默认检索底座，`Milvus` 为大规模演进，`Elasticsearch` 为全文 / 混合检索兼容项。
-- **主平台与 Agent 能力**：`Dify`、`RAGFlow` 或 `Coze Studio` 构成主平台中枢；`LangGraph + LangChain` 构成生产级 Agent 运行与定制编排层；`LlamaIndex` 负责知识工程与复杂 RAG；`Letta` 承担长期记忆 Agent 场景。
+- **主平台与 Agent 能力**：`Dify` 或 `RAGFlow`（二选一）构成主平台中枢；`LangGraph + LangChain` 构成生产级 Agent 运行与定制编排层；`LlamaIndex` 负责知识工程与复杂 RAG；`Letta` 承担长期记忆 Agent 场景。
 - **门户与交互层**：`AgentifUI` + 门户 / BFF / API 层构成统一门户前台与应用发布入口。
 - **运行、观测与治理**：`PostgreSQL + Redis + MinIO + K3s` 与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + 平台观测体系` 构成观测评测与企业治理层。
 :::

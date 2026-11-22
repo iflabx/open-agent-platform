@@ -24,7 +24,7 @@
 ## 与其他组件关系
 
 - 常与 [LangChain](/components/langchain) 组合使用，由 `LangChain` 负责工具与应用开发骨架，由 `LangGraph` 负责状态图运行。
-- 与 [Dify](/components/dify)、[RAGFlow](/components/ragflow)、[Coze Studio](/components/coze-studio) 的关系是复杂场景补位，而不是第二套主平台路线。
+- 与 [Dify](/components/dify)、[RAGFlow](/components/ragflow) 的关系是复杂场景补位，而不是第二套主平台路线。
 - 通过 [LiteLLM](/components/litellm) 调用模型，通过知识层接入检索和引用能力。
 - 与 [Casbin](/components/casbin)、[LangFuse](/components/langfuse) 配合完成授权、追踪和回放。
 
