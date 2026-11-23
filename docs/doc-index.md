@@ -28,7 +28,7 @@
 
 ### [1. 用户与渠道层](/layers/user-channel)
 
-- 企业现有 Web / IM / 工单 / 邮件 / CRM / ERP 入口
+- [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints)
 
 ### [2. 统一接入与流量治理层](/layers/access-traffic-governance)
 

@@ -53,7 +53,7 @@
 
     <rect x="410" y="530" width="352" height="212" rx="24" fill="#F0F9FF"/>
     <text x="444" y="578" fill="#0369A1" font-size="28" font-weight="700">数据区</text>
-    <text x="444" y="616" fill="#1F2937" font-size="18">PostgreSQL / Redis / SeaweedFS</text>
+    <text x="444" y="616" fill="#1F2937" font-size="14.5">PostgreSQL / Valkey / Redis / SeaweedFS</text>
     <text x="444" y="642" fill="#1F2937" font-size="18">Weaviate / Milvus / Elasticsearch</text>
     <text x="444" y="668" fill="#475569" font-size="17">有状态组件独立存储、备份、恢复与高可用</text>
     <text x="444" y="694" fill="#475569" font-size="17">检索底座按规模演进，不默认长期全量并行</text>

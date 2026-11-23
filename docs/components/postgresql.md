@@ -24,7 +24,7 @@
 
 - 为门户层、编排层、数据治理层和治理层提供结构化状态与元数据存储。
 - 与 [SeaweedFS](/components/seaweedfs)（或企业既有 S3 兼容对象存储）互补，分别承担结构化数据与对象文件承载。
-- 与 [Redis](/components/redis) 互补，分别承担持久化主存储与短期缓存。
+- 与 [Valkey](/components/valkey) / [Redis](/components/redis) 互补，分别承担持久化主存储与短期缓存。
 - 可与 [OpenMetadata](/components/openmetadata)、[dbt Core](/components/dbt-core) 等组件共同构成数据治理基础。
 
 ## 适合场景
@@ -57,6 +57,7 @@
 
 - [9. 基础设施层](/layers/infrastructure-layer)
 - [部署与发布](/deployment)
+- [Valkey](/components/valkey)
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
 

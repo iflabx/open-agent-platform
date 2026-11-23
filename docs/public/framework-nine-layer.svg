@@ -78,7 +78,7 @@
     <rect x="84" y="1190" width="1432" height="50" rx="24" fill="#111827"/>
     <rect x="110" y="1200" width="206" height="30" rx="15" fill="#1F2937"/>
     <text x="132" y="1221" fill="#F9FAFB" font-size="18" font-weight="600">9. 基础设施层</text>
-    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / agent-sandbox / PostgreSQL / Redis / SeaweedFS / GPU 节点 / 企业 SSO / KMS</text>
+    <text x="344" y="1221" fill="#CBD5E1" font-size="18">K3s / agent-sandbox / PostgreSQL / Valkey / Redis / SeaweedFS / GPU 节点 / 企业 SSO / KMS</text>
   </g>
 
   <path d="M800 284V304" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>

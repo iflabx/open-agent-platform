@@ -24,7 +24,7 @@
 ## 与其他组件关系
 
 - 为门户层、编排层、数据治理层、知识层、模型层和观测层提供统一运行底座。
-- 与 [PostgreSQL](/components/postgresql)、[Redis](/components/redis)、[SeaweedFS](/components/seaweedfs) 等状态型服务共同构成平台基础设施。
+- 与 [PostgreSQL](/components/postgresql)、[Valkey](/components/valkey) / [Redis](/components/redis)、[SeaweedFS](/components/seaweedfs) 等状态型服务共同构成平台基础设施。
 - 与企业现有 KMS / 证书体系、网络和存储体系配套使用。
 - 为发布、扩容、回滚和环境隔离提供基础能力。
 

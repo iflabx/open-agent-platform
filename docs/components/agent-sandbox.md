@@ -39,7 +39,7 @@
 ## 边界
 
 - **不替代上层权限裁决与工具网关**：沙箱解决“执行爆炸半径隔离”，不替代 [Casbin](/components/casbin) 的权限决策与 [agentgateway](/components/agentgateway) 的南向工具治理。
-- **不承载核心持久化状态服务**：不用于运行 [PostgreSQL](/components/postgresql)、[Redis](/components/redis)、[SeaweedFS](/components/seaweedfs) 或主平台控制面组件。
+- **不承载核心持久化状态服务**：不用于运行 [PostgreSQL](/components/postgresql)、[Valkey](/components/valkey) / [Redis](/components/redis)、[SeaweedFS](/components/seaweedfs) 或主平台控制面组件。
 - **不替代主机安全与镜像供应链治理**：仍需配合最小化只读根文件系统、非 root 运行与内部可信镜像仓库基线。
 
 ## 采用规则

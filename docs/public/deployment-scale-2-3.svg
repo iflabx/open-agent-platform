@@ -24,11 +24,11 @@
     <text x="648" y="306" fill="#0369A1" font-size="30" font-weight="700">S2 Data Node</text>
     <text x="648" y="340" fill="#64748B" font-size="18">16 vCPU / 64 GiB / 1 TiB NVMe</text>
     <rect x="648" y="386" width="170" height="60" rx="18" fill="#DBEAFE"/>
-    <rect x="836" y="386" width="140" height="60" rx="18" fill="#DBEAFE"/>
+    <rect x="836" y="386" width="168" height="60" rx="18" fill="#DBEAFE"/>
     <rect x="648" y="466" width="170" height="60" rx="18" fill="#DBEAFE"/>
     <rect x="836" y="466" width="168" height="60" rx="18" fill="#DBEAFE"/>
     <text x="688" y="424" fill="#1E3A8A" font-size="24" font-weight="700">PostgreSQL</text>
-    <text x="878" y="424" fill="#1E3A8A" font-size="24" font-weight="700">Redis</text>
+    <text x="920" y="422" text-anchor="middle" fill="#1E3A8A" font-size="18" font-weight="700">Valkey / Redis</text>
     <text x="733" y="504" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="700">SeaweedFS</text>
     <text x="870" y="504" fill="#1E3A8A" font-size="24" font-weight="700">Weaviate</text>
     <text x="648" y="590" fill="#475569" font-size="17">Stateful services are separated from the app node from this tier.</text>

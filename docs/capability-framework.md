@@ -47,7 +47,7 @@
 | 检索与答案质量 | 权限感知检索、引用、增量更新、失效治理 | 禁止默认将全量原文直接注入模型上下文 | `LlamaIndex` + `Weaviate` |
 | 授权与动作治理 | 动作级授权、审批、人工接管、审计 | 写操作和外发动作必须可裁决 | `Casbin` + 规范页体系 |
 | 观测、评测与发布 | 全链路追踪、离线评测、灰度、回滚、容量验证 | 禁止直接在生产环境手工修改关键行为配置 | `LangFuse` + `OpenTelemetry` + `k6` |
-| 运行与 SRE | 多环境、备份恢复、容量规划、故障处理 | 生产环境必须可恢复；执行沙箱落实独立节点池、默认拒绝出网白名单与凭据隔离 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`） |
+| 运行与 SRE | 多环境、备份恢复、容量规划、故障处理 | 生产环境必须可恢复；执行沙箱落实独立节点池、默认拒绝出网白名单与凭据隔离 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`） |
 
 ## 详细能力要求
 
@@ -265,7 +265,7 @@
 - 模型层、检索层与治理层须支持分别独立扩缩容。
 - 承载第 4 层不可信代码、脚本与工具执行的沙箱须独立划分节点池，并强制落实默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 
-方案落点：`K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）。
+方案落点：`K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）。
 
 ## 企业生产基线清单
 
