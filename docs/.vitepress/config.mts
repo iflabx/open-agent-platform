@@ -182,6 +182,7 @@ export default defineConfig({
             link: '/layers/infrastructure-layer',
             items: [
               { text: 'K3s', link: '/components/k3s' },
+              { text: 'Kubernetes / RKE2', link: '/components/rke2' },
               { text: 'Agent Sandbox', link: '/components/agent-sandbox' },
               { text: 'PostgreSQL', link: '/components/postgresql' },
               { text: 'Valkey', link: '/components/valkey' },

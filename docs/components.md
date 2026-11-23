@@ -22,7 +22,7 @@
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
 | 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
-| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS` / `RustFS`（条件引入轻量 S3 平替；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化、缓存会话和对象存储 |
+| 9. 基础设施层 | `K3s`（2–8 台试点验证） / 标准 `Kubernetes`（`RKE2`，10–12+ 台正式生产）、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS` / `RustFS`（条件引入轻量 S3 平替；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化、缓存会话和对象存储 |
 
 ## 1. 用户与渠道层
 
@@ -183,7 +183,8 @@
 
 ### 主组件
 
-- [K3s](/components/k3s)
+- [K3s](/components/k3s)（2–8 台试点与部门级验证）
+- [Kubernetes / RKE2](/components/rke2)（10–12+ 台正式高可用生产演进）
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 - [PostgreSQL](/components/postgresql)
 - [Valkey](/components/valkey)
@@ -196,12 +197,13 @@
 
 ### 复用能力
 
+- 企业既有标准 `Kubernetes`（10–12+ 台正式生产优先复用）
 - `KMS / 证书体系`
 - 企业现有 S3 兼容对象存储（优先复用）
 
 ### 说明
 
-- `K3s` 提供容器运行底座。
+- 容器运行底座按规模分阶段演进：2–8 台小规模试点与部门级验证阶段默认采用 `K3s` 快速拉起；10–12+ 台及以上正式高可用生产阶段演进至标准 `Kubernetes` / [RKE2](/components/rke2)（优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2`），两者共享 100% 相同 K8s API / Helm / CRD，实现零重写平滑迁移。
 - [Agent 执行沙箱](/components/agent-sandbox) 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），为第 4 层不可信代码、脚本与工具执行提供强隔离环境，并强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - `PostgreSQL` 提供关系型持久化与检查点存储；`Valkey`（默认推荐，`BSD-3-Clause`）与 `Redis`（兼容并列，适合企业既有集群复用）协议完全兼容，承担会话缓存、限流计数、幂等控制与短期状态存储。
 - `SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`）与条件引入的 `RustFS`（轻量高性能纯 S3 平替，`Apache-2.0`，内置 Web 控制台）提供对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用。
@@ -231,6 +233,7 @@
 | `Dify` / `RAGFlow` | 二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
 | `Docling` / `Apache Tika` | 默认 `Docling`，条件兼容 `Apache Tika` | `Docling` 承担默认非结构化文档解析；`Apache Tika` 保留用于老旧 / 偏门格式兼容抽取与轻量元数据预路由 |
 | `vLLM` / `SGLang` | 默认 `vLLM`，条件优选 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载 |
+| `K3s` / 标准 `Kubernetes`（`RKE2`） | 2–8 台试点默认 `K3s`，10–12+ 台正式生产演进标准 `Kubernetes` / `RKE2` | 共享 100% 相同 K8s API / Helm / CRD 实现零重写迁移；正式生产优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2` |
 | `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |
 | `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
 | `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |

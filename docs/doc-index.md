@@ -88,6 +88,7 @@
 - [SeaweedFS](/components/seaweedfs)
 - [RustFS](/components/rustfs)
 - [K3s](/components/k3s)
+- [Kubernetes / RKE2](/components/rke2)
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 
 ### 10. 跨层协议与标准

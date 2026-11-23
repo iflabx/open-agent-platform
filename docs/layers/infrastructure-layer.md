@@ -2,7 +2,7 @@
 
 > 定位：为整个平台提供运行底座、持久化、缓存、对象存储、Agent 强隔离执行沙箱与密钥证书支撑。
 >
-> 当前承载组件：`K3s`、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 `S3` 兼容对象存储，`Apache-2.0`）/ `RustFS`（轻量 `S3` 平替，`Apache-2.0`，按需；优先复用企业既有 `S3` 兼容对象存储）、Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）、企业现有 `KMS` / 证书体系。
+> 当前承载组件：`K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 `S3` 兼容对象存储，`Apache-2.0`）/ `RustFS`（轻量 `S3` 平替，`Apache-2.0`，按需；优先复用企业既有 `S3` 兼容对象存储）、Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）、企业现有 `KMS` / 证书体系。
 
 相关文档：
 
@@ -23,7 +23,7 @@
 
 ## 本层功能
 
-- **容器与集群调度**：提供轻量级容器运行与集群编排调度能力。
+- **容器与集群调度**：提供分阶段演进的容器运行与集群编排调度能力（2–8 台试点与部门验证采用 `K3s`，10–12+ 台企业级高可用生产平滑演进至标准 `Kubernetes` / `RKE2`）。
 - **多模态数据底座**：提供关系型数据持久化、内存缓存与对象存储能力。
 - **Agent 强隔离执行沙箱**：为 AI 生成代码、不可信脚本与高敏工具提供瞬时隔离运行、出向网络管控与凭据剥离能力。
 - **基础安全与网络支撑**：提供配置管理、密钥与证书管理及基础网络隔离能力。
@@ -31,14 +31,15 @@
 
 ## 当前承载组件
 
-- [K3s](/components/k3s)
+- [K3s](/components/k3s) → 标准 `Kubernetes` / `RKE2`（2–8 台试点与部门验证采用 `K3s`；10–12+ 台企业级高可用生产优先复用企业既有标准 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 实现零重写迁移）
 - [PostgreSQL](/components/postgresql)
 - [Valkey](/components/valkey) / [Redis](/components/redis)（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）
 - [SeaweedFS](/components/seaweedfs) / [RustFS](/components/rustfs)（默认自建 `S3` 兼容对象存储选 `SeaweedFS`，`Apache-2.0`；轻量 `S3` 平替按需选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用）
 - [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）
 - 企业现有 `KMS` / 证书体系
 
-::: tip 缓存与对象存储选型指引
+::: tip 容器、缓存与对象存储选型指引
+- **容器运行底座（`K3s` → 标准 `Kubernetes` / `RKE2`）**：2–8 台试点与部门验证阶段采用 [K3s](/components/k3s) 快速落地；进入 10–12+ 台企业级高可用生产阶段时，优先复用企业既有标准 `Kubernetes` 集群，新建全私有化或离线集群优选 `RKE2`。三者 100% 共享标准 K8s API、Helm Chart 与 CRD，业务编排与治理配置均可零重写迁移。
 - **缓存与会话（`Valkey` / `Redis`）**：新建纯开源环境优先采用 [Valkey](/components/valkey)（Linux Foundation `BSD-3-Clause`，与 `Redis` 协议 100% 兼容）；对已部署成熟 [Redis](/components/redis) 集群或托管实例的企业，直接兼容复用并保留既有 `Redis`。
 - **对象存储（`SeaweedFS` / `RustFS`）**：优先复用企业既有 `S3` 兼容对象存储；需自建时默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 `S3` 平替。
 :::
@@ -70,7 +71,7 @@
 
 ### 1. 运行链路
 
-1. 平台各层服务统一运行在 `K3s` 集群之上。
+1. 平台各层服务按演进阶段统一运行在 `K3s`（2–8 台试点与部门验证）或标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产）集群之上，全程共享标准 K8s API、Helm Chart 与 CRD。
 2. 按层级职责分配独立的计算、网络与存储资源配额。
 3. 版本发布、弹性扩容与故障回滚依托基础设施层执行。
 
@@ -127,7 +128,9 @@
 
 ## 参考资料
 
+- [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [K3s Documentation](https://docs.k3s.io/)
+- [RKE2 Documentation](https://docs.rke2.io/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Valkey Documentation](https://valkey.io/docs/)
 - [Redis Documentation](https://redis.io/docs/latest/)

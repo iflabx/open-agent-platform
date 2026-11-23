@@ -8,5 +8,6 @@
 
 当前包含：
 
-- [K3s](/components/k3s)
+- [K3s](/components/k3s)（2–8 台小规模试点与部门级验证）
+- [Kubernetes / RKE2](/components/rke2)（10–12+ 台正式高可用生产演进，优先复用企业既有标准 `Kubernetes`）
 - [Agent Sandbox（agent-sandbox + gVisor / Kata）](/components/agent-sandbox)

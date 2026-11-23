@@ -33,7 +33,7 @@
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
 | 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
-| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、缓存、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（默认自建 `SeaweedFS`，轻量 S3 平替按需 `RustFS`；优先复用企业既有 S3 存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
+| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、缓存、对象存储、网络与密钥体系 | `K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产；优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（默认自建 `SeaweedFS`，轻量 S3 平替按需 `RustFS`；优先复用企业既有 S3 存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 
@@ -155,15 +155,17 @@
 ### 单团队试点
 
 - 允许将门户、主平台路线与检索服务部署得更为紧凑，降低初期运维成本。
+- 2–8 台试点与部门验证阶段默认采用 `K3s` 快速交付容器运行底座，保持与标准 `Kubernetes` 100% 兼容的 API、Helm 与 CRD 契约。
 - 入口、知识、模型、治理四类职责仍须在架构设计与代码边界上保持分离。
 
 ### 部门级推广
 
-- 入口层、应用层、检索层与观测层开始按负载独立伸缩。
+- 入口层、应用层、检索层与观测层开始按负载独立伸缩，仍可延续 `K3s` 轻量化多节点集群运行。
 - 高风险动作审批、评测门槛与发布回滚必须纳入标准变更流程。
 
 ### 企业级生产
 
+- 10–12+ 台企业级高可用生产阶段平滑演进至标准 `Kubernetes` / `RKE2`（优先复用企业既有标准 `Kubernetes` 集群，新建私有化或离线环境优选 `RKE2`），依托 100% 共享 K8s API、Helm Chart 与 CRD 实现应用与编排配置零重写迁移。
 - 模型层、检索层、治理层与有状态底座分别独立扩容。
 - 部署环境与数据权限边界按租户、部门及系统安全等级严格收敛。
 
@@ -191,6 +193,7 @@
 
 - [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/)
 - [K3s Architecture](https://docs.k3s.io/architecture)
+- [RKE2 Documentation](https://docs.rke2.io/)
 - [agentgateway Introduction](https://agentgateway.dev/docs/standalone/latest/about/introduction/)
 - [Model Context Protocol Specification 2025-06-18](https://modelcontextprotocol.io/specification/2025-06-18)
 - [A2A Protocol 官方仓库](https://github.com/a2aproject/A2A)

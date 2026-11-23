@@ -30,9 +30,9 @@
 
 | 阶段 | 必选启用的核心组件 | 说明 |
 | --- | --- | --- |
-| 第一阶段 | `APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（优先复用企业既有 `S3` 兼容对象存储，自建默认 `SeaweedFS`，轻量 `S3` 平替按需 `RustFS`）、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
-| 第二阶段 | 在第一阶段基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入核心生产 Agent Runtime `LangGraph`（按需配合 `LangChain` 生态连接器）；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入生产治理与复杂流程编排阶段 |
-| 第三阶段 | 按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch`、`Mem0`（可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 互补）与 `LangSet` | 进入平台化与规模化阶段 |
+| 第一阶段 | `K3s`（2–8 台试点轻量容器底座）、`APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（优先复用企业既有 `S3` 兼容对象存储，自建默认 `SeaweedFS`，轻量 `S3` 平替按需 `RustFS`）、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
+| 第二阶段 | 在第一阶段 `K3s` 多节点底座基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入核心生产 Agent Runtime `LangGraph`（按需配合 `LangChain` 生态连接器）；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入部门级生产治理与复杂流程编排阶段 |
+| 第三阶段 | 容器底座由 `K3s` 平滑演进至标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有标准 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）；按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch`、`Mem0`（可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 互补）与 `LangSet` | 进入企业级平台化与规模化生产阶段 |
 
 ::: tip 门户前台与扩展能力阶段口径
 全阶段第 3 层共享门户均以 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层为主线，不引入第二套共享门户。面向少量高阶用户或研发团队的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）属于 [扩展升级](/extension-capabilities) 范畴，仅建议在平台治理、独立沙箱节点池与 `LiteLLM` / 审计基线完备后，按 Multi-Instance 独立沙箱隔离模式专项评估。
@@ -49,7 +49,7 @@
 - 选定一个高价值、低耦合、可量化的场景，优先考虑 [内部知识助手](/scenarios)。
 - 选择一条主平台路线：`Dify` 或 `RAGFlow` 二选一。
 - 打通 `APISIX` → `AgentifUI` / 门户 BFF → 主平台路线 → `LiteLLM` → `vLLM` 最小链路。
-- 搭建 `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（优先复用企业既有 `S3` 兼容对象存储，自建默认 `SeaweedFS`，轻量 `S3` 平替按需 `RustFS`）、`Weaviate` 最小可用底座。
+- 搭建 `K3s`（2–8 台试点轻量容器底座）与 `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（优先复用企业既有 `S3` 兼容对象存储，自建默认 `SeaweedFS`，轻量 `S3` 平替按需 `RustFS`）、`Weaviate` 最小可用底座。
 - 基于 `LlamaIndex` 建立可控的知识接入、检索与引用链路。
 - 引入最小审计能力与基础 `LangFuse` 观测能力。
 
@@ -81,6 +81,7 @@
 ### 建议任务
 
 - 补齐统一入口、身份透传与细粒度授权链路。
+- 沿用 `K3s` 轻量化多节点集群承载 2–8 台部门级验证负载，并将核心组件交付清单统一收敛为标准 Helm Chart 与 CRD 声明式配置，为后续零重写迁移至标准 `Kubernetes` / `RKE2` 做好契约对齐。
 - 建立 `staging` 环境、灰度发布与回滚流程，完善 `PostgreSQL`、`Valkey` / `Redis` 与 `SeaweedFS` / `RustFS`（或企业既有 `S3` 存储）的持久化、备份与容量监控基线。
 - 补齐 `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `LangFuse` 双层观测体系。
 - 引入第二个业务场景并复用既有底座，不复制独立系统。
@@ -121,6 +122,7 @@
 - 固化 [AgentifUI](/components/agentifui) + 门户 / BFF 的共享门户契约；如存在少量高阶用户或高信任小组的个人自治助手需求，再按 [扩展升级](/extension-capabilities) 专项评估独立沙箱多实例能力。
 - 将知识接入、索引发布、Prompt、工具与模型路由全部纳入统一发布管理。
 - 建立跨部门评测集、审计抽样与例行复盘机制；对多业务线协同维护版本化黄金测试集与持续回归评测的团队，可条件引入或扩展 [LangSet](/components/langset)，与 `LangFuse` 和 `LiteLLM` 联动形成评测闭环。
+- 将容器运行底座由试点期 `K3s` 平滑演进至 10–12+ 台企业级高可用标准 `Kubernetes` / `RKE2`（优先复用企业既有标准 `Kubernetes` 集群，新建全私有化或离线集群优选 `RKE2`），依托 100% 共享的标准 K8s API、Helm Chart 与 CRD 实现应用、网关与治理配置零重写迁移。
 - 将入口层、检索层、模型层、治理层与有状态基础设施（`PostgreSQL`、`Valkey` / `Redis` 高可用集群及 `SeaweedFS` / `RustFS` 或企业既有 `S3` 存储）按负载独立扩容；模型层按场景拆分 `vLLM` 通用高吞吐池与 `SGLang` 多步 Agent / 代码推理池并视集群规模演进 PD 分离，高安全隔离场景将沙箱节点池升级为 `Kata Containers` 裸金属 KVM 强隔离。
 - 根据向量数据规模与隔离需求，评估是否从 `Weaviate` 演进至 `Milvus`。
 
@@ -142,7 +144,7 @@
 ### 长期演进方向
 
 - 持续扩充领域评测集与失败样本库
-- 细化模型路由、成本治理与容量规划
+- 细化模型路由、成本治理、标准 `Kubernetes` / `RKE2` 多池调度与容量规划
 - 沉淀多 Agent 模板与场景复用资产
 - 建立季度级审计、回顾与架构收敛机制
 

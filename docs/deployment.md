@@ -8,16 +8,17 @@
 
 | 档位 | 核心目标 | 最小组件组合（默认基线） | 模型策略 | 推荐服务器数 | 适合阶段 |
 | --- | --- | --- | --- | --- | --- |
-| 1 台最小验证版 | 验证门户与主平台路线可用性 | `AgentifUI` + `Dify` | 调用外部 `OpenAI 兼容 API` | 1 | 首轮 PoC、内测 |
-| 2–3 台小团队试点版 | 将应用层、数据层与模型层初步解耦 | `APISIX` + `AgentifUI` + `Dify` + `PostgreSQL` + `Valkey` / `Redis` + `SeaweedFS` / `RustFS` + `Weaviate` | 2 台时使用外部模型；3 台时可增加 `LiteLLM` + `vLLM` + `Qwen` | 2–3 | 小团队试点 |
-| 5 台生产基线版 | 满足部门级生产治理要求的最小组合 | `APISIX` + `AgentifUI` + `Dify` + `LiteLLM` + `vLLM` + `Qwen` + `LlamaIndex` + `Casbin` + `LangFuse` + 平台观测栈 | 默认自托管模型 | 5 | 部门级推广 |
-| 7–8 台完整功能版 | 补齐数据治理和完整平台能力 | 在 5 台版基础上增加 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容） | 自托管模型，拆出检索、数据治理、观测单元；多步 Agent / 代码负载可按需评估 `SGLang` | 7–8 | 多部门共用平台 |
-| 10–12+ 台完整高可用版 | 进入企业级正式生产与故障隔离 | 在 7–8 台版基础上对无状态、数据、GPU 单元分别实施双活或高可用，按需增设独立 Agent 沙箱节点池 | 自托管模型，多 GPU 节点（`vLLM` 通用池 + `SGLang` 多步 Agent / 代码池，大规模演进 PD 分离） | 10–12+ | 企业级正式生产 |
+| 1 台最小验证版 | 验证门户与主平台路线可用性 | `AgentifUI` + `Dify`（同机容器栈） | 调用外部 `OpenAI 兼容 API` | 1 | 首轮 PoC、内测 |
+| 2–3 台小团队试点版 | 将应用层、数据层与模型层初步解耦 | `K3s` + `APISIX` + `AgentifUI` + `Dify` + `PostgreSQL` + `Valkey` / `Redis` + `SeaweedFS` / `RustFS` + `Weaviate` | 2 台时使用外部模型；3 台时可增加 `LiteLLM` + `vLLM` + `Qwen` | 2–3 | 小团队试点 |
+| 5 台生产基线版 | 满足部门级生产治理要求的最小组合 | `K3s` + `APISIX` + `AgentifUI` + `Dify` + `LiteLLM` + `vLLM` + `Qwen` + `LlamaIndex` + `Casbin` + `LangFuse` + 平台观测栈 | 默认自托管模型 | 5 | 部门级推广 |
+| 7–8 台完整功能版 | 补齐数据治理和完整平台能力 | 在 5 台版 `K3s` 底座基础上增加 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容） | 自托管模型，拆出检索、数据治理、观测单元；多步 Agent / 代码负载可按需评估 `SGLang` | 7–8 | 多部门共用平台 |
+| 10–12+ 台完整高可用版 | 进入企业级正式生产与故障隔离 | 容器底座平滑演进至标准 `Kubernetes` / `RKE2`（优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`），在 7–8 台版基础上对无状态、数据、GPU 单元分别实施双活或高可用，按需增设独立 Agent 沙箱节点池 | 自托管模型，多 GPU 节点（`vLLM` 通用池 + `SGLang` 多步 Agent / 代码池，大规模演进 PD 分离） | 10–12+ | 企业级正式生产 |
 
 ::: tip 估算口径说明
 - 上表用于决策与预算对齐，各档位具体落位方式见下文分级说明。
-- 服务器数按“单环境”计算，不包含企业既有 `SSO / IAM`、`KMS / 证书体系`、`WAF`、`DNS / LB`、托管数据库等复用能力。
-- 若数据库、对象存储或 GPU 复用企业现有托管能力，服务器数量可相应减少，但部署单元与治理边界保持不变。
+- **容器运行底座分阶段演进**：2–8 台试点与部门验证阶段统一采用 `K3s`，10–12+ 台企业级高可用生产阶段演进至标准 `Kubernetes` / `RKE2`（优先复用企业既有标准 `Kubernetes`，新建全私有化或离线集群优选 `RKE2`）；三者 100% 共享标准 K8s API、Helm Chart 与 CRD，支持零重写平滑迁移。
+- 服务器数按“单环境”计算，不包含企业既有 `SSO / IAM`、`KMS / 证书体系`、`WAF`、`DNS / LB`、企业既有标准 `Kubernetes` 集群与托管数据库等复用能力。
+- 若容器底座、数据库、对象存储或 GPU 复用企业现有托管能力，服务器数量可相应减少，但部署单元与治理边界保持不变。
 - 上表与下文所有部署图均以 `AgentifUI` + 门户 / BFF 共享多用户门户基线绘制；个人自治型超级智能体扩展能力（如 [OpenClaw](/components/openclaw)）不归属共享门户单元，须在共享门户档位估算之外单独规划 Multi-Instance 独立沙箱节点池与专属资源配额，详见 [扩展升级](/extension-capabilities)。
 :::
 
@@ -49,7 +50,8 @@
 - 默认以 `x86_64 Linux` 私有化部署为口径；若使用云托管数据库、对象存储或 GPU 池，服务器数量可相应下降，但部署单元不会消失。
 - 以下分级以 `AgentifUI` + `Dify` 作为默认起步路线展开；若主平台路线调整为 `RAGFlow`，服务器数量通常不变，但知识解析与检索链路的资源瓶颈位置会有所差异。
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
-- 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` 或观测节点，不改变各档位服务器数量基线。
+- **分阶段容器底座与零重写迁移**：2–8 台试点与部门验证档位统一采用 `K3s` 快速交付容器编排环境；进入 10–12+ 台企业级高可用生产档位时，平滑演进至标准 `Kubernetes` / `RKE2`（企业已有成熟标准 `Kubernetes` 集群时**优先复用**，新建全私有化或离线集群时优选 `RKE2`）。三者 100% 共享标准 K8s API、Helm Chart 与 CRD 规范，升级集群底座时所有应用编排、网关路由、观测与沙箱声明式配置均无需重写即可完成迁移。
+- 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` / 标准 `Kubernetes` 集群或观测节点，不改变各档位服务器数量基线。
 - 若业务场景涉及 AI 生成代码、不可信脚本或高敏文件处理工具执行，须独立规划第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 专属节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping），严禁与控制面或核心有状态服务混布。
 
 ### 1. 1 台：最小验证版
@@ -80,7 +82,7 @@
 
 ### 2. 2–3 台：小团队试点版
 
-该档位将应用层、数据层与模型层初步拆分，使平台具备正式试点与横向扩展的基础。
+该档位将应用层、数据层与模型层初步拆分，并以 `K3s` 作为轻量容器运行底座（2–8 台试点与部门验证区间起点），使平台具备正式试点、标准 Helm 交付与横向扩展的基础。
 
 <div class="diagram-image">
   <img src="/deployment-scale-2-3.svg" alt="2-3 台小团队试点版部署架构图" />
@@ -168,13 +170,14 @@
 
 ### 5. 10–12+ 台：完整高可用版
 
-当平台承接多业务线、多模型池和正式生产流量时，建设重点转向故障隔离充分性、有状态服务可恢复性与 GPU 节点可切换性。
+当平台承接多业务线、多模型池和正式生产流量时，容器运行底座由试点期的 `K3s` 平滑演进至**标准 `Kubernetes` / `RKE2`**，建设重点转向故障隔离充分性、有状态服务可恢复性与 GPU 节点可切换性。
 
 <div class="diagram-image">
   <img src="/deployment-scale-10-12.svg" alt="10-12 台以上完整高可用版部署架构图" />
 </div>
 
 - **推荐能力**：
+  - 容器运行底座演进至标准 `Kubernetes` / `RKE2`：企业已有成熟标准 `Kubernetes` 基础设施时**优先复用**以保持运维体系一致；新建全私有化或离线（Air-gapped）生产集群时优选 `RKE2`。依托 100% 共享的标准 K8s API、Helm Chart 与 CRD 规范，可将 2–8 台 `K3s` 阶段沉淀的全部编排清单、网关规则与治理配置**零重写迁移**至高可用生产集群
   - 网关、门户、编排、检索、观测、模型分别独立扩缩容
   - 关键无状态服务至少双实例部署
   - GPU 推理节点至少双节点部署，消除模型服务单点风险；按负载拆分通用高吞吐池（`vLLM`）与多步 Agent / 代码推理池（[SGLang](/components/sglang)，基于 RadixAttention 复用长前缀 KV-Cache），在大规模集群场景下演进为 PD 分离（Disaggregated Prefill and Decode）架构
@@ -182,7 +185,7 @@
   - 面向代码执行与高敏工具场景规划独立的 Agent 沙箱隔离节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），严格落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping）
   - `dev` / `staging` / `prod` 严格分离，并建立标准灰度与回滚流程
 - **推荐部署单元**：
-  - 3 台 `K3s` 控制 / 通用应用节点
+  - 3 台标准 `Kubernetes` / `RKE2` 控制面与通用应用节点（若直接复用企业既有标准 `Kubernetes` 集群，可按需缩减自建控制面节点）
   - 2 台无状态应用节点
   - 2 台数据 / 检索节点
   - 2 台 GPU 节点（按需分池承载 `vLLM` 与 `SGLang`，大规模演进 PD 分离）
@@ -241,7 +244,7 @@
 | 模型服务单元 | `LiteLLM` + `vLLM` / `SGLang` + `Qwen` | 负责模型路由与推理执行；`vLLM` 为通用默认引擎，`SGLang` 面向多步 Agent 与代码负载按需分池部署 |
 | 治理观测单元 | `Casbin`、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不新增数据库或存储引擎 |
 | Agent 执行沙箱单元 | [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离） | 专属沙箱隔离节点池，承接 AI 生成代码、不可信脚本与高敏工具的瞬时强隔离执行，落实默认拒绝出向白名单与凭据剥离 |
-| 基础设施单元 | `K3s`、`PostgreSQL`、[Valkey](/components/valkey) / [Redis](/components/redis)、[SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储） | 负责运行底座、缓存会话与持久化能力 |
+| 基础设施单元 | `K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`）、`PostgreSQL`、[Valkey](/components/valkey) / [Redis](/components/redis)、[SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储） | 负责分阶段演进的容器运行底座（100% 共享 K8s API / Helm / CRD 零重写迁移）、缓存会话与持久化能力 |
 
 ## 有状态组件与持久化
 
@@ -337,6 +340,7 @@
 
 - [Dify Self Host with Docker Compose](https://docs.dify.ai/en/getting-started/install-self-hosted/docker-compose)
 - [K3s Requirements](https://docs.k3s.io/installation/requirements)
+- [RKE2 Documentation](https://docs.rke2.io/)
 - [Apache APISIX Architecture](https://apisix.apache.org/docs/apisix/3.14/architecture-design/apisix/)
 - [Weaviate Resource Planning](https://docs.weaviate.io/weaviate/concepts/resources)
 - [vLLM GPU Installation and Requirements](https://docs.vllm.ai/en/stable/getting_started/installation/gpu.html)

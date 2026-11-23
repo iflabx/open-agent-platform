@@ -61,7 +61,8 @@
 | `Weaviate` | 标准开源 | `BSD-3-Clause` | 可直接纳入 |
 | `Milvus` | 标准开源 | `Apache-2.0` | 可作为条件演进项纳入 |
 | `Elasticsearch` | 多重 / 混合许可证边界 | `AGPL-3.0 / SSPLv1 / Elastic License 2.0` | 作为兼容项时需单独做许可证确认 |
-| `K3s` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `K3s` | 标准开源 | `Apache-2.0` | 默认用于 2–8 台小规模试点与部门级验证，可直接纳入 |
+| `RKE2` | 标准开源 | `Apache-2.0` | 10–12+ 台正式高可用生产演进项；优先复用企业既有标准 Kubernetes，从零自建私有化大集群推荐 RKE2 |
 | `Kubernetes agent-sandbox` | 标准开源 | `Apache-2.0` | 可直接纳入，基础设施层 Agent 沙箱编排与生命周期管理组件 |
 | `gVisor` | 标准开源 | `Apache-2.0` | 可直接纳入，默认沙箱用户态内核运行时，无需嵌套虚拟化 |
 | `Kata Containers` | 标准开源 | `Apache-2.0` | 条件引入，面向具备裸金属 KVM 节点的硬件级 / MicroVM 强隔离场景 |
@@ -142,7 +143,8 @@
 | `Weaviate` | [官方仓库](https://github.com/weaviate/weaviate) | `BSD-3-Clause` |
 | `Milvus` | [官方仓库](https://github.com/milvus-io/milvus) | `Apache-2.0` |
 | `Elasticsearch` | [官方仓库](https://github.com/elastic/elasticsearch) | 多重 / 混合许可证边界，需单独确认 |
-| `K3s` | [官方仓库](https://github.com/k3s-io/k3s) | `Apache-2.0` |
+| `K3s` | [官方仓库](https://github.com/k3s-io/k3s) | 标准开源，`Apache-2.0`，默认用于 2–8 台小规模试点与部门级验证 |
+| `RKE2` | [官方仓库](https://github.com/rancher/rke2) | 标准开源，`Apache-2.0`，10–12+ 台正式高可用生产演进项；优先复用企业既有标准 Kubernetes，从零自建私有化大集群推荐 RKE2 |
 | `Kubernetes agent-sandbox` | [官方仓库](https://github.com/kubernetes-sigs/agent-sandbox) | 标准开源，`Apache-2.0` |
 | `gVisor` | [官方仓库](https://github.com/google/gvisor) | 标准开源，`Apache-2.0`，默认沙箱运行时 |
 | `Kata Containers` | [官方仓库](https://github.com/kata-containers/kata-containers) | 标准开源，`Apache-2.0`，条件引入硬件级强隔离运行时 |
@@ -204,6 +206,7 @@
 - [Grafana k6 官方仓库](https://github.com/grafana/k6)
 - [Docling 官方仓库](https://github.com/docling-project/docling)
 - [SGLang 官方仓库](https://github.com/sgl-project/sglang)
+- [RKE2 官方仓库](https://github.com/rancher/rke2)
 - [Kubernetes agent-sandbox 官方仓库](https://github.com/kubernetes-sigs/agent-sandbox)
 - [gVisor 官方仓库](https://github.com/google/gvisor)
 - [Kata Containers 官方仓库](https://github.com/kata-containers/kata-containers)
