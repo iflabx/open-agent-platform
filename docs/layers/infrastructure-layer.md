@@ -2,14 +2,16 @@
 
 > 定位：为整个平台提供运行底座、持久化、缓存、对象存储、Agent 强隔离执行沙箱与密钥证书支撑。
 >
-> 当前承载组件：`K3s`、`PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 `S3` 兼容对象存储，`Apache-2.0`；轻量即插替代可选 `RustFS`，`Apache-2.0`；优先复用企业既有 `S3` 兼容对象存储）、Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）、企业现有 `KMS` / 证书体系。
+> 当前承载组件：`K3s`、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 `S3` 兼容对象存储，`Apache-2.0`）/ `RustFS`（轻量 `S3` 平替，`Apache-2.0`，按需；优先复用企业既有 `S3` 兼容对象存储）、Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）、企业现有 `KMS` / 证书体系。
 
 相关文档：
 
 - [K3s](/components/k3s)
 - [PostgreSQL](/components/postgresql)
+- [Valkey](/components/valkey)
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
+- [RustFS](/components/rustfs)
 - [Agent 执行沙箱](/components/agent-sandbox)
 - [部署与发布](/deployment)
 
@@ -31,10 +33,15 @@
 
 - [K3s](/components/k3s)
 - [PostgreSQL](/components/postgresql)
-- [Redis](/components/redis)
-- [SeaweedFS](/components/seaweedfs)（默认自建 `S3` 兼容对象存储，`Apache-2.0`；轻量即插替代可选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用）
+- [Valkey](/components/valkey) / [Redis](/components/redis)（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）
+- [SeaweedFS](/components/seaweedfs) / [RustFS](/components/rustfs)（默认自建 `S3` 兼容对象存储选 `SeaweedFS`，`Apache-2.0`；轻量 `S3` 平替按需选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用）
 - [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）
 - 企业现有 `KMS` / 证书体系
+
+::: tip 缓存与对象存储选型指引
+- **缓存与会话（`Valkey` / `Redis`）**：新建纯开源环境优先采用 [Valkey](/components/valkey)（Linux Foundation `BSD-3-Clause`，与 `Redis` 协议 100% 兼容）；对已部署成熟 [Redis](/components/redis) 集群或托管实例的企业，直接兼容复用并保留既有 `Redis`。
+- **对象存储（`SeaweedFS` / `RustFS`）**：优先复用企业既有 `S3` 兼容对象存储；需自建时默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 `S3` 平替。
+:::
 
 ## 上下游关系
 
@@ -70,8 +77,8 @@
 ### 2. 状态链路
 
 1. 结构化业务状态与元数据持久化至 `PostgreSQL`。
-2. 会话缓存、短期状态与队列辅助能力由 `Redis` 承接。
-3. 原始文档、模型产物与附件等非结构化对象存储至 `SeaweedFS`（或轻量即插替代 `RustFS`；已有企业级 `S3` 兼容对象存储时优先复用）。
+2. 会话缓存、短期状态与队列辅助能力由 `Valkey` / `Redis` 承接（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）。
+3. 原始文档、模型产物与附件等非结构化对象存储至 `SeaweedFS`（默认）或 `RustFS`（轻量 `S3` 平替，按需；已有企业级 `S3` 兼容对象存储时优先复用）。
 
 ### 3. 安全链路
 
@@ -122,6 +129,7 @@
 
 - [K3s Documentation](https://docs.k3s.io/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Valkey Documentation](https://valkey.io/docs/)
 - [Redis Documentation](https://redis.io/docs/latest/)
 - [SeaweedFS Documentation](https://github.com/seaweedfs/seaweedfs/wiki)
 - [RustFS](https://rustfs.com/)

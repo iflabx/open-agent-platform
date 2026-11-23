@@ -33,7 +33,7 @@
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
 | 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
-| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
+| 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、缓存、对象存储、网络与密钥体系 | `K3s`、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（默认自建 `SeaweedFS`，轻量 S3 平替按需 `RustFS`；优先复用企业既有 S3 存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 

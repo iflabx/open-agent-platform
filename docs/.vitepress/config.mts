@@ -184,8 +184,10 @@ export default defineConfig({
               { text: 'K3s', link: '/components/k3s' },
               { text: 'Agent Sandbox', link: '/components/agent-sandbox' },
               { text: 'PostgreSQL', link: '/components/postgresql' },
+              { text: 'Valkey', link: '/components/valkey' },
               { text: 'Redis', link: '/components/redis' },
-              { text: 'SeaweedFS', link: '/components/seaweedfs' }
+              { text: 'SeaweedFS', link: '/components/seaweedfs' },
+              { text: 'RustFS', link: '/components/rustfs' }
             ]
           },
           {

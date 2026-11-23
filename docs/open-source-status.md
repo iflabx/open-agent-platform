@@ -17,7 +17,7 @@
   - **`Open core`**：`LiteLLM`、`LangFuse`
   - **自定义许可证**：`Dify`
   - **强 copyleft**：`Grafana`、`Loki`、`k6`（历史参考组件 `MinIO` 亦为 `AGPL-3.0` 且社区版已归档，不再默认选用）
-  - **需锁版本**：`Redis`
+  - **需锁版本 / 复合许可证**：`Redis`（`RSALv2 / SSPLv1 / AGPL-3.0`，新建纯开源环境优先推荐协议完全兼容的 `BSD-3-Clause` 组件 `Valkey`）
   - **多重 / 混合许可证边界**：`Elasticsearch`
 - **企业复用能力边界**：企业既有 `SSO / IAM`、`KMS / 证书体系` 默认直接复用，不在本页开源许可证审计范围内。
 
@@ -53,9 +53,10 @@
 | `k6` | 强 copyleft | `AGPL-3.0` | 可作为压测工具纳入，但需明确 AGPL 影响 |
 | `Casbin` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `PostgreSQL` | 标准开源 | `PostgreSQL License` | 可直接纳入 |
-| `Redis` | 需锁版本 | 新版本许可证口径变化较大 | 实施时必须固定大版本 |
+| `Valkey` | 标准开源 | `BSD-3-Clause` | 默认推荐纯开源缓存与会话底座（Linux Foundation 托管），与 `Redis` 协议完全兼容并列 |
+| `Redis` | 需锁版本 / 复合许可证 | `RSALv2 / SSPLv1 / AGPL-3.0` | 兼容并列；企业既有集群复用或按需采用时必须固定大版本，新建纯开源环境优先推荐 `Valkey` |
 | `SeaweedFS` | 标准开源 | `Apache-2.0` | 默认自建 S3 兼容对象存储底座（优先复用企业既有 S3 兼容对象存储） |
-| `RustFS` | 标准开源 | `Apache-2.0` | 轻量 S3 兼容对象存储替代参考，提供内置 Web 控制台 |
+| `RustFS` | 标准开源 | `Apache-2.0` | 条件引入，轻量高性能 S3 兼容对象存储平替备选，提供内置 Web 控制台 |
 | `MinIO` | 强 copyleft / 已归档 | `AGPL-3.0`，`minio/minio` 社区版仓库已归档只读且停止安全补丁维护 | 历史参考、不推荐新建；存量环境应规划向 `SeaweedFS` 或企业既有 S3 存储迁移 |
 | `Weaviate` | 标准开源 | `BSD-3-Clause` | 可直接纳入 |
 | `Milvus` | 标准开源 | `Apache-2.0` | 可作为条件演进项纳入 |
@@ -133,9 +134,10 @@
 | 对象 | 公开来源 | 开源判定 |
 | --- | --- | --- |
 | `PostgreSQL` | [官方许可证页](https://www.postgresql.org/about/licence/) | `PostgreSQL License`，可直接纳入 |
-| `Redis` | [官方仓库](https://github.com/redis/redis) | 近年许可证口径调整明显，实施时必须锁定大版本 |
+| `Valkey` | [官方仓库](https://github.com/valkey-io/valkey) | 标准开源，`BSD-3-Clause`，默认推荐缓存与会话底座，与 `Redis` 协议完全兼容并列 |
+| `Redis` | [官方仓库](https://github.com/redis/redis) | 复合许可证（`RSALv2 / SSPLv1 / AGPL-3.0`），实施时必须锁定大版本；兼容并列，新建纯开源环境优先推荐 `Valkey` |
 | `SeaweedFS` | [官方仓库](https://github.com/seaweedfs/seaweedfs) | 标准开源，`Apache-2.0`，默认自建 S3 兼容对象存储底座 |
-| `RustFS` | [官方仓库](https://github.com/rustfs/rustfs) | 标准开源，`Apache-2.0`，轻量 S3 兼容对象存储替代参考 |
+| `RustFS` | [官方仓库](https://github.com/rustfs/rustfs) | 标准开源，`Apache-2.0`，条件引入，轻量 S3 兼容对象存储平替备选 |
 | `MinIO` | [官方仓库](https://github.com/minio/minio) | `AGPL-3.0`，社区版仓库已归档只读且无安全补丁，仅作历史参考、不推荐新建 |
 | `Weaviate` | [官方仓库](https://github.com/weaviate/weaviate) | `BSD-3-Clause` |
 | `Milvus` | [官方仓库](https://github.com/milvus-io/milvus) | `Apache-2.0` |
@@ -161,10 +163,10 @@
 - 社区核心代码采用 `MIT` 开源，但仓库中同时存在企业目录及独立企业许可证。
 - 方案与合规文档中不得将整个仓库表述为“纯单一 MIT 项目”。
 
-### 3. `Redis` 必须锁定大版本
+### 3. `Redis` 复合许可证与大版本锁定（并列 `Valkey`）
 
-- 不得仅标注“Redis”而不明确版本口径。
-- 实施时应在方案和部署文档中固定生产使用的具体大版本，并核对对应版本的许可证条款。
+- `Redis` 采用复合许可证（`RSALv2 / SSPLv1 / AGPL-3.0`），不同大版本口径差异明显，不得仅标注“Redis”而不明确版本与许可证条款。
+- 企业既有 `Redis` 集群复用或按需采用时，须在部署清单中固定生产使用的具体大版本并完成法务核对；新建全私有化纯开源环境优先推荐与 `Redis` 100% 线上协议兼容、采用标准 `BSD-3-Clause` 许可证的 `Valkey`。
 
 ### 4. `Grafana`、`Loki`、`k6` 采用强 copyleft 许可证；`MinIO` 社区版已归档不再默认选用
 
@@ -190,6 +192,7 @@
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)
 - [LangSet 官方仓库](https://github.com/iflabx/langset)
+- [Valkey 官方仓库](https://github.com/valkey-io/valkey)
 - [Redis 官方仓库](https://github.com/redis/redis)
 - [SeaweedFS 官方仓库](https://github.com/seaweedfs/seaweedfs)
 - [RustFS 官方仓库](https://github.com/rustfs/rustfs)

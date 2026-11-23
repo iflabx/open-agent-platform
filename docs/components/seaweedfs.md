@@ -16,7 +16,7 @@
 
 ::: tip 复用优先与轻量替代口径
 - **优先复用企业现有对象存储**：若企业已建有稳定的 S3 兼容对象存储服务，默认直接复用既有存储底座，不重复建设。
-- **轻量单机 / 中小规模替代参考**：若仅需轻量级 S3 兼容存储与开箱即用的内置 Web 管理控制台，可按需评估 `RustFS`（`Apache-2.0`，[GitHub](https://github.com/rustfs/rustfs)）作为平滑替代方案。
+- **轻量单机 / 中小规模替代参考**：若仅需轻量级 S3 兼容存储与开箱即用的内置 Web 管理控制台，可按需评估条件引入组件 [RustFS](/components/rustfs)（`Apache-2.0`）作为平滑替代方案。
 :::
 
 ## 主要职责
@@ -28,6 +28,7 @@
 
 ## 与其他组件关系
 
+- **与 [RustFS](/components/rustfs) 按场景二选一**：两者同属 `Apache-2.0` 协议的 S3 兼容对象存储底座，不建议在同一环境长期并行部署。海量小文件、PB 级演进或需 POSIX / FUSE、Iceberg / S3 Tables 时默认选用 `SeaweedFS`；聚焦轻量纯 S3 平替与内置 Web 控制台时可条件选用 [RustFS](/components/rustfs)。
 - **与 [PostgreSQL](/components/postgresql) 互补**：`SeaweedFS` 承载文件本体与大对象，`PostgreSQL` 承载文件元数据、权限映射与业务状态。
 - **与 [Docling](/components/docling)、[Apache Tika](/components/apache-tika) 及 [SeaTunnel](/components/seatunnel) 协同**：`SeaTunnel` 将多源文档与对象数据同步入湖，`Apache Tika` 与 `Docling` 从 `SeaweedFS` 读取源文件并回写解析产物。
 - **与 [LangSet](/components/langset) 与 [Agent Sandbox](/components/agent-sandbox) 联动**：为 `LangSet` 提供 S3 兼容存储后端，并通过受限预签名或短期临时凭证与 `Agent Sandbox` 安全交换执行产物。
@@ -51,7 +52,7 @@
 
 - **复用优先**：企业已有成熟 S3 兼容对象存储底座时优先直接复用，仅通过标准 S3 API 对接平台组件。
 - **自建默认选型**：需随平台自建私有化对象存储时，默认采用 `SeaweedFS`（`Apache-2.0`）。
-- **轻量替代参考**：面向极简部署、偏好内置 Web 控制台的轻量 S3 兼容场景，可按需评估 `RustFS`（`Apache-2.0`）。
+- **轻量替代备选**：面向极简部署、偏好内置 Web 控制台的轻量纯 S3 兼容场景，可按需选用条件引入组件 [RustFS](/components/rustfs)（`Apache-2.0`），与 `SeaweedFS` 二选一。
 - **历史参考说明**：原 [MinIO](/components/minio) 社区版已归档只读且停止安全补丁维护，不再作为默认选型。
 
 ## 治理注意点
@@ -65,6 +66,7 @@
 
 - [9. 基础设施层](/layers/infrastructure-layer)
 - [数据与存储底座](/components/infrastructure-data-storage)
+- [RustFS](/components/rustfs)
 - [Docling](/components/docling)
 - [LangSet](/components/langset)
 - [MinIO（历史参考）](/components/minio)

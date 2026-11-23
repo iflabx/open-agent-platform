@@ -83,8 +83,10 @@
 ### [9. 基础设施层](/layers/infrastructure-layer)
 
 - [PostgreSQL](/components/postgresql)
+- [Valkey](/components/valkey)
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
+- [RustFS](/components/rustfs)
 - [K3s](/components/k3s)
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 

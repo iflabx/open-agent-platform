@@ -22,7 +22,7 @@
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
 | 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
-| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Redis`、`SeaweedFS`（轻量替代 `RustFS`；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化和对象存储 |
+| 9. 基础设施层 | `K3s`、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS` / `RustFS`（条件引入轻量 S3 平替；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化、缓存会话和对象存储 |
 
 ## 1. 用户与渠道层
 
@@ -186,8 +186,13 @@
 - [K3s](/components/k3s)
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
 - [PostgreSQL](/components/postgresql)
+- [Valkey](/components/valkey)
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
+
+### 条件组件
+
+- [RustFS](/components/rustfs)
 
 ### 复用能力
 
@@ -198,7 +203,8 @@
 
 - `K3s` 提供容器运行底座。
 - [Agent 执行沙箱](/components/agent-sandbox) 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），为第 4 层不可信代码、脚本与工具执行提供强隔离环境，并强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
-- `PostgreSQL`、`Redis`、`SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`，轻量替代 `RustFS`）提供持久化、缓存、会话和对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用。
+- `PostgreSQL` 提供关系型持久化与检查点存储；`Valkey`（默认推荐，`BSD-3-Clause`）与 `Redis`（兼容并列，适合企业既有集群复用）协议完全兼容，承担会话缓存、限流计数、幂等控制与短期状态存储。
+- `SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`）与条件引入的 `RustFS`（轻量高性能纯 S3 平替，`Apache-2.0`，内置 Web 控制台）提供对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用。
 - 企业现有 `KMS / 证书体系` 作为复用能力，不作为新增组件。
 
 ## 跨层协议与标准
@@ -228,7 +234,8 @@
 | `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |
 | `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
 | `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |
-| `SeaweedFS` / `RustFS` | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储；企业已有 S3 设施时优先直接复用 |
+| `Valkey` / `Redis` | 新建默认推荐 `Valkey`，存量兼容并列 `Redis` | 两者 100% 线上协议兼容；新建纯开源环境优先采用 `BSD-3-Clause` 的 `Valkey`，企业既有 `Redis` 集群可直接复用 |
+| `SeaweedFS` / `RustFS` | 优先复用企业 S3，自建默认 `SeaweedFS`，条件引入 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储；海量小文件与多协议扩展选 `SeaweedFS`，轻量纯 S3 平替与内置 Web 控制台选 `RustFS` |
 | `LangChain` | 条件引入 | 作为 `LangGraph` 生态下的可选工具包与连接器适配层按需引入；简单调用优先原生 SDK |
 | `Mem0` | 条件引入 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，仅在跨会话长期记忆场景启用 |
 | `LangSet` | 条件引入 | 负责团队协作评测数据集工程与离线回归评测，与 `LangFuse` 互补 |

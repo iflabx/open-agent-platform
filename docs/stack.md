@@ -31,7 +31,7 @@
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
-| 基础设施 | `K3s` + `PostgreSQL` + `Redis` + `SeaweedFS`（优先复用企业现有 S3 兼容对象存储） | 轻量自建对象存储可选 `RustFS`（`Apache-2.0`）平替；第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展；对象存储优先复用企业现有 S3 设施，自建默认选 `SeaweedFS`（`Apache-2.0`）；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
+| 基础设施 | `K3s` + `PostgreSQL` + [Valkey](/components/valkey) / [Redis](/components/redis) + [SeaweedFS](/components/seaweedfs)（优先复用企业既有 S3 兼容对象存储） | 轻量自建对象存储按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）平替；第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 先收敛基础底座，再按瓶颈扩展；缓存与会话新建纯开源场景优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留既有 `Redis`；对象存储优先复用企业既有 S3 设施，自建默认选 `SeaweedFS`（`Apache-2.0`），轻量场景按需选用 `RustFS`（`Apache-2.0`）；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
 
 ## 推荐组合
 
@@ -43,7 +43,7 @@
 - 一条主平台路线：`Dify` 或 `RAGFlow`
 - `LlamaIndex`
 - `LiteLLM` + `vLLM` + `Qwen`
-- `PostgreSQL` + `Redis` + `SeaweedFS`（优先复用企业现有 S3 对象存储，轻量替代 `RustFS`）+ `Weaviate`
+- `PostgreSQL` + `Valkey` / `Redis` + `SeaweedFS`（优先复用企业既有 S3 对象存储，轻量平替 `RustFS`）+ `Weaviate`
 - `LangFuse`
 
 ### 组合 B：生产化中台
@@ -120,10 +120,10 @@
 - 默认采用 `gVisor` 承接常规隔离需求，兼顾冷启动速度与系统调用隔离；具备裸金属虚拟化条件且需要 KVM 级强隔离的场景启用 `Kata Containers`。
 - 无论采用哪种运行时，均须强制落实三项安全红线：独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 
-### 10. 对象存储选型（优先复用企业 S3、`SeaweedFS` 与 `RustFS`）
+### 10. 对象存储与缓存选型（`SeaweedFS` / `RustFS` 与 `Valkey` / `Redis`）
 
-- 企业已有 S3 兼容对象存储时优先直接复用，不重复自建存储集群。
-- 需自建对象存储时，默认选用 `SeaweedFS`（`Apache-2.0`），提供稳定的 S3 兼容协议支持与良好的扩展性；轻量化单集群或资源受限场景可选用 `RustFS`（`Apache-2.0`）作为轻量平替。
+- **对象存储**：企业已有 S3 兼容对象存储时优先直接复用，不重复自建存储集群；需自建对象存储时，默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），提供稳定的 S3 兼容协议支持与良好的扩展性；轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 S3 平替。
+- **缓存与会话**：新建纯开源环境优先采用 [Valkey](/components/valkey)（Linux Foundation `BSD-3-Clause`，与 `Redis` 协议 100% 兼容）；对已部署企业既有 [Redis](/components/redis) 集群或托管实例的环境，保持兼容并保留既有 `Redis`。
 
 ## 应避免的选型做法
 
