@@ -189,7 +189,8 @@ export default defineConfig({
               { text: 'Valkey', link: '/components/valkey' },
               { text: 'Redis', link: '/components/redis' },
               { text: 'SeaweedFS', link: '/components/seaweedfs' },
-              { text: 'RustFS', link: '/components/rustfs' }
+              { text: 'RustFS', link: '/components/rustfs' },
+              { text: 'MinIO（存量兼容）', link: '/components/minio' }
             ]
           },
           {

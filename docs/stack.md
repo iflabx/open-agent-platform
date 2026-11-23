@@ -19,7 +19,7 @@
 
 | 收敛模式 | 核心规则 | 涉及组件组 | 典型判定方式 |
 | --- | --- | --- | --- |
-| **一、按企业现状二选一 / 阶段替代** | 同一环境只落一套，不长期并行两套同类主底座 | 主平台（`Dify` / `RAGFlow`）、容器底座（`K3s` / 标准 `Kubernetes`·`RKE2`）、向量检索（`Weaviate` / `Milvus`）、对象存储（`SeaweedFS` / `RustFS` / 企业 S3）、缓存（`Valkey` / `Redis`） | 均基于统一标准接口（K8s API / S3 API / Redis 协议等），按企业既有资产与规模二选一或分阶段平滑切换 |
+| **一、按企业现状二选一 / 阶段替代** | 同一环境只落一套，不长期并行两套同类主底座 | 主平台（`Dify` / `RAGFlow`）、容器底座（`K3s` / 标准 `Kubernetes`·`RKE2`）、向量检索（`Weaviate` / `Milvus`）、对象存储（`SeaweedFS` / `RustFS` / 企业 S3，存量兼容 `MinIO`）、缓存（`Valkey` / `Redis`） | 均基于统一标准接口（K8s API / S3 API / Redis 协议等），按企业既有资产与规模二选一或分阶段平滑切换 |
 | **二、按负载分池并存** | 小规模默认单选起步，大规模可在同集群按池共存 | 推理引擎（`vLLM` + `SGLang`）、Agent 执行沙箱（`gVisor` + `Kata Containers`） | 通过统一控制面路由分池（`LiteLLM` 分池路由 / K8s `RuntimeClass` 调度），按任务特征与安全等级共存 |
 | **三、按成熟度分层叠加** | 上下游职责互补，引入后者**不替代**前者 | 编排（主平台 + `LangGraph`）、解析（`Docling` + `Apache Tika`）、评测（`LangFuse` + `LangSet`）、授权（`Casbin` + `OpenFGA`） | 小规模先用前者跑通闭环；进入多部门复杂生产后叠加后者补齐长时状态机、冷门格式、离线测试集或跨系统 ReBAC |
 
@@ -41,7 +41,7 @@
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
-| 基础设施 | [K3s](/components/k3s)（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产）+ `PostgreSQL` + [Valkey](/components/valkey) / [Redis](/components/redis) + [SeaweedFS](/components/seaweedfs)（优先复用企业既有 S3 兼容对象存储） | 企业级高可用生产优先复用企业既有标准 `Kubernetes` 集群，新建私有化或离线集群优选 `RKE2`；轻量自建对象存储按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）平替；第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 容器底座按规模分阶段演进，100% 共享 K8s API / Helm / CRD 实现零重写迁移；缓存与会话新建纯开源场景优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留既有 `Redis`；对象存储优先复用企业既有 S3 设施，自建默认选 `SeaweedFS`（`Apache-2.0`），轻量场景按需选用 `RustFS`（`Apache-2.0`）；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
+| 基础设施 | [K3s](/components/k3s)（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产）+ `PostgreSQL` + [Valkey](/components/valkey) / [Redis](/components/redis) + [SeaweedFS](/components/seaweedfs)（优先复用企业既有 S3 兼容对象存储） | 企业级高可用生产优先复用企业既有标准 `Kubernetes` 集群，新建私有化或离线集群优选 `RKE2`；轻量自建对象存储按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）平替，企业既有 [MinIO](/components/minio) 集群可作为存量兼容与过渡选项（内网强隔离 / 升级商业版 `AIStor` / 经标准 S3 API 渐进迁往 `SeaweedFS` 或 `RustFS`）；第 4 层涉及不可信代码、脚本与工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`）；规模扩大后独立扩容 | 容器底座按规模分阶段演进，100% 共享 K8s API / Helm / CRD 实现零重写迁移；缓存与会话新建纯开源场景优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留既有 `Redis`；对象存储优先复用企业既有 S3 设施，自建默认选 `SeaweedFS`（`Apache-2.0`），轻量场景按需选用 `RustFS`（`Apache-2.0`），存量 `MinIO` 集群支持受控过渡复用；执行沙箱强制落实独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
 
 ## 推荐组合
 
@@ -133,9 +133,9 @@
 - 默认采用 `gVisor` 承接常规隔离需求，兼顾冷启动速度与系统调用隔离；具备裸金属虚拟化条件且需要 KVM 级强隔离的场景启用 `Kata Containers`。
 - 无论采用哪种运行时，均须强制落实三项安全红线：独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 
-### 10. 对象存储与缓存选型（`SeaweedFS` / `RustFS` 与 `Valkey` / `Redis`）
+### 10. 对象存储与缓存选型（`SeaweedFS` / `RustFS` / 存量 `MinIO` 与 `Valkey` / `Redis`）
 
-- **对象存储**：企业已有 S3 兼容对象存储时优先直接复用，不重复自建存储集群；需自建对象存储时，默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），提供稳定的 S3 兼容协议支持与良好的扩展性；轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 S3 平替。
+- **对象存储**：企业已有 S3 兼容对象存储时优先直接复用，不重复自建存储集群；新建自建对象存储默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），提供稳定的 S3 兼容协议支持与良好的扩展性；轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 S3 平替。对现网已部署的存量 [MinIO](/components/minio) 集群，可作为**存量兼容与过渡选项**继续受控复用（内网强隔离锁定稳定版、升级官方商业版 `AIStor`，或基于标准 S3 API 渐进迁往 `SeaweedFS` / `RustFS`），但新建环境不推荐选用社区归档版。
 - **缓存与会话**：新建纯开源环境优先采用 [Valkey](/components/valkey)（Linux Foundation `BSD-3-Clause`，与 `Redis` 协议 100% 兼容）；对已部署企业既有 [Redis](/components/redis) 集群或托管实例的环境，保持兼容并保留既有 `Redis`。
 
 ### 11. 容器运行底座分阶段演进（`K3s` → 标准 `Kubernetes` / `RKE2`）

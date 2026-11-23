@@ -16,7 +16,7 @@
 - **需单独审查的重点对象**：
   - **`Open core`**：`LiteLLM`、`LangFuse`
   - **自定义许可证**：`Dify`
-  - **强 copyleft**：`Grafana`、`Loki`、`k6`（历史参考组件 `MinIO` 亦为 `AGPL-3.0` 且社区版已归档，不再默认选用）
+  - **强 copyleft**：`Grafana`、`Loki`、`k6`（存量兼容与过渡复用项 `MinIO` 亦为 `AGPL-3.0` 且社区版已归档，新建不推荐选用）
   - **需锁版本 / 复合许可证**：`Redis`（`RSALv2 / SSPLv1 / AGPL-3.0`，新建纯开源环境优先推荐协议完全兼容的 `BSD-3-Clause` 组件 `Valkey`）
   - **多重 / 混合许可证边界**：`Elasticsearch`
 - **企业复用能力边界**：企业既有 `SSO / IAM`、`KMS / 证书体系` 默认直接复用，不在本页开源许可证审计范围内。
@@ -58,7 +58,7 @@
 | `Redis` | 需锁版本 / 复合许可证 | `RSALv2 / SSPLv1 / AGPL-3.0` | 兼容并列；企业既有集群复用或按需采用时必须固定大版本，新建纯开源环境优先推荐 `Valkey` |
 | `SeaweedFS` | 标准开源 | `Apache-2.0` | 默认自建 S3 兼容对象存储底座（优先复用企业既有 S3 兼容对象存储） |
 | `RustFS` | 标准开源 | `Apache-2.0` | 条件引入，轻量高性能 S3 兼容对象存储平替备选，提供内置 Web 控制台 |
-| `MinIO` | 强 copyleft / 已归档 | `AGPL-3.0`，`minio/minio` 社区版仓库已归档只读且停止安全补丁维护 | 历史参考、不推荐新建；存量环境应规划向 `SeaweedFS` 或企业既有 S3 存储迁移 |
+| `MinIO` | 强 copyleft / 已归档 | `AGPL-3.0`，`minio/minio` 社区版仓库已归档只读且停止安全补丁维护 | 存量兼容与过渡复用；新建不推荐选用社区归档版，存量环境可内网隔离过渡、升级商业版 `AIStor` 或经标准 S3 API 渐进迁往 `SeaweedFS` / `RustFS` |
 | `Weaviate` | 标准开源 | `BSD-3-Clause` | 可直接纳入 |
 | `Milvus` | 标准开源 | `Apache-2.0` | 可作为条件演进项纳入 |
 | `Elasticsearch` | 多重 / 混合许可证边界 | `AGPL-3.0 / SSPLv1 / Elastic License 2.0` | 作为兼容项时需单独做许可证确认 |
@@ -141,7 +141,7 @@
 | `Redis` | [官方仓库](https://github.com/redis/redis) | 复合许可证（`RSALv2 / SSPLv1 / AGPL-3.0`），实施时必须锁定大版本；兼容并列，新建纯开源环境优先推荐 `Valkey` |
 | `SeaweedFS` | [官方仓库](https://github.com/seaweedfs/seaweedfs) | 标准开源，`Apache-2.0`，默认自建 S3 兼容对象存储底座 |
 | `RustFS` | [官方仓库](https://github.com/rustfs/rustfs) | 标准开源，`Apache-2.0`，条件引入，轻量 S3 兼容对象存储平替备选 |
-| `MinIO` | [官方仓库](https://github.com/minio/minio) | `AGPL-3.0`，社区版仓库已归档只读且无安全补丁，仅作历史参考、不推荐新建 |
+| `MinIO` | [官方仓库](https://github.com/minio/minio) | `AGPL-3.0`，社区版仓库已归档只读且无安全补丁，定位为存量兼容与过渡复用（新建不推荐选用社区归档版，存量可内网隔离过渡、升级 `AIStor` 或经标准 S3 API 迁往 `SeaweedFS` / `RustFS`） |
 | `Weaviate` | [官方仓库](https://github.com/weaviate/weaviate) | `BSD-3-Clause` |
 | `Milvus` | [官方仓库](https://github.com/milvus-io/milvus) | `Apache-2.0` |
 | `Elasticsearch` | [官方仓库](https://github.com/elastic/elasticsearch) | 多重 / 混合许可证边界，需单独确认 |
@@ -175,7 +175,7 @@
 ### 4. `Grafana`、`Loki`、`k6` 采用强 copyleft 许可证；`MinIO` 社区版已归档不再默认选用
 
 - `Grafana`、`Loki`、`k6` 主许可证均为 `AGPL-3.0`，工程层面当前可接受，但在采购、法务与内控评审阶段须明确 `AGPL-3.0` 的影响边界。
-- `MinIO` 不仅采用 `AGPL-3.0`，且 `minio/minio` 社区版仓库已归档为只读状态、不再提供安全补丁；本方案已将默认自建 S3 兼容对象存储底座切换为标准 `Apache-2.0` 的 `SeaweedFS`（轻量替代参考 `RustFS`），`MinIO` 仅作存量历史参考。
+- `MinIO` 不仅采用 `AGPL-3.0`，且 `minio/minio` 社区版仓库已归档为只读状态、不再提供安全补丁；本方案新建自建 S3 兼容对象存储底座默认采用标准 `Apache-2.0` 的 `SeaweedFS`（轻量平替参考 `RustFS`），`MinIO` 定位为存量兼容与过渡复用项，存量环境可通过内网强隔离短期维稳、升级官方商业版 `AIStor` 或基于标准 S3 API 渐进迁往 `SeaweedFS` / `RustFS`。
 
 ### 5. `Elasticsearch` 需单独确认兼容项口径
 

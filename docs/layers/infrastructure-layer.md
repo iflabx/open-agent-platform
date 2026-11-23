@@ -12,6 +12,7 @@
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
 - [RustFS](/components/rustfs)
+- [MinIO](/components/minio)（存量兼容）
 - [Agent 执行沙箱](/components/agent-sandbox)
 - [部署与发布](/deployment)
 
@@ -34,14 +35,14 @@
 - [K3s](/components/k3s) → 标准 `Kubernetes` / `RKE2`（2–8 台试点与部门验证采用 `K3s`；10–12+ 台企业级高可用生产优先复用企业既有标准 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 实现零重写迁移）
 - [PostgreSQL](/components/postgresql)
 - [Valkey](/components/valkey) / [Redis](/components/redis)（新建纯开源优先 `Valkey`，Linux Foundation `BSD-3-Clause`，100% 协议兼容；兼容并保留既有 `Redis`）
-- [SeaweedFS](/components/seaweedfs) / [RustFS](/components/rustfs)（默认自建 `S3` 兼容对象存储选 `SeaweedFS`，`Apache-2.0`；轻量 `S3` 平替按需选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用）
+- [SeaweedFS](/components/seaweedfs) / [RustFS](/components/rustfs)（新建自建 `S3` 兼容对象存储默认选 `SeaweedFS`，`Apache-2.0`；轻量 `S3` 平替按需选 `RustFS`，`Apache-2.0`；有企业既有 `S3` 兼容对象存储时优先复用；存量 [MinIO](/components/minio) 集群支持内网受控过渡复用）
 - [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离）
 - 企业现有 `KMS` / 证书体系
 
 ::: tip 容器、缓存与对象存储选型指引
 - **容器运行底座（`K3s` → 标准 `Kubernetes` / `RKE2`）**：2–8 台试点与部门验证阶段采用 [K3s](/components/k3s) 快速落地；进入 10–12+ 台企业级高可用生产阶段时，优先复用企业既有标准 `Kubernetes` 集群，新建全私有化或离线集群优选 `RKE2`。三者 100% 共享标准 K8s API、Helm Chart 与 CRD，业务编排与治理配置均可零重写迁移。
 - **缓存与会话（`Valkey` / `Redis`）**：新建纯开源环境优先采用 [Valkey](/components/valkey)（Linux Foundation `BSD-3-Clause`，与 `Redis` 协议 100% 兼容）；对已部署成熟 [Redis](/components/redis) 集群或托管实例的企业，直接兼容复用并保留既有 `Redis`。
-- **对象存储（`SeaweedFS` / `RustFS`）**：优先复用企业既有 `S3` 兼容对象存储；需自建时默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 `S3` 平替。
+- **对象存储（`SeaweedFS` / `RustFS` / 存量 `MinIO`）**：新建环境默认选用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`），轻量化单集群或资源受限场景可按需选用 [RustFS](/components/rustfs)（`Apache-2.0`）作为轻量 `S3` 平替；存量环境优先复用企业既有 `S3` 兼容对象存储，对已广泛部署的存量 [MinIO](/components/minio) 集群可在内网强隔离下受控过渡复用、升级商业版 `AIStor` 或经标准 `S3` API 渐进迁往新底座。
 :::
 
 ## 上下游关系

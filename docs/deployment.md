@@ -51,6 +51,7 @@
 - 以下分级以 `AgentifUI` + `Dify` 作为默认起步路线展开；若主平台路线调整为 `RAGFlow`，服务器数量通常不变，但知识解析与检索链路的资源瓶颈位置会有所差异。
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
 - **分阶段容器底座与零重写迁移**：2–8 台试点与部门验证档位统一采用 `K3s` 快速交付容器编排环境；进入 10–12+ 台企业级高可用生产档位时，平滑演进至标准 `Kubernetes` / `RKE2`（企业已有成熟标准 `Kubernetes` 集群时**优先复用**，新建全私有化或离线集群时优选 `RKE2`）。三者 100% 共享标准 K8s API、Helm Chart 与 CRD 规范，升级集群底座时所有应用编排、网关路由、观测与沙箱声明式配置均无需重写即可完成迁移。
+- **对象存储新建与存量过渡口径**：新建私有化集群默认采用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`）或轻量 `S3` 平替 [RustFS](/components/rustfs)（`Apache-2.0`），优先复用企业既有 `S3` 兼容对象存储；对现网已部署存量 [MinIO](/components/minio) 集群的企业，过渡期可在严格内网隔离下经标准 `S3` API 继续受控复用（或升级官方商业版 `AIStor`），并按需通过 `rclone` 等工具双轨渐进迁往新底座。
 - 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` / 标准 `Kubernetes` 集群或观测节点，不改变各档位服务器数量基线。
 - 授权体系遵循从小到大的演进路径：默认采用 `Casbin` 承担轻量级嵌入式 RBAC / ABAC 与工具动作级裁决；当进入阶段三或大规模多部门跨系统 RAG 文档继承树 ACL 预过滤场景时，可条件启用 `OpenFGA`（CNCF `Apache-2.0` ReBAC）。`OpenFGA` 直接复用既有 `PostgreSQL` 存储关系元组，不引入新的数据库引擎，可共部署于 `K3s` / 标准 `Kubernetes` 控制面或应用节点，不改变各档位服务器数量基线。
 - 若业务场景涉及 AI 生成代码、不可信脚本或高敏文件处理工具执行，须独立规划第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 专属节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping），严禁与控制面或核心有状态服务混布。
@@ -255,7 +256,7 @@
 | --- | --- | --- |
 | `PostgreSQL` | 平台配置、业务状态、审计元数据（条件启用 `OpenFGA` 时同步承载 ReBAC 关系元组） | 必须配备持久卷、定期备份与恢复演练 |
 | [Valkey](/components/valkey) / [Redis](/components/redis) | 会话缓存、任务状态、短期上下文 | 明确持久化策略与失效策略；新建纯开源优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留既有 `Redis` |
-| [SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储） | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略 |
+| [SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储；存量兼容 [MinIO](/components/minio)） | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略；新建集群默认选用 `SeaweedFS` / `RustFS`，存量 `MinIO` 集群过渡期须严格内网隔离经标准 `S3` API 受控访问（或升级商业版 `AIStor`） |
 | `Weaviate` / `Milvus` | 向量索引与检索状态 | 与知识发布节奏联动，避免无序重建 |
 | `Elasticsearch` | 全文 / 混合检索索引 | 保留索引治理与容量水位监控 |
 | 观测存储 | 指标、日志、追踪、评测数据 | 明确留存周期、冷热分层与清理机制 |

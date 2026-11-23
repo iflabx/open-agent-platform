@@ -202,13 +202,14 @@
 - 企业既有标准 `Kubernetes`（10–12+ 台正式生产优先复用）
 - `KMS / 证书体系`
 - 企业现有 S3 兼容对象存储（优先复用）
+- [MinIO](/components/minio)（存量兼容与过渡复用）
 
 ### 说明
 
 - 容器运行底座按规模分阶段演进：2–8 台小规模试点与部门级验证阶段默认采用 `K3s` 快速拉起；10–12+ 台及以上正式高可用生产阶段演进至标准 `Kubernetes` / [RKE2](/components/rke2)（优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2`），两者共享 100% 相同 K8s API / Helm / CRD，实现零重写平滑迁移。
 - [Agent 执行沙箱](/components/agent-sandbox) 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），为第 4 层不可信代码、脚本与工具执行提供强隔离环境，并强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - `PostgreSQL` 提供关系型持久化与检查点存储；`Valkey`（默认推荐，`BSD-3-Clause`）与 `Redis`（兼容并列，适合企业既有集群复用）协议完全兼容，承担会话缓存、限流计数、幂等控制与短期状态存储。
-- `SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`）与条件引入的 `RustFS`（轻量高性能纯 S3 平替，`Apache-2.0`，内置 Web 控制台）提供对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用。
+- `SeaweedFS`（默认自建 S3 兼容对象存储，`Apache-2.0`）与条件引入的 `RustFS`（轻量高性能纯 S3 平替，`Apache-2.0`，内置 Web 控制台）提供新建自建对象存储能力；若企业已有 S3 兼容对象存储则优先直接复用；对现网已广泛部署的存量 [MinIO](/components/minio) 集群，支持在内网强隔离下受控复用、升级商业版 `AIStor` 或经标准 S3 API 双轨渐进迁往新底座。
 - 企业现有 `KMS / 证书体系` 作为复用能力，不作为新增组件。
 
 ## 跨层协议与标准
@@ -237,7 +238,7 @@
 | `Dify` / `RAGFlow` | 二选一 | 主平台路线二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
 | `K3s` / 标准 `Kubernetes`（`RKE2`） | 二选一 / 阶段替代 | 2–8 台试点默认 `K3s`，10–12+ 台正式生产演进标准 `Kubernetes` / `RKE2` | 共享 100% 相同 K8s API / Helm / CRD 实现零重写迁移；正式生产优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2` |
 | `Weaviate` / `Milvus` | 二选一 / 阶段替代 | 默认 `Weaviate`，大规模时再评估 `Milvus` | 同一环境不默认长期双向量底座并行 |
-| `SeaweedFS` / `RustFS` | 二选一 | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代选 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储，同一环境按规模与运维偏好只落一套；海量小文件与多协议扩展选 `SeaweedFS`，轻量纯 S3 平替与内置 Web 控制台选 `RustFS` |
+| `SeaweedFS` / `RustFS` / `MinIO`（存量兼容） | 二选一 / 存量过渡 | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代选 `RustFS`，存量兼容 `MinIO` | 新建环境默认采用 `Apache-2.0` 的 `SeaweedFS`（海量小文件与多协议扩展）或轻量平替 `RustFS`（内置 Web 控制台），同一环境只落一套；企业现网已广泛部署的存量 [MinIO](/components/minio) 集群可在内网强隔离下受控复用、升级商业版 `AIStor` 或经标准 S3 API 渐进迁往新底座 |
 | `Valkey` / `Redis` | 二选一 | 新建默认推荐 `Valkey`，存量复用兼容 `Redis` | 两者 100% 线上协议兼容，同一环境只落一套；新建纯开源环境优先采用 `BSD-3-Clause` 的 `Valkey`，企业既有 `Redis` 集群可直接复用 |
 | `vLLM` / `SGLang` | 分池并存 | 默认 `vLLM`，多步 Agent / 代码池条件启用 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载，两者统一挂接在 `LiteLLM` 之后分池并存 |
 | `gVisor` / `Kata Containers` | 分池并存 | 默认 `gVisor`，裸金属强隔离池启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 通过 `RuntimeClass` 同集群分池并存，服务第 4 层不可信代码、脚本与工具执行 |

@@ -74,8 +74,8 @@
 | **协议与互操作** | 工具与 Agent 协作协议 | `MCP`（Agent-to-Tool / Context）、`A2A`（Agent-to-Agent） |
 | **数据治理与 AI 数据底座** | 元数据、采集、建模与解析 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（默认文档解析）、`Apache Tika`（条件兼容） |
 | **接入治理、评测与授权** | 网关、观测、评测、压测与授权 | `APISIX`（统一入口网关）、`agentgateway`（内部 AI 原生协议网关）、`LangFuse`（LLM 观测与评测）、`LangSet`（条件引入，评测数据集工程与离线回归评测）、`k6`（压测与容量验证）、`Casbin`（默认轻量级嵌入式 RBAC / ABAC 与工具动作授权裁决）、`OpenFGA`（条件引入，CNCF `Apache-2.0` ReBAC，面向大规模跨系统 RAG 文档继承树 ACL 预过滤） |
-| **基础设施** | 存储、检索、运行与观测 | `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 S3 兼容对象存储）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）、`Weaviate`（默认向量检索）、`Milvus`（大规模向量检索演进）、`Elasticsearch`（全文 / 混合检索兼容）、`K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`（Agent 执行沙箱）、`OpenTelemetry + Prometheus + Grafana + Loki` |
-| | 企业现有能力复用 | `SSO / IAM`、`KMS / 证书体系`、企业现有标准 `Kubernetes` 集群、企业现有 S3 兼容对象存储（优先复用） |
+| **基础设施** | 存储、检索、运行与观测 | `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 S3 兼容对象存储）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储；存量 [MinIO](/components/minio) 集群可经标准 S3 API 作为存量兼容与过渡复用项）、`Weaviate`（默认向量检索）、`Milvus`（大规模向量检索演进）、`Elasticsearch`（全文 / 混合检索兼容）、`K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`（Agent 执行沙箱）、`OpenTelemetry + Prometheus + Grafana + Loki` |
+| | 企业现有能力复用 | `SSO / IAM`、`KMS / 证书体系`、企业现有标准 `Kubernetes` 集群、企业现有 S3 兼容对象存储（优先复用；含存量 [MinIO](/components/minio) 集群受控过渡复用） |
 
 ## 组件职责边界
 
@@ -214,7 +214,7 @@
 | | `agentgateway` | 内部 AI 原生协议网关，负责 `MCP`、`A2A` 及相关南向（Southbound）协议的统一接入、路由与治理。 |
 | **存储与检索** | `PostgreSQL` | 平台主数据库，承载配置、元数据、状态、权限映射、运营数据与平台后台数据。 |
 | | `Valkey` / `Redis` | 运行时加速层，承载缓存、会话、短期状态、限流计数与幂等控制；新建纯开源场景优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留企业既有 `Redis` 集群与托管实例。 |
-| | `SeaweedFS` / `RustFS` | 自建 S3 兼容对象存储，承载知识原文件、用户上传附件、导出结果与文件型中间产物；优先复用企业既有 S3 存储，自建默认采用 `SeaweedFS`（`Apache-2.0`），轻量化场景按需采用 `RustFS`（`Apache-2.0`，轻量 S3 平替）。 |
+| | `SeaweedFS` / `RustFS`（存量兼容 `MinIO`） | 自建 S3 兼容对象存储，承载知识原文件、用户上传附件、导出结果与文件型中间产物；优先复用企业既有 S3 存储，新建自建默认采用 `SeaweedFS`（`Apache-2.0`），轻量化场景按需采用 `RustFS`（`Apache-2.0`，轻量 S3 平替）；企业现网存量 [MinIO](/components/minio) 集群可作为存量兼容与过渡复用项，通过标准 S3 API 受控接入并平滑演进。 |
 | | `Weaviate` | 默认向量检索与混合检索底座，支撑企业知识库与智能体检索场景。 |
 | | `Milvus` | 大规模阶段向量检索演进底座，适用于更高规模知识库、更高吞吐与更强隔离场景。 |
 | | `Elasticsearch` | 全文检索与混合检索兼容项，适用于全文搜索要求较高或特定主平台配套场景。 |

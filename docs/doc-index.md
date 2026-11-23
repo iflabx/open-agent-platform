@@ -88,6 +88,7 @@
 - [Redis](/components/redis)
 - [SeaweedFS](/components/seaweedfs)
 - [RustFS](/components/rustfs)
+- [MinIO](/components/minio)（存量兼容与过渡复用）
 - [K3s](/components/k3s)
 - [Kubernetes / RKE2](/components/rke2)
 - [Agent 执行沙箱（Kubernetes agent-sandbox + gVisor / Kata Containers）](/components/agent-sandbox)
