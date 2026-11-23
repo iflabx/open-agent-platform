@@ -24,7 +24,7 @@
     <path d="M274 550V582" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
 
     <rect x="120" y="582" width="308" height="188" rx="20" fill="#DBEAFE"/>
-    <text x="274" y="626" text-anchor="middle" fill="#1E3A8A" font-size="28" font-weight="700">AgentifUI</text>
+    <text x="274" y="625" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="700">AgentifUI / LibreChat</text>
     <text x="152" y="656" fill="#1F2937" font-size="17">统一门户 / BFF / API 层</text>
     <text x="152" y="682" fill="#1F2937" font-size="17">应用目录、会话承接、北向 BFF</text>
     <text x="152" y="708" fill="#1F2937" font-size="17">反馈入口、运营后台、统一 API</text>
@@ -95,5 +95,5 @@
   <path d="M1004 482H1044" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
 
   <rect x="84" y="918" width="1512" height="82" rx="22" fill="#111827"/>
-  <text x="110" y="964" fill="#F9FAFB" font-size="18" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI 负责统一门户与 BFF，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
+  <text x="110" y="964" fill="#F9FAFB" font-size="18" font-family="IBM Plex Sans, PingFang SC, Microsoft YaHei, sans-serif">口径收敛：APISIX 负责北向统一入口，AgentifUI / LibreChat 负责统一门户与 BFF，agentgateway 负责内部 AI 协议网关，LiteLLM 负责唯一模型入口。</text>
 </svg>

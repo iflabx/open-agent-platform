@@ -8,7 +8,8 @@
 
 包含组件：
 
-- [AgentifUI](/components/agentifui)
+- [AgentifUI](/components/agentifui)（默认：面向 `Dify` / `LangGraph` 应用目录与工作流门户）
+- [LibreChat](/components/librechat)（并列参考：面向通用多模型 / `MCP` 共享对话门户）
 - [LangGraph](/components/langgraph)
 - [LangChain](/components/langchain)（条件引入：`LangGraph` 体系生态工具包与连接器）
 - [LlamaIndex](/components/llamaindex)

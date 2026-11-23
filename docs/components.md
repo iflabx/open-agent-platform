@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | 1. 用户与渠道层 | [企业现有 Web / IM / 工单 / CRM / ERP 入口](/components/existing-enterprise-entrypoints) | 通过企业现有入口复用能力说明页承载，统一覆盖 Web、IM、工单、邮件、CRM / ERP 和 Webhook 等入口 |
 | 2. 统一接入与流量治理层 | `APISIX`、`agentgateway`、企业现有 `SSO / IAM` | 统一入口、AI 原生协议接入、认证接入、流量治理 |
-| 3. 门户与应用层 | `AgentifUI`、门户 / `BFF` / API 层 | 承接企业多用户统一 AI 工作台、应用目录、会话入口与 BFF / API 聚合边界 |
+| 3. 门户与应用层 | `AgentifUI` / `LibreChat`（按场景并列选型）、门户 / `BFF` / API 层 | 承接企业多用户统一 AI 工作台、应用目录、多模型 / MCP 对话入口与 BFF / API 聚合边界 |
 | 4. Agent 编排层 | `Dify`、`RAGFlow`、`LangGraph`、`LangChain`（条件生态连接器）、`Mem0`（条件长期记忆） | 主平台路线（二选一）、复杂运行时与条件扩展 |
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika` | 数据采集、标准化、非结构化解析、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
@@ -54,9 +54,10 @@
 
 ## 3. 门户与应用层
 
-### 主组件
+### 主组件（按场景二选一收敛）
 
-- [AgentifUI](/components/agentifui)
+- [AgentifUI](/components/agentifui)（默认：面向 `Dify` / `LangGraph` 应用目录、工作流与受控人工确认）
+- [LibreChat](/components/librechat)（并列参考：纯 `MIT`，面向通用多模型 / `MCP` 共享对话与开箱即用 `OIDC / SAML / LDAP`）
 
 ### 配套能力
 
@@ -64,7 +65,7 @@
 
 ### 说明
 
-- 本层以 `AgentifUI` 与门户 / `BFF` / API 层承接企业多用户共享工作台、应用入口、会话入口和用户交互。
+- 本层以 `AgentifUI` 或 `LibreChat`（按企业主导门户场景二选一，避免全员入口分裂）与门户 / `BFF` / API 层承接企业多用户共享工作台、应用入口、会话入口和用户交互。
 - 门户层不应直接持有知识索引、模型路由或授权裁决逻辑。
 - 个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）不纳入本层共享门户基线，归入“可选扩展能力”按单人或高信任小组独立沙箱实例模式按需引入。
 
@@ -236,6 +237,7 @@
 | 组件组 | 关系模式 | 采用规则 | 说明 |
 | --- | --- | --- | --- |
 | `Dify` / `RAGFlow` | 二选一 | 主平台路线二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
+| `AgentifUI` / `LibreChat` | 二选一 | 按主导门户场景二选一 | 同一环境不并行两套全员共享对话前台；面向 `Dify` / `LangGraph` 应用目录、工作流与受控人工确认选 `AgentifUI`，面向全员通用多模型 / `MCP` 共享对话与原生 `OIDC / SAML / LDAP` 选 `LibreChat`（纯 `MIT`，需评估额外 `MongoDB` 依赖） |
 | `K3s` / 标准 `Kubernetes`（`RKE2`） | 二选一 / 阶段替代 | 2–8 台试点默认 `K3s`，10–12+ 台正式生产演进标准 `Kubernetes` / `RKE2` | 共享 100% 相同 K8s API / Helm / CRD 实现零重写迁移；正式生产优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2` |
 | `Weaviate` / `Milvus` | 二选一 / 阶段替代 | 默认 `Weaviate`，大规模时再评估 `Milvus` | 同一环境不默认长期双向量底座并行 |
 | `SeaweedFS` / `RustFS` / `MinIO`（存量兼容） | 二选一 / 存量过渡 | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代选 `RustFS`，存量兼容 `MinIO` | 新建环境默认采用 `Apache-2.0` 的 `SeaweedFS`（海量小文件与多协议扩展）或轻量平替 `RustFS`（内置 Web 控制台），同一环境只落一套；企业现网已广泛部署的存量 [MinIO](/components/minio) 集群可在内网强隔离下受控复用、升级商业版 `AIStor` 或经标准 S3 API 渐进迁往新底座 |

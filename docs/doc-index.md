@@ -38,6 +38,7 @@
 ### [3. 门户与应用层](/layers/portal-application)
 
 - [AgentifUI](/components/agentifui)
+- [LibreChat](/components/librechat)（并列参考：通用多模型 / `MCP` 共享对话门户）
 
 ### [4. Agent 编排层](/layers/agent-orchestration)
 

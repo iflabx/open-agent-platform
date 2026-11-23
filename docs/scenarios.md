@@ -26,7 +26,7 @@
 
 场景优先级主要由业务价值、治理风险和集成复杂度决定，而非由前台形态决定。
 
-- **统一共享门户基线**：上述全员与多部门共享场景均基于 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层交付，统一承接应用目录、工作台、会话上下文与多应用分发。
+- **统一共享门户基线**：上述全员与多部门共享场景均基于 [AgentifUI](/components/agentifui)（默认，面向 `Dify` / `LangGraph` 应用目录与工作流）或 [LibreChat](/components/librechat)（并列参考，面向通用多模型 / `MCP` 共享对话）+ 门户 / BFF / API 层按主导场景二选一交付，统一承接应用目录、工作台、会话上下文与多应用分发。
 - **扩展能力边界**：面向少量高阶用户、研发或高信任小组的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）不作为第 3 层共享多用户门户，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 - **下游保持收敛**：无论面向何种业务场景，下游均遵循“一条主平台路线 + 知识层 + 模型网关 + 治理链路”的收敛规则。
 
@@ -34,10 +34,10 @@
 
 | 场景 | 前台形态 | 主控组件 | 知识 / 数据组件 | 模型与治理组件 |
 | --- | --- | --- | --- | --- |
-| 内部知识助手 | `AgentifUI` + 门户 / BFF | `Dify` / `RAGFlow` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
-| 服务台智能分诊 | `AgentifUI` / 工单前台 + 门户 / BFF | 主平台路线 + `LangGraph` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`Casbin`、`OpenTelemetry` |
-| 流程自动化 Agent | `AgentifUI` + 门户 / BFF | `LangGraph` | `OpenMetadata`、`dbt Core`、`LlamaIndex` | `LiteLLM`、`Casbin`、`LangFuse` |
-| 数据分析助手 | `AgentifUI` / 业务门户 | `LangGraph` | `OpenMetadata`、`dbt Core`、`PostgreSQL` | `LiteLLM`、`Casbin`、`LangFuse` |
+| 内部知识助手 | `AgentifUI` / `LibreChat` + 门户 / BFF | `Dify` / `RAGFlow` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`LangFuse`、`Casbin` |
+| 服务台智能分诊 | `AgentifUI` / `LibreChat` / 工单前台 + 门户 / BFF | 主平台路线 + `LangGraph` | `LlamaIndex` + `Weaviate` | `LiteLLM`、`Casbin`、`OpenTelemetry` |
+| 流程自动化 Agent | `AgentifUI` / `LibreChat` + 门户 / BFF | `LangGraph` | `OpenMetadata`、`dbt Core`、`LlamaIndex` | `LiteLLM`、`Casbin`、`LangFuse` |
+| 数据分析助手 | `AgentifUI` / `LibreChat` / 业务门户 | `LangGraph` | `OpenMetadata`、`dbt Core`、`PostgreSQL` | `LiteLLM`、`Casbin`、`LangFuse` |
 
 ## 场景一：内部知识助手
 
@@ -47,7 +47,7 @@
 
 ### 推荐链路
 
-门户 / 企业 IM → `APISIX` → `AgentifUI` / 门户 BFF → 主平台路线 → `LlamaIndex` → `Weaviate` → `LiteLLM` → `vLLM`
+门户 / 企业 IM → `APISIX` → `AgentifUI` / `LibreChat` / 门户 BFF → 主平台路线 → `LlamaIndex` → `Weaviate` → `LiteLLM` → `vLLM`
 
 如需更复杂的问答状态控制，可在编排层补充 `LangGraph`（简单调用优先原生 SDK，`LangChain` 按需作为连接器工具包）；如涉及跨会话用户画像与长期记忆，可按需挂载 `Mem0` 长期记忆层。
 
@@ -84,7 +84,7 @@
 
 ### 推荐链路
 
-渠道入口 → `APISIX` → `AgentifUI` / 工单集成层 → 主平台路线或 `LangGraph` → 工单工具 → `LiteLLM`
+渠道入口 → `APISIX` → `AgentifUI` / `LibreChat` / 工单集成层 → 主平台路线或 `LangGraph` → 工单工具 → `LiteLLM`
 
 知识回答部分仍通过 `LlamaIndex` + `Weaviate` 提供支持。
 

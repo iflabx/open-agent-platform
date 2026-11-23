@@ -19,7 +19,7 @@
 - **容器运行底座分阶段演进**：2–8 台试点与部门验证阶段统一采用 `K3s`，10–12+ 台企业级高可用生产阶段演进至标准 `Kubernetes` / `RKE2`（优先复用企业既有标准 `Kubernetes`，新建全私有化或离线集群优选 `RKE2`）；三者 100% 共享标准 K8s API、Helm Chart 与 CRD，支持零重写平滑迁移。
 - 服务器数按“单环境”计算，不包含企业既有 `SSO / IAM`、`KMS / 证书体系`、`WAF`、`DNS / LB`、企业既有标准 `Kubernetes` 集群与托管数据库等复用能力。
 - 若容器底座、数据库、对象存储或 GPU 复用企业现有托管能力，服务器数量可相应减少，但部署单元与治理边界保持不变。
-- 上表与下文所有部署图均以 `AgentifUI` + 门户 / BFF 共享多用户门户基线绘制；个人自治型超级智能体扩展能力（如 [OpenClaw](/components/openclaw)）不归属共享门户单元，须在共享门户档位估算之外单独规划 Multi-Instance 独立沙箱节点池与专属资源配额，详见 [扩展升级](/extension-capabilities)。
+- 上表与下文所有部署图均以默认门户 `AgentifUI` + 门户 / BFF 共享多用户门户基线绘制（直接复用平台既有 `PostgreSQL + Valkey / Redis + S3`）；若企业选用 [LibreChat](/components/librechat) 作为第 3 层共享门户，须额外规划 `MongoDB`（及可选 `Meilisearch`）的容器资源、持久化存储与备份策略。个人自治型超级智能体扩展能力（如 [OpenClaw](/components/openclaw)）不归属共享门户单元，须在共享门户档位估算之外单独规划 Multi-Instance 独立沙箱节点池与专属资源配额，详见 [扩展升级](/extension-capabilities)。
 :::
 
 ## 部署原则
@@ -48,7 +48,7 @@
 - 以下服务器数量按“单环境”计算，仅覆盖平台本体，不包含企业既有 `SSO / IAM`、`KMS / 证书体系`、`WAF`、`DNS / LB`、企业数据库托管服务等复用能力。
 - 以下硬件配置结合组件官方最低要求、依赖拓扑与可用性冗余综合得出，属于工程建议值，不等同于各组件官方最低启动门槛。
 - 默认以 `x86_64 Linux` 私有化部署为口径；若使用云托管数据库、对象存储或 GPU 池，服务器数量可相应下降，但部署单元不会消失。
-- 以下分级以 `AgentifUI` + `Dify` 作为默认起步路线展开；若主平台路线调整为 `RAGFlow`，服务器数量通常不变，但知识解析与检索链路的资源瓶颈位置会有所差异。
+- 以下分级以默认门户 `AgentifUI` + `Dify` 作为默认起步路线展开（`AgentifUI` 直接复用平台既有 `PostgreSQL + Valkey / Redis + S3`）；若主平台路线调整为 `RAGFlow`，服务器数量通常不变，但知识解析与检索链路的资源瓶颈位置会有所差异。若企业按主导场景选用 [LibreChat](/components/librechat) 作为第 3 层共享门户，须额外规划 `MongoDB`（及可选 `Meilisearch`）的容器资源、持久化存储与备份恢复策略。
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
 - **分阶段容器底座与零重写迁移**：2–8 台试点与部门验证档位统一采用 `K3s` 快速交付容器编排环境；进入 10–12+ 台企业级高可用生产档位时，平滑演进至标准 `Kubernetes` / `RKE2`（企业已有成熟标准 `Kubernetes` 集群时**优先复用**，新建全私有化或离线集群时优选 `RKE2`）。三者 100% 共享标准 K8s API、Helm Chart 与 CRD 规范，升级集群底座时所有应用编排、网关路由、观测与沙箱声明式配置均无需重写即可完成迁移。
 - **对象存储新建与存量过渡口径**：新建私有化集群默认采用 [SeaweedFS](/components/seaweedfs)（`Apache-2.0`）或轻量 `S3` 平替 [RustFS](/components/rustfs)（`Apache-2.0`），优先复用企业既有 `S3` 兼容对象存储；对现网已部署存量 [MinIO](/components/minio) 集群的企业，过渡期可在严格内网隔离下经标准 `S3` API 继续受控复用（或升级官方商业版 `AIStor`），并按需通过 `rclone` 等工具双轨渐进迁往新底座。
@@ -220,7 +220,7 @@
 
 - 主平台路线负责标准场景。
 - `LangGraph` 作为核心生产 Agent Runtime，负责复杂状态机、人工介入和基于 `PostgreSQL` Checkpointer 的长链路恢复；`LangChain` 收敛为 `LangGraph` 下的条件生态工具库与连接器；跨会话长期记忆按需条件引入 `Mem0`（`Apache-2.0`）。
-- 由 `AgentifUI` + 门户 / BFF 负责用户上下文、会话和应用聚合。
+- 由 `AgentifUI` / [LibreChat](/components/librechat)（按主导场景二选一）+ 门户 / BFF 负责用户上下文、会话和应用聚合。
 
 ### 知识与数据层
 
@@ -240,7 +240,7 @@
 | 部署单元 | 主要组件 | 说明 |
 | --- | --- | --- |
 | 入口单元 | `APISIX` | 统一承接北向流量和入口治理 |
-| 门户单元 | `AgentifUI` + 门户 / BFF | 统一承接企业共享门户、应用目录、会话上下文与 BFF 聚合 |
+| 门户单元 | `AgentifUI` / [LibreChat](/components/librechat)（按主导场景二选一）+ 门户 / BFF | 统一承接企业共享门户、应用目录、多模型 / `MCP` 对话入口、会话上下文与 BFF 聚合；默认 `AgentifUI` 复用既有 `PostgreSQL + Valkey / Redis + S3`，选用 `LibreChat` 时须额外规划 `MongoDB`（及可选 `Meilisearch`）的容器资源、持久化与备份 |
 | 主平台单元 | `Dify` / `RAGFlow` | 标准场景二选一，仅保留一条主平台路线 |
 | 复杂运行时单元 | `LangGraph`（核心生产 Agent Runtime），条件配合 `LangChain`（生态连接器）与 `Mem0`（可插拔长期记忆层） | 负责长链路流程、状态机、基于 `PostgreSQL` Checkpointer 的状态恢复与可选跨会话长期记忆 |
 | 数据治理单元 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（条件兼容 `Apache Tika`） | 负责采集、版面解析、清洗、元数据和资产发布 |
@@ -259,6 +259,7 @@
 | [SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储；存量兼容 [MinIO](/components/minio)） | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略；新建集群默认选用 `SeaweedFS` / `RustFS`，存量 `MinIO` 集群过渡期须严格内网隔离经标准 `S3` API 受控访问（或升级商业版 `AIStor`） |
 | `Weaviate` / `Milvus` | 向量索引与检索状态 | 与知识发布节奏联动，避免无序重建 |
 | `Elasticsearch` | 全文 / 混合检索索引 | 保留索引治理与容量水位监控 |
+| `MongoDB`（及可选 `Meilisearch`，仅选用 [LibreChat](/components/librechat) 时引入） | `LibreChat` 共享门户会话、用户配置与消息检索索引 | 默认 `AgentifUI` 基线复用 `PostgreSQL + Valkey / Redis + S3`，不引入该依赖；选用 `LibreChat` 作为第 3 层共享门户时，须额外规划容器资源、持久卷、定期备份与恢复演练 |
 | 观测存储 | 指标、日志、追踪、评测数据 | 明确留存周期、冷热分层与清理机制 |
 
 ## 发布与回滚

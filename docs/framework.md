@@ -69,7 +69,7 @@
 | **模型与推理** | 推理服务与模型网关 | `vLLM`（通用高吞吐默认）、`SGLang`（条件优选，多步 Agent 与代码负载）、`LiteLLM` |
 | | 基础模型组合 | `Qwen3.5 27B FP8`（企业通用主模型）、`Qwen3-Coder-Next`（代码模型）、`Qwen/Qwen3-Embedding-8B`（Embedding）、`Qwen/Qwen3-Reranker-8B`（Reranker）、`Qwen3Guard-Stream-8B`（安全审查模型） |
 | **主平台与门户** | 主平台中枢 | `Dify` / `RAGFlow`（二选一） |
-| | 门户与交互前台 | `AgentifUI` + 门户 / BFF / API 层（统一门户与应用目录） |
+| | 门户与交互前台 | `AgentifUI`（默认，面向 `Dify` / `LangGraph` 应用目录与工作流） / `LibreChat`（并列参考，面向通用多模型 / `MCP` 共享对话） + 门户 / BFF / API 层 |
 | **高级 Agent 能力** | 运行时、编排、知识与记忆 | `LangGraph`（生产级 Agent Runtime）、`LangChain`（条件引入，生态适配与连接器工具包）、`LlamaIndex`（知识工程与复杂 RAG）、`Mem0`（条件引入，可插拔长期记忆层） |
 | **协议与互操作** | 工具与 Agent 协作协议 | `MCP`（Agent-to-Tool / Context）、`A2A`（Agent-to-Agent） |
 | **数据治理与 AI 数据底座** | 元数据、采集、建模与解析 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（默认文档解析）、`Apache Tika`（条件兼容） |
@@ -86,7 +86,7 @@
 </div>
 
 ::: tip 核心边界口径
-`APISIX` 负责北向统一入口，`AgentifUI` + 门户 / BFF 负责统一门户与应用入口，`agentgateway` 负责内部 AI 协议网关，`LiteLLM` 作为唯一模型入口。
+`APISIX` 负责北向统一入口，`AgentifUI` / `LibreChat` + 门户 / BFF 负责统一门户与应用入口，`agentgateway` 负责内部 AI 协议网关，`LiteLLM` 作为唯一模型入口。
 :::
 
 ### 1. 推理层
@@ -174,9 +174,12 @@
 
 ### 8. 门户与交互层
 
-- **`AgentifUI`**
-  - **职责**：作为企业统一 AI 门户，提供多应用入口、聊天入口、工作台、应用目录、会话交互、应用分发与反馈提交。
-  - **边界**：不持有核心编排逻辑，不直接耦合底层模型；通过统一 BFF / API 层对接 `Dify`、`RAGFlow`、自研服务及协议层能力。
+- **`AgentifUI`**（默认，应用编排型门户）
+  - **职责**：作为面向 `Dify` 与兼容 `LangChain / LangGraph` 后端的企业统一 AI 应用门户（`Next.js + Fastify Sidecar + PostgreSQL RLS + AG-UI`），提供应用目录、聊天与工作流入口、受控人工确认、交付物预览与反馈提交。
+  - **边界**：不构建也不托管 Agent 本身，不直接耦合底层模型；处于 `0.3.x` 演进期且社区体量相对偏小，强 `SAML` 需求建议通过前置网关 / 统一 `OIDC` 代理收敛。
+- **`LibreChat`**（并列参考，通用多模型 / `MCP` 共享对话门户）
+  - **职责**：纯 `MIT` 高成熟度共享对话门户，原生支持 `OIDC / SAML / LDAP`、多用户 RBAC、Artifacts 与原生 `MCP` 工具接入，天然对接 `LiteLLM` / `vLLM`。
+  - **边界**：不承担复杂工作流编排与企业主知识治理，不原生覆盖 `Dify` Workflow 表单与 `LangGraph` 人工审批交互；与 `AgentifUI` 按企业主导场景二选一收敛，不长期并行两套全员共享对话前台。
 
 > 若后续门户层能力不足，演进方向仍应保持“独立自建门户壳 + 稳定 BFF 契约”，避免与底层引擎耦合。面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享门户基线，归入 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
 
@@ -237,7 +240,7 @@
 5. **数据治理平面**：`OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容），承担数据源登记、采集同步、结构化治理、非结构化解析与资产发布。
 6. **知识服务平面**：`Dify` / `RAGFlow` + `Qwen/Qwen3-Embedding-8B` + `Qwen/Qwen3-Reranker-8B` + `Weaviate` / `Milvus` / `Elasticsearch`，承担基于治理后资产的切片、索引、检索与权限过滤。
 7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow`（二选一），复杂流程生产级 Runtime 采用 `LangGraph`（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包），知识工程采用 `LlamaIndex`，跨会话长期记忆场景按需引入 `Mem0`。
-8. **门户与应用发布平面**：`AgentifUI` + 门户 / BFF / API 层 + 企业 SSO + 应用中心、应用目录、会话入口与反馈运营后台。
+8. **门户与应用发布平面**：`AgentifUI` / `LibreChat`（按场景二选一） + 门户 / BFF / API 层 + 企业 SSO + 应用中心、应用目录、会话入口与反馈运营后台。
 9. **评测、治理与验证平面**：`LangFuse` + `LangSet`（条件引入） + `k6` + `Qwen3Guard-Stream-8B` + `Casbin` + `OpenFGA`（条件引入），承担审计、在线观测、版本化离线回归评测、细粒度授权与文档继承树 ACL 预过滤、内容合规、质量回放与容量验证。
 
 门户前台应以统一工作台而非单一聊天页形态交付：
@@ -333,7 +336,7 @@
 | **`Dify` / `RAGFlow` 职责重叠** | 按企业路线二选一，不并行建设多套主底座或主知识平面，编排与知识链路围绕单一主平台收敛。 |
 | **`LangGraph` / `LangChain` / `LlamaIndex` / `Mem0` 叠加复杂度过高** | 严格收敛边界：`LangGraph` 为复杂流程核心生产级 Runtime，简单调用优先原生 SDK，`LangChain` 仅作可选生态连接器；`LlamaIndex` 负责知识工程与复杂 RAG；`Mem0` 仅在跨会话长期记忆场景按需引入，与 `LangGraph` + `PostgreSQL` Checkpointer 互补。 |
 | **`MCP` 与 `A2A` 边界混淆** | `MCP` 专注 Agent-to-Tool / Context 接入，`A2A` 专注 Agent-to-Agent 协作，二者互补而不互替。 |
-| **`AgentifUI` 难以承载完整企业门户** | 将其定位为起步前端壳，核心控制点下沉至自研 BFF 与统一身份层，确保前端可替换、后端契约稳定；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户替代方案。 |
+| **门户前台社区体量与场景适配风险（`AgentifUI` / `LibreChat`）** | `AgentifUI` 虽在 `Dify + LangGraph / AG-UI` 应用门户架构上高度契合，但处于 `0.3.x` 演进期且社区规模偏小、端到端 `SAML` 尚未完备；通用多模型 / `MCP` 共享对话与开箱即用 `OIDC / SAML / LDAP` 场景可并列选用高成熟度纯 `MIT` 方案 [LibreChat](/components/librechat)，同时将核心控制点与契约沉淀在统一身份与 BFF 层，确保前台可替换。个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户替代方案。 |
 | **`LangFuse` 无法覆盖全平台运维** | `LangFuse` 专注 LLM 级观测，必须叠加基础设施级可观测性（Observability）体系形成双层观测。 |
 | **基础设施过度建设** | 身份与密钥复用企业现有体系，入口收敛至 `APISIX`，消息总线与独立全文检索等非必要能力不前置建设。 |
 | **数据治理层过重导致运维复杂** | 采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 仅作老旧 / 偏门格式与元数据预路由条件兼容），先满足 RAG / 搜索 / 查询 / Agent 核心数据供给，再随规模演进。 |
@@ -356,6 +359,6 @@
 - **入口与协议治理**：`APISIX` 构成北向统一入口网关与流量治理层，`agentgateway` 承担内部 AI 协议治理，`MCP + A2A` 构成互操作协议层。
 - **数据与知识底座**：`OpenMetadata + SeaTunnel + dbt Core + Docling`（`Apache Tika` 条件兼容）构成企业 AI 数据治理底座；`Weaviate` 为默认检索底座，`Milvus` 为大规模演进，`Elasticsearch` 为全文 / 混合检索兼容项。
 - **主平台与 Agent 能力**：`Dify` 或 `RAGFlow`（二选一）构成主平台中枢；`LangGraph` 构成复杂流程核心生产级 Agent Runtime（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包）；`LlamaIndex` 负责知识工程与复杂 RAG；`Mem0` 作为条件引入的可插拔长期记忆层。
-- **门户与交互层**：`AgentifUI` + 门户 / BFF / API 层构成统一门户前台与应用发布入口。
+- **门户与交互层**：`AgentifUI`（默认，面向 `Dify` / `LangGraph` 应用门户）/ `LibreChat`（并列参考，面向通用多模型 / `MCP` 共享对话） + 门户 / BFF / API 层构成统一门户前台与应用发布入口。
 - **运行、观测与治理**：`PostgreSQL + Valkey / Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）`+ SeaweedFS`（默认）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）`+ K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + OpenFGA（条件引入） + 平台观测体系` 构成观测评测与企业治理层。
 :::

@@ -32,7 +32,8 @@
 | `Dify` | 自定义许可证 | `Dify Open Source License` | 带额外限制，不应等同标准 `Apache-2.0` |
 | `RAGFlow` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `Coze Studio` | 标准开源 | `Apache-2.0` | 非主路线观察参考；因底层依赖 MySQL / Milvus / ES / NSQ 异构中间件且开源迭代放缓，不纳入默认主平台候选 |
-| `AgentifUI` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `AgentifUI` | 标准开源 | `Apache-2.0`（社区版） | 可直接纳入；面向 `Dify` / `LangChain·LangGraph` 应用门户（含 `Fastify` BFF 与 `AG-UI`）；官方同时存在商业支持与商标政策，当前处于 `0.3.x` 演进期，建议锁定版本 |
+| `LibreChat` | 标准开源 | `MIT` | 可直接纳入；并列参考高成熟度通用多模型 / `MCP` 共享对话门户，原生支持 `OIDC / SAML / LDAP` 与 RBAC，许可证纯净 |
 | `OpenClaw` | 标准开源 | `MIT` | 可选扩展能力，按独立沙箱实例模式按需引入，不纳入主方案共享门户基线 |
 | `APISIX` | 标准开源 | `Apache-2.0` | 可直接纳入 |
 | `agentgateway` | 标准开源 | `Apache-2.0` | 可直接纳入 |
@@ -90,7 +91,8 @@
 | `Dify` | [官方仓库](https://github.com/langgenius/dify) | 自定义许可证，不应简单视为标准 `Apache-2.0` |
 | `RAGFlow` | [官方仓库](https://github.com/infiniflow/ragflow) | 标准开源，`Apache-2.0` |
 | `Coze Studio` | [官方仓库](https://github.com/coze-dev/coze-studio) | 标准开源，`Apache-2.0`，非主路线观察参考（不纳入默认主平台候选） |
-| `AgentifUI` | [官方仓库](https://github.com/iflabx/agentifui) | 标准开源，`Apache-2.0` |
+| `AgentifUI` | [官方仓库](https://github.com/iflabx/agentifui) | 标准开源，`Apache-2.0`（社区版）；面向 `Dify` / `LangGraph` 应用门户，官方同时声明商业支持与商标政策 |
+| `LibreChat` | [官方仓库](https://github.com/danny-avila/LibreChat) | 标准开源，`MIT`；并列参考高成熟度通用多模型 / `MCP` 共享对话门户 |
 | `OpenClaw` | [官方仓库](https://github.com/openclaw/openclaw) | 标准开源，`MIT`，可选扩展能力，按独立沙箱实例模式按需引入，不纳入主方案共享门户基线 |
 
 ### 3. Agent 框架与知识工程
@@ -191,6 +193,8 @@
 ## 参考资料
 
 - [Dify 官方仓库](https://github.com/langgenius/dify)
+- [AgentifUI 官方仓库](https://github.com/iflabx/agentifui)
+- [LibreChat 官方仓库](https://github.com/danny-avila/LibreChat)
 - [OpenClaw 官方仓库](https://github.com/openclaw/openclaw)
 - [agentgateway 官方仓库](https://github.com/agentgateway/agentgateway)
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)

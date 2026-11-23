@@ -2,11 +2,12 @@
 
 > 定位：承接统一工作台、应用目录、会话入口与 BFF / API 编排边界。
 >
-> 当前承载组件：`AgentifUI`、门户 / BFF / API 层。
+> 当前承载组件：`AgentifUI`（默认，面向 `Dify` / `LangGraph` 应用目录与工作流交付）、`LibreChat`（并列参考，面向通用多模型 / `MCP` 共享对话与原生 `OIDC / SAML / LDAP`）、门户 / BFF / API 层。
 
 相关文档：
 
 - [AgentifUI](/components/agentifui)
+- [LibreChat](/components/librechat)
 - [方案综述](/guide/)
 - [组件](/components)
 - [Agent 编排层](/layers/agent-orchestration)
@@ -27,11 +28,12 @@
 
 ## 当前承载组件
 
-- [AgentifUI](/components/agentifui)
+- [AgentifUI](/components/agentifui)（默认：面向 `Dify` / `LangChain·LangGraph` 应用目录、工作流与受控人工确认）
+- [LibreChat](/components/librechat)（并列参考：纯 `MIT`，面向通用多模型 / `MCP` 共享对话与开箱即用 `OIDC / SAML / LDAP`）
 - 门户 / BFF / API 层
 
 ::: tip 采用边界
-门户与应用层以 [AgentifUI](/components/agentifui) 与门户 / BFF / API 层作为企业多用户共享工作台基线。[OpenClaw](/components/openclaw) 定位为个人自治型超级智能体，按单人或高信任小组独立沙箱实例模式按需引入，不纳入本层共享门户基线，详见 [扩展升级](/extension-capabilities)。
+门户与应用层以 [AgentifUI](/components/agentifui) / [LibreChat](/components/librechat)（按主导场景二选一收敛，同一环境不并行两套全员共享对话前台）与门户 / BFF / API 层作为企业多用户共享工作台基线。[OpenClaw](/components/openclaw) 定位为个人自治型超级智能体，按单人或高信任小组独立沙箱实例模式按需引入，不纳入本层共享门户基线，详见 [扩展升级](/extension-capabilities)。
 :::
 
 ## 上下游关系
@@ -106,4 +108,5 @@
 ## 参考资料
 
 - [AgentifUI](https://agentifui.com/)
+- [LibreChat](https://www.librechat.ai/)
 - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)

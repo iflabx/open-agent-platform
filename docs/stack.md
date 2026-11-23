@@ -19,7 +19,7 @@
 
 | 收敛模式 | 核心规则 | 涉及组件组 | 典型判定方式 |
 | --- | --- | --- | --- |
-| **一、按企业现状二选一 / 阶段替代** | 同一环境只落一套，不长期并行两套同类主底座 | 主平台（`Dify` / `RAGFlow`）、容器底座（`K3s` / 标准 `Kubernetes`·`RKE2`）、向量检索（`Weaviate` / `Milvus`）、对象存储（`SeaweedFS` / `RustFS` / 企业 S3，存量兼容 `MinIO`）、缓存（`Valkey` / `Redis`） | 均基于统一标准接口（K8s API / S3 API / Redis 协议等），按企业既有资产与规模二选一或分阶段平滑切换 |
+| **一、按企业现状二选一 / 阶段替代** | 同一环境只落一套，不长期并行两套同类主底座 | 主平台（`Dify` / `RAGFlow`）、门户前台（`AgentifUI` / `LibreChat`）、容器底座（`K3s` / 标准 `Kubernetes`·`RKE2`）、向量检索（`Weaviate` / `Milvus`）、对象存储（`SeaweedFS` / `RustFS` / 企业 S3，存量兼容 `MinIO`）、缓存（`Valkey` / `Redis`） | 均基于统一标准接口（K8s API / S3 API / Redis 协议 / OpenAI·AG-UI 协议等），按企业既有资产、主导场景与规模二选一或分阶段平滑切换 |
 | **二、按负载分池并存** | 小规模默认单选起步，大规模可在同集群按池共存 | 推理引擎（`vLLM` + `SGLang`）、Agent 执行沙箱（`gVisor` + `Kata Containers`） | 通过统一控制面路由分池（`LiteLLM` 分池路由 / K8s `RuntimeClass` 调度），按任务特征与安全等级共存 |
 | **三、按成熟度分层叠加** | 上下游职责互补，引入后者**不替代**前者 | 编排（主平台 + `LangGraph`）、解析（`Docling` + `Apache Tika`）、评测（`LangFuse` + `LangSet`）、授权（`Casbin` + `OpenFGA`） | 小规模先用前者跑通闭环；进入多部门复杂生产后叠加后者补齐长时状态机、冷门格式、离线测试集或跨系统 ReBAC |
 
@@ -30,7 +30,7 @@
 | 模型推理 | `vLLM` + `Qwen` 模型族 | 多步 Agent 与代码负载条件优选 [SGLang](/components/sglang)（`RadixAttention` 前缀 KV-Cache 复用） | `vLLM` 为通用高吞吐默认引擎；`SGLang` 按模型池分工条件启用，均统一经由 `LiteLLM` 纳管 |
 | 模型网关 | `LiteLLM` | 无额外正式替代项 | 所有模型请求统一经由同一网关 |
 | 主平台路线 | `Dify`、`RAGFlow` 二选一 | 不长期并行 | 通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`）；深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
-| 门户与应用前台 | `AgentifUI` + 门户 / BFF / API 层 | 无额外共享门户替代项 | 统一承接企业多应用入口与会话上下文；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户 |
+| 门户与应用前台 | `AgentifUI` + 门户 / BFF / API 层 | 通用多模型 / `MCP` 共享对话与原生 `OIDC / SAML / LDAP` 场景并列参考 [LibreChat](/components/librechat)（纯 `MIT`） | 按主导门户场景二选一收敛：`Dify` / `LangGraph` 应用目录、工作流与受控人工确认优先 `AgentifUI`；全员多模型统一对话 + `MCP` 工具助手优先 `LibreChat`；个人自治型超级智能体（如 `OpenClaw`）归属 [扩展升级](/extension-capabilities) 独立沙箱评估，不作为第 3 层共享门户 |
 | 复杂 Agent 运行时 | `LangGraph` | 复杂流程或长链路场景启用；生态连接器按需引入 `LangChain` | 复杂流程核心生产级 Runtime；简单调用优先使用原生 SDK，`LangChain` 仅作为可选工具包与连接器，不充当核心业务编排支柱 |
 | 可插拔长期记忆层 | `Mem0`（条件引入） | 仅在需要跨会话长期记忆时启用 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，非全平台默认组件 |
 | 知识工程 | `LlamaIndex` | 无 | 统一负责检索编排、切片和引用构建 |
@@ -143,6 +143,12 @@
 - **2–8 台试点与部门验证**：采用 [K3s](/components/k3s) 作为轻量容器运行底座，降低初期集群搭建与运维复杂度，快速支撑 PoC 与部门级生产验证。
 - **10–12+ 台企业级高可用生产**：平滑演进至标准 `Kubernetes` / `RKE2`。若企业已有成熟的标准 `Kubernetes` 基础设施，**优先直接复用**以保持统一运维与安全基线；若为新建全私有化或离线（Air-gapped）集群，优选 `RKE2`。
 - **零重写平滑迁移**：`K3s`、标准 `Kubernetes` 与 `RKE2` 100% 共享标准 K8s API、Helm Chart 与 CRD 规范，所有应用编排、网关路由、观测采集与沙箱隔离配置均无需重写即可完成迁移。
+
+### 12. 门户前台选型取舍（`AgentifUI` 与 `LibreChat`）
+
+- **[AgentifUI](/components/agentifui)**（默认）：基于 `Next.js + Fastify Sidecar + PostgreSQL RLS + Valkey / Redis + S3 + Better Auth`，原生聚焦 `Dify` 与兼容 `LangChain / LangGraph` 后端的应用目录、工作流/表单执行、受控人工确认与交付物预览，并以 `AG-UI` 作为共享交互底座；适合已明确采用 `Dify` / `LangGraph` 编排路线的企业应用门户。采用时需关注其处于 `0.3.x` 演进期、社区规模偏小及 `SAML` 认证边界。
+- **[LibreChat](/components/librechat)**（并列参考）：采用纯 `MIT` 协议，社区成熟度高，原生支持 `OIDC / SAML / LDAP`、多用户 RBAC、Artifacts 与原生 `MCP` Agent，天然对接 `LiteLLM` / `vLLM`；适合以全员通用多模型共享对话和 `MCP` 工具助手为主导的场景（需评估其默认 `MongoDB` 依赖的运维边界）。
+- **单轨收敛**：同一企业环境按主导场景二选一落位，避免同时维护两套全员共享对话前台；个人自治型超级智能体（如 `OpenClaw`）不纳入共享门户选型。
 
 ## 应避免的选型做法
 
