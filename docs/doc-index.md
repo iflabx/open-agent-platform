@@ -75,6 +75,7 @@
 - [LangSet](/components/langset)
 - [k6](/components/k6)
 - [Casbin](/components/casbin)
+- [OpenFGA](/components/openfga)
 - [OpenTelemetry](/standards/opentelemetry)
 - [Prometheus](/components/prometheus)
 - [Grafana](/components/grafana)

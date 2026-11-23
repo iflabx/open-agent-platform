@@ -40,7 +40,8 @@
 
 ## 与组件 / 协议关系
 
-- **与 [Casbin](/components/casbin) 的关系**：属于“授权模型规范”与“授权裁决引擎实现”的关系。
+- **与 [Casbin](/components/casbin) 的关系**：属于“授权模型规范”与“默认轻量进程内授权裁决引擎”的关系，负责日常 `RBAC + ABAC` 与工具动作授权裁决。
+- **与 [OpenFGA](/components/openfga) 的关系**：当知识库或文档权限涉及跨系统深层继承图谱（如文件夹、项目、群组与动态分享链接）时，可在 `RBAC + ABAC`（`Casbin`）基线之上条件叠加 `OpenFGA` 承接 `ReBAC` 关系授权与 RAG 文档级 ACL 预过滤，两者互补协作。
 - **与 [身份接入协议（OIDC / OAuth2 / SAML / SCIM）](/protocols/identity-access) 的关系**：属于“身份来源”与“权限裁决”的协作关系，认证不能替代授权。
 - **与 [OpenMetadata](/components/openmetadata)、[LlamaIndex](/components/llamaindex) 配合**：依托标签、数据域与访问范围承接知识层的属性约束。
 - **与 [APISIX](/components/apisix) 配合**：网关负责前置校验与上下文传递，业务授权结果仍由统一裁决口径决定。
@@ -82,6 +83,7 @@
 - [Maker-Checker](/norms/maker-checker)
 - [安全与治理](/governance)
 - [Casbin](/components/casbin)
+- [OpenFGA](/components/openfga)
 
 ## 参考资料
 

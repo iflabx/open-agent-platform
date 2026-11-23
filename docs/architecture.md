@@ -32,7 +32,7 @@
 | 5. 数据治理层 | 采集、清洗、标准化、标签治理、元数据和数据产品发布 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容） | 不直接承担终端交互 |
 | 6. 知识与检索层 | 建索引、检索、重排、引用和权限感知上下文构建 | `LlamaIndex` + `Weaviate`；大规模检索演进到 `Milvus`；全文 / 混合检索兼容 `Elasticsearch` | 不替代数据治理，也不直接承担业务流程控制 |
 | 7. 模型网关与推理层 | 统一模型接入、路由、配额、回退和推理执行 | `LiteLLM` + `vLLM`（默认）/ [SGLang](/components/sglang)（条件优选）+ `Qwen` 模型族 | 不承载业务应用状态和页面逻辑 |
-| 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
+| 8. 治理与观测层 | 负责权限裁决、审计、追踪、评测、压测和发布门槛 | `Casbin`、`OpenFGA`（条件组件，大规模跨系统 RAG 文档继承树 ReBAC 预过滤）、`LangFuse`、`LangSet`（条件组件）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 不直接变成业务入口，不直接承载原始数据存储 |
 | 9. 基础设施层 | 提供运行底座、Agent 执行沙箱、持久化、缓存、对象存储、网络与密钥体系 | `K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产；优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、[Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（默认自建 `SeaweedFS`，轻量 S3 平替按需 `RustFS`；优先复用企业既有 S3 存储）、企业 `KMS / 证书体系` | 不混入上层业务决策逻辑 |
 
 > 面向少量高阶用户或高信任小组的个人自治型超级智能体（如 `OpenClaw`）不纳入第 3 层共享多用户门户基线，归属 [扩展升级](/extension-capabilities) 按独立沙箱多实例隔离评估。
@@ -57,7 +57,7 @@
 
 配套治理链：
 
-`Casbin` + `LangFuse` + `LangSet`（条件组件） + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `k6`
+`Casbin` + `OpenFGA`（条件组件） + `LangFuse` + `LangSet`（条件组件） + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` + `k6`
 
 适用场景：
 
@@ -97,7 +97,7 @@
 治理与控制面贯穿全部 9 个层级，而非事后外挂：
 
 - **北向接入与流量治理**：由 `APISIX` 承担认证接入、限流、路由与审计前置。
-- **细粒度动作授权**：由 `Casbin` 承担应用内与动作级策略裁决。
+- **细粒度授权演进**：默认由 `Casbin` 承担轻量级嵌入式 RBAC / ABAC 与工具动作级策略裁决；大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）。
 - **AI 级观测与评测**：由 `LangFuse` 承担在线 LLM Trace、Prompt 版本、评分沉淀与回放；需要协同构建版本化评测数据集与离线回归评测时，按需引入 `LangSet`（条件组件），与 `LangFuse` 及 `k6` 形成互补。
 - **平台级可观测性**：由 `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 承担指标、日志与全链路追踪。
 - **发布前容量基线**：由 `k6` 承担关键链路性能压测与容量验证。
@@ -110,7 +110,7 @@
 2. `APISIX` 完成北向入口认证接入、限流、路由与审计前置。
 3. 门户 / BFF 初始化会话，并将用户、角色、租户与场景上下文传递至编排层。
 4. 主平台路线或 `LangGraph` 判断请求类型（纯问答、带检索问答或工具型任务）。
-5. `LlamaIndex` 调用知识与检索层，按权限标签执行召回、过滤、重排与引用构建。
+5. `LlamaIndex` 调用知识与检索层，按权限标签执行召回、过滤、重排与引用构建（大规模跨系统文档继承树场景下，可由条件引入的 `OpenFGA` 执行 ReBAC ACL 预过滤）。
 6. 编排层将受控上下文与任务指令发送至 `LiteLLM`。
 7. `LiteLLM` 将请求路由至 `vLLM`（或面向多步 Agent / 代码负载条件优选的 `SGLang`）上托管的目标 `Qwen` 模型。
 8. 结果返回前由治理层完成留痕、评测记录及必要的输出审查。
@@ -146,7 +146,8 @@
 | 数据治理服务 | 数据采集、标准化、元数据、数据产品发布 | 不直接承担用户会话和页面逻辑 |
 | 知识与检索服务 | 切片、索引、召回、重排、引用输出 | 不绕过权限过滤直接向模型供数 |
 | `LiteLLM` | 模型统一接入、路由、回退、配额治理 | 不承接业务状态和应用编排 |
-| `Casbin` | 细粒度授权裁决 | 不承担入口认证接入 |
+| `Casbin` | 默认轻量级嵌入式 RBAC / ABAC 与工具动作级细粒度授权裁决 | 不承担入口认证接入，不承担大规模跨系统文档继承树图计算 |
+| `OpenFGA`（条件组件） | 面向大规模跨系统 RAG 文档继承树的 ReBAC 关系授权与检索前 ACL 预过滤（复用既有 `PostgreSQL`） | 不替代 `Casbin` 的应用内轻量 RBAC / ABAC 与工具动作裁决，不承担入口认证接入 |
 | `LangFuse`、`LangSet`（条件组件）与平台观测体系 | AI 级与平台级双层观测、版本化离线回归评测、回放与审计 | 不直接替代运维控制面或业务入口 |
 | [Agent 执行沙箱](/components/agent-sandbox) | 基于 `Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），隔离第 4 层不可信代码、脚本与工具执行，强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） | 不承载业务编排逻辑，不直接持有生产凭据或开放默认出网 |
 
@@ -167,7 +168,7 @@
 
 - 10–12+ 台企业级高可用生产阶段平滑演进至标准 `Kubernetes` / `RKE2`（优先复用企业既有标准 `Kubernetes` 集群，新建私有化或离线环境优选 `RKE2`），依托 100% 共享 K8s API、Helm Chart 与 CRD 实现应用与编排配置零重写迁移。
 - 模型层、检索层、治理层与有状态底座分别独立扩容。
-- 部署环境与数据权限边界按租户、部门及系统安全等级严格收敛。
+- 部署环境与数据权限边界按租户、部门及系统安全等级严格收敛；当跨系统文档继承树 ACL 复杂度显著上升时，条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）与 `Casbin` 分层协同。
 
 ## 架构反模式
 

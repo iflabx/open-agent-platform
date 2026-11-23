@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | 第一阶段 | `K3s`（2–8 台试点轻量容器底座）、`APISIX`、`AgentifUI`、一条主平台路线、`LlamaIndex`、`LiteLLM`、`vLLM`、`Qwen`、`PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS` / `RustFS`（优先复用企业既有 `S3` 兼容对象存储，自建默认 `SeaweedFS`，轻量 `S3` 平替按需 `RustFS`）、`Weaviate`、`LangFuse` | 完成最小可试用闭环 |
 | 第二阶段 | 在第一阶段 `K3s` 多节点底座基础上补齐 `Casbin`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6`，并引入核心生产 Agent Runtime `LangGraph`（按需配合 `LangChain` 生态连接器）；有版本化评测集与持续回归需求时可条件引入 `LangSet`；涉及 AI 生成代码或高敏工具执行时启用 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor`），多步 Agent / 代码负载显著时可条件评估 [SGLang](/components/sglang) | 进入部门级生产治理与复杂流程编排阶段 |
-| 第三阶段 | 容器底座由 `K3s` 平滑演进至标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有标准 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）；按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch`、`Mem0`（可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 互补）与 `LangSet` | 进入企业级平台化与规模化生产阶段 |
+| 第三阶段 | 容器底座由 `K3s` 平滑演进至标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有标准 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）；按需补齐 `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）全链路治理，完善独立沙箱节点池（`gVisor` / `Kata Containers` 裸金属 KVM 强隔离）与 `SGLang` 推理分池（大规模演进 PD 分离），以及条件启用 `Milvus` / `Elasticsearch`、`Mem0`（可插拔长期记忆层，`Apache-2.0`，与 `LangGraph` + `PostgreSQL` Checkpointer 互补）、`LangSet` 与 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`，面向大规模跨系统 RAG 文档继承树 ACL 预过滤） | 进入企业级平台化与规模化生产阶段 |
 
 ::: tip 门户前台与扩展能力阶段口径
 全阶段第 3 层共享门户均以 [AgentifUI](/components/agentifui) + 门户 / BFF / API 层为主线，不引入第二套共享门户。面向少量高阶用户或研发团队的个人自治型超级智能体（如 [OpenClaw](/components/openclaw)）属于 [扩展升级](/extension-capabilities) 范畴，仅建议在平台治理、独立沙箱节点池与 `LiteLLM` / 审计基线完备后，按 Multi-Instance 独立沙箱隔离模式专项评估。
@@ -117,7 +117,7 @@
 
 ### 建议任务
 
-- 固化主平台路线、`LangGraph`（核心生产 Agent Runtime，`LangChain` 收敛为条件生态工具库与连接器；跨会话长期记忆按需引入 `Mem0` 与 `LangGraph` + `PostgreSQL` Checkpointer 互补）、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界。
+- 固化主平台路线、`LangGraph`（核心生产 Agent Runtime，`LangChain` 收敛为条件生态工具库与连接器；跨会话长期记忆按需引入 `Mem0` 与 `LangGraph` + `PostgreSQL` Checkpointer 互补）、`LlamaIndex`、`LiteLLM`、`Casbin` 的长期职责边界；当多系统知识库文档继承树 ACL 规模显著上升时，条件启用 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）承接 RAG 检索前 ACL 预过滤，与默认 `Casbin` 分层协同。
 - 补齐 `OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling` 数据治理与非结构化文档解析链路（老旧 / 冷门格式按需兼容 `Apache Tika`），建立“先治理、后检索”的数据资产发布闭环。
 - 固化 [AgentifUI](/components/agentifui) + 门户 / BFF 的共享门户契约；如存在少量高阶用户或高信任小组的个人自治助手需求，再按 [扩展升级](/extension-capabilities) 专项评估独立沙箱多实例能力。
 - 将知识接入、索引发布、Prompt、工具与模型路由全部纳入统一发布管理。
@@ -145,6 +145,7 @@
 
 - 持续扩充领域评测集与失败样本库
 - 细化模型路由、成本治理、标准 `Kubernetes` / `RKE2` 多池调度与容量规划
+- 随跨系统文档继承树与多部门权限规模扩大，按需演进或深化 `Casbin`（应用与工具动作裁决）+ 条件 `OpenFGA`（跨系统 RAG 文档继承树 ReBAC ACL 预过滤）分层授权体系
 - 沉淀多 Agent 模板与场景复用资产
 - 建立季度级审计、回顾与架构收敛机制
 
@@ -158,7 +159,7 @@
 
 ### 1. 治理主线
 
-- 权限模型持续收敛
+- 权限模型持续收敛（按规模从 `Casbin` 轻量嵌入式裁决平滑演进至 `Casbin` + 条件 `OpenFGA` 分层协同）
 - 高风险动作持续纳入人工接管
 - 发布前评测与审计抽样常态化
 

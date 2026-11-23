@@ -21,7 +21,7 @@
 | 5. 数据治理层 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika` | 数据采集、标准化、非结构化解析、元数据与资产发布 |
 | 6. 知识与检索层 | `LlamaIndex`、`Weaviate`、`Milvus`、`Elasticsearch` | 检索、重排、索引和知识引用 |
 | 7. 模型网关与推理层 | `LiteLLM`、`vLLM`、`SGLang`、`Qwen` 模型族 | 模型统一接入与推理执行 |
-| 8. 治理与观测层 | `Casbin`、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
+| 8. 治理与观测层 | `Casbin`、`OpenFGA`（条件引入）、`LangFuse`、`LangSet`、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki` | 授权、评测与数据集工程、观测、压测和发布门槛 |
 | 9. 基础设施层 | `K3s`（2–8 台试点验证） / 标准 `Kubernetes`（`RKE2`，10–12+ 台正式生产）、`Kubernetes agent-sandbox`（`gVisor` / `Kata Containers`）、`PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS` / `RustFS`（条件引入轻量 S3 平替；优先复用企业现有 S3 对象存储）、企业现有 `KMS / 证书体系` | 运行底座、Agent 执行沙箱、持久化、缓存会话和对象存储 |
 
 ## 1. 用户与渠道层
@@ -169,11 +169,13 @@
 
 ### 条件组件
 
+- [OpenFGA](/components/openfga)
 - [LangSet](/components/langset)
 
 ### 说明
 
-- `Casbin` 负责细粒度授权裁决。
+- `Casbin` 负责默认轻量进程内 `RBAC + ABAC` 细粒度授权与工具动作裁决。
+- `OpenFGA` 是条件引入的 `ReBAC` 关系授权引擎（CNCF、`Apache-2.0`），面向大规模跨系统文档继承树与 RAG 文档级 ACL 预过滤演进，与 `Casbin` 互补。
 - `LangFuse` 负责 LLM 观测、评测样本和回放。
 - `LangSet` 是条件引入的评测数据集工程与离线回归评测工作台，与 `LangFuse` 互补协作。
 - `k6` 负责发布前容量和性能基线验证。
@@ -228,22 +230,25 @@
 
 ## 条件引入与互斥规则
 
-| 组件组 | 采用规则 | 说明 |
-| --- | --- | --- |
-| `Dify` / `RAGFlow` | 二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
-| `Docling` / `Apache Tika` | 默认 `Docling`，条件兼容 `Apache Tika` | `Docling` 承担默认非结构化文档解析；`Apache Tika` 保留用于老旧 / 偏门格式兼容抽取与轻量元数据预路由 |
-| `vLLM` / `SGLang` | 默认 `vLLM`，条件优选 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载 |
-| `K3s` / 标准 `Kubernetes`（`RKE2`） | 2–8 台试点默认 `K3s`，10–12+ 台正式生产演进标准 `Kubernetes` / `RKE2` | 共享 100% 相同 K8s API / Helm / CRD 实现零重写迁移；正式生产优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2` |
-| `gVisor` / `Kata Containers` | 默认 `gVisor`，裸金属强隔离启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 构成第 9 层 Agent 执行沙箱，服务第 4 层不可信代码、脚本与工具执行 |
-| `Weaviate` / `Milvus` | 默认 `Weaviate`，大规模时再评估 `Milvus` | 不默认长期双底座并行 |
-| `Elasticsearch` | 条件引入 | 主要承担全文 / 混合检索兼容需求 |
-| `Valkey` / `Redis` | 新建默认推荐 `Valkey`，存量兼容并列 `Redis` | 两者 100% 线上协议兼容；新建纯开源环境优先采用 `BSD-3-Clause` 的 `Valkey`，企业既有 `Redis` 集群可直接复用 |
-| `SeaweedFS` / `RustFS` | 优先复用企业 S3，自建默认 `SeaweedFS`，条件引入 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储；海量小文件与多协议扩展选 `SeaweedFS`，轻量纯 S3 平替与内置 Web 控制台选 `RustFS` |
-| `LangChain` | 条件引入 | 作为 `LangGraph` 生态下的可选工具包与连接器适配层按需引入；简单调用优先原生 SDK |
-| `Mem0` | 条件引入 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补，仅在跨会话长期记忆场景启用 |
-| `LangSet` | 条件引入 | 负责团队协作评测数据集工程与离线回归评测，与 `LangFuse` 互补 |
-| `LangGraph` | 复杂流程默认启用 | 复杂流程核心生产级 Agent Runtime；标准场景可先以主平台路线为主 |
-| `OpenClaw` | 可选扩展能力 | 不纳入主方案共享门户基线，按单人 / 高信任小组独立沙箱实例模式按需引入 |
+方案中的成对与条件组件按 **三类收敛关系** 管理：**按现状二选一 / 阶段替代**（同一环境只落一套）、**按负载分池并存**（小规模单选，大规模可同集群分池）与 **按成熟度分层叠加**（上下游互补，引入后者不替代前者）：
+
+| 组件组 | 关系模式 | 采用规则 | 说明 |
+| --- | --- | --- | --- |
+| `Dify` / `RAGFlow` | 二选一 | 主平台路线二选一 | 主平台路线不应长期并行；通用多应用 / 低代码工作流交付选 `Dify`（对齐 `PostgreSQL + Weaviate + LangSet`），深度文档解析 / 复杂 RAG 或严格纯 `Apache-2.0` 选 `RAGFlow` |
+| `K3s` / 标准 `Kubernetes`（`RKE2`） | 二选一 / 阶段替代 | 2–8 台试点默认 `K3s`，10–12+ 台正式生产演进标准 `Kubernetes` / `RKE2` | 共享 100% 相同 K8s API / Helm / CRD 实现零重写迁移；正式生产优先复用企业既有标准 `Kubernetes`，从零自建私有化大集群推荐 `RKE2` |
+| `Weaviate` / `Milvus` | 二选一 / 阶段替代 | 默认 `Weaviate`，大规模时再评估 `Milvus` | 同一环境不默认长期双向量底座并行 |
+| `SeaweedFS` / `RustFS` | 二选一 | 优先复用企业 S3，自建默认 `SeaweedFS`，轻量替代选 `RustFS` | 两者均为 `Apache-2.0` S3 兼容对象存储，同一环境按规模与运维偏好只落一套；海量小文件与多协议扩展选 `SeaweedFS`，轻量纯 S3 平替与内置 Web 控制台选 `RustFS` |
+| `Valkey` / `Redis` | 二选一 | 新建默认推荐 `Valkey`，存量复用兼容 `Redis` | 两者 100% 线上协议兼容，同一环境只落一套；新建纯开源环境优先采用 `BSD-3-Clause` 的 `Valkey`，企业既有 `Redis` 集群可直接复用 |
+| `vLLM` / `SGLang` | 分池并存 | 默认 `vLLM`，多步 Agent / 代码池条件启用 `SGLang` | `vLLM` 承担通用高吞吐默认推理；`SGLang` 通过 `RadixAttention` 前缀 KV-Cache 复用优选用于多步 Agent 与代码负载，两者统一挂接在 `LiteLLM` 之后分池并存 |
+| `gVisor` / `Kata Containers` | 分池并存 | 默认 `gVisor`，裸金属强隔离池启用 `Kata Containers` | 配合 `Kubernetes agent-sandbox` 通过 `RuntimeClass` 同集群分池并存，服务第 4 层不可信代码、脚本与工具执行 |
+| 主平台 / `LangGraph` | 分层叠加 | 标准场景用主平台，复杂流程叠加 `LangGraph` | `LangGraph` 承担复杂长时状态机与生产级 Agent Runtime，与低代码主平台长期互补 |
+| `Docling` / `Apache Tika` | 分层叠加 | 默认 `Docling`，老旧偏门格式兼容叠加 `Apache Tika` | `Docling` 承担默认非结构化文档解析；`Apache Tika` 保留用于老旧 / 偏门格式兼容抽取与轻量元数据预路由 |
+| `LangFuse` / `LangSet` | 分层叠加 | 默认 `LangFuse`，团队回归评测叠加 `LangSet` | `LangSet` 负责团队协作评测数据集工程与离线回归评测，与 `LangFuse` 在线观测互补 |
+| `Casbin` / `OpenFGA` | 分层叠加 | 默认 `Casbin`，大规模文档继承树叠加 `OpenFGA` | 小到大互补演进：`Casbin` 承接默认进程内 `RBAC + ABAC` 与工具动作裁决；跨系统 RAG 存在复杂文档 / 文件夹继承树与文档级 ACL 预过滤需求时叠加 `OpenFGA` |
+| `Elasticsearch` | 条件兼容 | 仅在强全文检索场景启用 | 承担全文 / 混合检索兼容需求，不默认与主向量底座三套并行 |
+| `LangChain` | 条件工具包 | 按需搭配 `LangGraph` | 作为 `LangGraph` 生态下的可选工具包与连接器适配层按需引入；简单调用优先原生 SDK |
+| `Mem0` | 条件叠加 | 跨会话长期记忆按需启用 | `Apache-2.0` 可插拔长期记忆层，与 `LangGraph` + `PostgreSQL` Checkpointer 互补 |
+| `OpenClaw` | 独立扩展 | 独立沙箱实例按需引入 | 不纳入主方案共享门户基线，按单人 / 高信任小组独立沙箱实例模式按需引入 |
 
 ## 阅读导航
 

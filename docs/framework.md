@@ -73,7 +73,7 @@
 | **高级 Agent 能力** | 运行时、编排、知识与记忆 | `LangGraph`（生产级 Agent Runtime）、`LangChain`（条件引入，生态适配与连接器工具包）、`LlamaIndex`（知识工程与复杂 RAG）、`Mem0`（条件引入，可插拔长期记忆层） |
 | **协议与互操作** | 工具与 Agent 协作协议 | `MCP`（Agent-to-Tool / Context）、`A2A`（Agent-to-Agent） |
 | **数据治理与 AI 数据底座** | 元数据、采集、建模与解析 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（默认文档解析）、`Apache Tika`（条件兼容） |
-| **接入治理、评测与授权** | 网关、观测、评测、压测与授权 | `APISIX`（统一入口网关）、`agentgateway`（内部 AI 原生协议网关）、`LangFuse`（LLM 观测与评测）、`LangSet`（条件引入，评测数据集工程与离线回归评测）、`k6`（压测与容量验证）、`Casbin`（授权与策略裁决） |
+| **接入治理、评测与授权** | 网关、观测、评测、压测与授权 | `APISIX`（统一入口网关）、`agentgateway`（内部 AI 原生协议网关）、`LangFuse`（LLM 观测与评测）、`LangSet`（条件引入，评测数据集工程与离线回归评测）、`k6`（压测与容量验证）、`Casbin`（默认轻量级嵌入式 RBAC / ABAC 与工具动作授权裁决）、`OpenFGA`（条件引入，CNCF `Apache-2.0` ReBAC，面向大规模跨系统 RAG 文档继承树 ACL 预过滤） |
 | **基础设施** | 存储、检索、运行与观测 | `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 S3 兼容对象存储）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）、`Weaviate`（默认向量检索）、`Milvus`（大规模向量检索演进）、`Elasticsearch`（全文 / 混合检索兼容）、`K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）、`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`（Agent 执行沙箱）、`OpenTelemetry + Prometheus + Grafana + Loki` |
 | | 企业现有能力复用 | `SSO / IAM`、`KMS / 证书体系`、企业现有标准 `Kubernetes` 集群、企业现有 S3 兼容对象存储（优先复用） |
 
@@ -114,7 +114,7 @@
 
 - **`APISIX`**
   - **职责**：作为统一北向入口，承载门户、BFF、知识服务、Agent 服务和运维接口的流量接入；提供路由转发、限流、熔断、灰度、审计与插件化治理能力；与企业 `SSO / IAM` 协同承担入口级认证接入与安全前置。
-  - **边界**：不替代 `LiteLLM` 的模型路由与治理；不替代 `Casbin` 的细粒度授权裁决；不承载业务工作流编排与知识索引逻辑。
+  - **边界**：不替代 `LiteLLM` 的模型路由与治理；不替代 `Casbin` / `OpenFGA` 的细粒度授权裁决；不承载业务工作流编排与知识索引逻辑。
 - **`agentgateway`**
   - **职责**：作为内部 AI 原生协议网关，承接 `MCP`、`A2A` 及相关南向（Southbound）协议接入；提供统一的协议路由、认证、授权与可观测边界；在复杂场景下承接 `OpenAPI → MCP` 适配、远程 Agent 接入与内部 LLM 协议治理。
   - **边界**：不替代 `APISIX` 的北向入口职责；不替代 `LiteLLM` 的默认模型治理中心角色；不承载业务应用目录与门户统一语义。
@@ -197,7 +197,7 @@
 数据治理层与基础设施层不追求全量自建，而是优先复用企业现有能力，并对平台新增组件做最小收敛：
 
 - **优先复用企业现有能力**：身份认证复用企业现有 `SSO / IAM` 体系，密钥与证书复用企业现有 `KMS / 证书体系`，正式生产容器底座优先复用企业现有标准 `Kubernetes` 集群，对象存储优先复用企业现有 S3 兼容对象存储；上述能力均以明确集成边界为主，避免重复自建。
-- **平台新增标准底座**：数据治理采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）；检索底座按 `Weaviate`（默认）/ `Milvus`（大规模演进）/ `Elasticsearch`（全文与混合兼容）分层收敛；推理引擎以 `vLLM` 为通用默认，多步 Agent 与代码负载可条件优选 `SGLang`；基础与治理栈采用 `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 S3 兼容对象存储）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）、分阶段容器运行底座（2–8 台试点与部门验证采用 `K3s`，10–12+ 台高可用生产演进至标准 `Kubernetes` / `RKE2`——优先复用企业既有 `Kubernetes`，新建私有化或离线环境优选 `RKE2`，依托 100% 共享 K8s API / Helm / CRD 实现零重写迁移）、[Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox)、`APISIX`、`agentgateway`、`LangGraph`、`Casbin`、`k6`、`MCP + A2A` 及 `OpenTelemetry + Prometheus + Grafana + Loki`；有版本化评测数据集工程与离线回归评测需求时条件引入 `LangSet`，有跨会话长期记忆需求时条件引入 `Mem0`。
+- **平台新增标准底座**：数据治理采用 `OpenMetadata + SeaTunnel + dbt Core + Docling` 轻中型组合（`Apache Tika` 作为老旧 / 偏门格式与元数据预路由条件兼容项）；检索底座按 `Weaviate`（默认）/ `Milvus`（大规模演进）/ `Elasticsearch`（全文与混合兼容）分层收敛；推理引擎以 `vLLM` 为通用默认，多步 Agent 与代码负载可条件优选 `SGLang`；基础与治理栈采用 `PostgreSQL`、`Valkey` / `Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）、`SeaweedFS`（默认自建 S3 兼容对象存储）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）、分阶段容器运行底座（2–8 台试点与部门验证采用 `K3s`，10–12+ 台高可用生产演进至标准 `Kubernetes` / `RKE2`——优先复用企业既有 `Kubernetes`，新建私有化或离线环境优选 `RKE2`，依托 100% 共享 K8s API / Helm / CRD 实现零重写迁移）、[Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox)、`APISIX`、`agentgateway`、`LangGraph`、`Casbin`、`k6`、`MCP + A2A` 及 `OpenTelemetry + Prometheus + Grafana + Loki`；有版本化评测数据集工程与离线回归评测需求时条件引入 `LangSet`，有跨会话长期记忆需求时条件引入 `Mem0`，大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）。
 - **暂不纳入标准底座的能力**：消息总线与独立作业总线当前暂不选型，待异步任务与事件规模提升后再行评估。
 
 ## 数据治理与基础设施分工说明
@@ -223,7 +223,8 @@
 | | `OpenTelemetry + Prometheus + Grafana + Loki` | 平台可观测底座，覆盖指标、日志与统一埋点标准，与 `LangFuse` 构成双层观测体系。 |
 | | `LangSet`（条件引入） | 评测数据集工程与离线回归评测工具，负责可追溯的版本化测试集管理与离线回归触发，与 `LangFuse`、`k6` 互补。 |
 | | `k6` | 统一压测与容量验证工具，覆盖网关、门户 BFF、知识服务、Agent 服务与模型接口。 |
-| | `Casbin` | 统一授权与策略裁决引擎，覆盖应用访问、知识权限、工具调用权限与多租户 / 部门级授权控制。 |
+| | `Casbin` | 默认轻量级嵌入式授权与策略裁决引擎，覆盖应用访问、RBAC / ABAC、工具调用权限与多租户 / 部门级授权控制。 |
+| | `OpenFGA`（条件引入） | CNCF `Apache-2.0` 关系型授权（ReBAC）引擎，复用既有 `PostgreSQL`，用于大规模跨系统 RAG 文档继承树 ACL 预过滤与 `ListObjects` 下推。 |
 
 ## 分层平面视图
 
@@ -237,7 +238,7 @@
 6. **知识服务平面**：`Dify` / `RAGFlow` + `Qwen/Qwen3-Embedding-8B` + `Qwen/Qwen3-Reranker-8B` + `Weaviate` / `Milvus` / `Elasticsearch`，承担基于治理后资产的切片、索引、检索与权限过滤。
 7. **Agent 运行与编排平面**：标准化场景采用 `Dify` / `RAGFlow`（二选一），复杂流程生产级 Runtime 采用 `LangGraph`（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包），知识工程采用 `LlamaIndex`，跨会话长期记忆场景按需引入 `Mem0`。
 8. **门户与应用发布平面**：`AgentifUI` + 门户 / BFF / API 层 + 企业 SSO + 应用中心、应用目录、会话入口与反馈运营后台。
-9. **评测、治理与验证平面**：`LangFuse` + `LangSet`（条件引入） + `k6` + `Qwen3Guard-Stream-8B` + `Casbin`，承担审计、在线观测、版本化离线回归评测、内容合规、质量回放与容量验证。
+9. **评测、治理与验证平面**：`LangFuse` + `LangSet`（条件引入） + `k6` + `Qwen3Guard-Stream-8B` + `Casbin` + `OpenFGA`（条件引入），承担审计、在线观测、版本化离线回归评测、细粒度授权与文档继承树 ACL 预过滤、内容合规、质量回放与容量验证。
 
 门户前台应以统一工作台而非单一聊天页形态交付：
 
@@ -262,7 +263,7 @@
 7. 如需跨 Agent 协作或远程能力编排，优先经由 `agentgateway` 承接 `A2A` 路径。
 8. 如需知识增强或数据查询，优先消费数据治理层发布的 AI 数据服务与治理后数据资产。
 9. 请求进入主平台的知识检索链路或受控查询链路。
-10. 检索前按用户权限、部门与数据标签执行前置过滤。
+10. 检索前按用户权限、部门与数据标签执行前置过滤（大规模跨系统文档继承树场景下，可由条件引入的 `OpenFGA` 执行 ReBAC ACL 预过滤）。
 11. 召回结果经 `Qwen/Qwen3-Reranker-8B` 重排。
 12. 编排层组织最终上下文与工具调用计划。
 13. 所有模型请求统一发往 `LiteLLM`。
@@ -292,7 +293,7 @@
 | 部署分区 | 承载组件与能力 |
 | --- | --- |
 | **推理区** | GPU 节点、`vLLM`、`SGLang`（条件优选）、模型缓存与镜像仓库 |
-| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph` 自研 Agent 服务（按需搭配 `LangChain` 连接器与 `Mem0` 长期记忆层）、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、门户 BFF |
+| **平台服务区** | `APISIX`、`LiteLLM`、`Dify` / `RAGFlow`、`OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`、`Apache Tika`（条件兼容）、`LangGraph` 自研 Agent 服务（按需搭配 `LangChain` 连接器与 `Mem0` 长期记忆层）、`LlamaIndex` 知识工程服务、`MCP` Server / Gateway、`A2A` Client / Server、`LangFuse`、`Casbin`、`OpenFGA`（条件引入，复用数据区 `PostgreSQL`）、门户 BFF |
 | **执行沙箱区** | 独立沙箱节点池、`Kubernetes agent-sandbox` + `gVisor`（默认）/ `Kata Containers`（裸金属 KVM 强隔离），承接第 4 层不可信代码、脚本与工具执行 |
 | **数据区** | `PostgreSQL`、`Valkey` / `Redis`、`SeaweedFS`（默认）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）、`Weaviate`、`Milvus`、`Elasticsearch` |
 | **观测区** | `Prometheus`、`Grafana`、`Loki`、`OpenTelemetry Collector` |
@@ -319,7 +320,7 @@
   <img src="/framework-governance-loop.svg" alt="企业级智能体平台安全与治理控制点闭环图" />
 </div>
 
-- **身份与权限**：对接企业统一 `SSO / IAM`，入口统一收敛至 `APISIX`，细粒度授权由 `Casbin` 统一裁决，覆盖应用级、知识库级、工具级与数据标签级四层权限。
+- **身份与权限**：对接企业统一 `SSO / IAM`，入口统一收敛至 `APISIX`，遵循从小到大的授权演进路径——默认由 `Casbin` 承担轻量级嵌入式 RBAC / ABAC 与工具动作级权限裁决（覆盖应用级、知识库级、工具级与数据标签级四层权限）；当进入大规模跨系统 RAG 文档继承树 ACL 预过滤场景时，条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）与 `Casbin` 分层协同。
 - **数据安全**：落实文档入库分类分级、敏感字段脱敏、检索前权限过滤与输出前内容审查。
 - **执行沙箱安全**：第 4 层 Agent 触发的不可信代码、脚本与工具执行，须统一落入第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`），并强制落实三项安全红线——独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - **行为审计**：全量记录用户请求、检索命中、Prompt 摘要、模型调用、工具执行、人工介入与安全命中事件。
@@ -356,5 +357,5 @@
 - **数据与知识底座**：`OpenMetadata + SeaTunnel + dbt Core + Docling`（`Apache Tika` 条件兼容）构成企业 AI 数据治理底座；`Weaviate` 为默认检索底座，`Milvus` 为大规模演进，`Elasticsearch` 为全文 / 混合检索兼容项。
 - **主平台与 Agent 能力**：`Dify` 或 `RAGFlow`（二选一）构成主平台中枢；`LangGraph` 构成复杂流程核心生产级 Agent Runtime（简单调用优先原生 SDK，`LangChain` 按需作为生态连接器工具包）；`LlamaIndex` 负责知识工程与复杂 RAG；`Mem0` 作为条件引入的可插拔长期记忆层。
 - **门户与交互层**：`AgentifUI` + 门户 / BFF / API 层构成统一门户前台与应用发布入口。
-- **运行、观测与治理**：`PostgreSQL + Valkey / Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）`+ SeaweedFS`（默认）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）`+ K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + 平台观测体系` 构成观测评测与企业治理层。
+- **运行、观测与治理**：`PostgreSQL + Valkey / Redis`（新建纯开源优先 `Valkey`，兼容并保留既有 `Redis`）`+ SeaweedFS`（默认）/ `RustFS`（轻量 S3 平替，按需；优先复用企业既有 S3 存储）`+ K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产，优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`，100% 共享 K8s API / Helm / CRD 零重写迁移）与 [Agent 执行沙箱（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`）](/components/agent-sandbox) 构成运行基础设施；`LangFuse + LangSet（条件引入） + k6 + Casbin + OpenFGA（条件引入） + 平台观测体系` 构成观测评测与企业治理层。
 :::

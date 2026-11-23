@@ -25,6 +25,7 @@
 
 - 身份由企业现有 `SSO / IAM` 提供，`Casbin` 负责授权裁决而不是身份认证。
 - 与 [APISIX](/components/apisix)、门户层、编排层和知识服务配合，在关键动作处做权限判断。
+- 与 [OpenFGA](/components/openfga) 形成由小到大的互补演进：`Casbin` 承担默认轻量进程内 `RBAC + ABAC` 与工具动作裁决；当企业 RAG 跨越多个源系统且涉及复杂文档 / 文件夹继承树时，可条件叠加 `OpenFGA` 承接 `ReBAC` 关系图谱与文档级 ACL 预过滤。
 - 与 [LangFuse](/components/langfuse) 和统一审计链路配合，保留策略生效证据。
 - 对工具调用、知识访问和应用入口提供统一授权口径。
 
@@ -42,7 +43,8 @@
 
 ## 采用规则
 
-- 本方案默认以 `Casbin` 作为细粒度授权裁决引擎。
+- 本方案默认以 `Casbin` 作为轻量进程内细粒度授权裁决引擎，承担 `RBAC + ABAC` 与工具动作裁决。
+- 当企业 RAG 知识检索跨越多个源系统、存在深层文档 / 文件夹继承树或动态分享权限时，按需条件引入 [OpenFGA](/components/openfga) 承接 `ReBAC` 关系图谱与文档级 ACL 预过滤，与 `Casbin` 形成小到大互补演进，无需替换 `Casbin`。
 - 身份源继续复用企业既有 `SSO / IAM`，不在组件清单中引入第二套身份系统。
 - 任何关键业务动作均不应仅依赖前端可见性或网关路由规则判断权限。
 
@@ -56,6 +58,8 @@
 ## 关联文档
 
 - [8. 治理与观测层](/layers/governance-observability)
+- [OpenFGA](/components/openfga)
+- [RBAC + ABAC](/norms/rbac-abac)
 - [安全与治理](/governance)
 - [身份接入协议](/protocols/identity-access)
 - [APISIX](/components/apisix)

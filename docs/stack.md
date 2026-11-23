@@ -13,6 +13,16 @@
 3. **同类职责单轨收敛**：同一类职责优先保留一套主方案，避免长期并行多套同类主底座。
 4. **按需演进**：仅在现有组件边界明显不足时评估演进路径，避免预先叠加冗余组件。
 
+## 选型收敛关系总表（三类模式）
+
+为避免将“互斥替换”与“分层互补”混为一谈，方案中所有成对或分阶段演进的组件统一归为三类收敛关系：
+
+| 收敛模式 | 核心规则 | 涉及组件组 | 典型判定方式 |
+| --- | --- | --- | --- |
+| **一、按企业现状二选一 / 阶段替代** | 同一环境只落一套，不长期并行两套同类主底座 | 主平台（`Dify` / `RAGFlow`）、容器底座（`K3s` / 标准 `Kubernetes`·`RKE2`）、向量检索（`Weaviate` / `Milvus`）、对象存储（`SeaweedFS` / `RustFS` / 企业 S3）、缓存（`Valkey` / `Redis`） | 均基于统一标准接口（K8s API / S3 API / Redis 协议等），按企业既有资产与规模二选一或分阶段平滑切换 |
+| **二、按负载分池并存** | 小规模默认单选起步，大规模可在同集群按池共存 | 推理引擎（`vLLM` + `SGLang`）、Agent 执行沙箱（`gVisor` + `Kata Containers`） | 通过统一控制面路由分池（`LiteLLM` 分池路由 / K8s `RuntimeClass` 调度），按任务特征与安全等级共存 |
+| **三、按成熟度分层叠加** | 上下游职责互补，引入后者**不替代**前者 | 编排（主平台 + `LangGraph`）、解析（`Docling` + `Apache Tika`）、评测（`LangFuse` + `LangSet`）、授权（`Casbin` + `OpenFGA`） | 小规模先用前者跑通闭环；进入多部门复杂生产后叠加后者补齐长时状态机、冷门格式、离线测试集或跨系统 ReBAC |
+
 ## 推荐技术栈总览
 
 | 能力域 | 主选组件 | 条件引入 / 演进 | 取舍判断 |
@@ -27,7 +37,7 @@
 | 数据治理 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling` | 老旧 / 偏门格式兼容与元数据预路由条件引入 `Apache Tika` | 将原始数据治理为 AI 可消费资产；`Docling` 承担默认非结构化文档解析 |
 | 向量检索 | `Weaviate` | 数据规模和隔离要求显著上升时演进到 `Milvus` | 默认优先使用单一向量底座 |
 | 全文 / 混合检索 | `Elasticsearch` | 仅在确有全文检索需求时启用 | 不作为默认长期三套并行的一部分 |
-| 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 无 | 入口认证、流量治理和细粒度授权分层负责 |
+| 入口与权限 | `APISIX` + 企业现有 `SSO / IAM` + `Casbin` | 大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`） | 入口认证与流量治理交由 `APISIX`；授权按从小到大演进，`Casbin` 默认承担应用内轻量 RBAC / ABAC 与工具动作裁决，`OpenFGA` 按需补齐跨系统文档继承树关系授权 |
 | AI 原生协议接入 | `agentgateway` | 需要统一 `MCP` / `A2A` / 南向（Southbound）协议治理时启用 | 不替代 `APISIX`，不替代 `LiteLLM` |
 | 观测与评测 | `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` | 需要协同维护版本化评测数据集与离线回归评测时，条件引入 `LangSet` | 平台级与 AI 级观测均需具备；`LangSet` 专注评测数据集工程与离线回归，与 `LangFuse` 在线观测互补 |
 | 发布验证 | `k6` | 无 | 所有关键链路发布前均需建立容量基线 |
@@ -51,7 +61,7 @@
 
 适合多业务线复用、需要更强治理与复杂流程编排的团队：
 
-- `APISIX` + 企业现有 `SSO / IAM` + `Casbin`
+- `APISIX` + 企业现有 `SSO / IAM` + `Casbin`（大规模跨系统 RAG 文档继承树 ACL 预过滤场景按需条件引入 `OpenFGA`，复用既有 `PostgreSQL`）
 - `agentgateway`
 - 一条主平台路线
 - `LangGraph`（按需搭配 `LangChain` 连接器工具包与 `Mem0` 长期记忆层）
@@ -92,11 +102,12 @@
 - `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 负责平台级指标、日志和追踪。
 - 三者承担不同观测与验证维度，互补而不互相替代。
 
-### 5. `APISIX`、企业 `SSO / IAM`、`Casbin` 的关系
+### 5. `APISIX`、企业 `SSO / IAM`、`Casbin` 与 `OpenFGA` 的关系
 
 - 企业现有 `SSO / IAM` 负责身份源和账号生命周期。
 - `APISIX` 负责入口级认证接入、流量治理和审计前置。
-- `Casbin` 负责应用内细粒度授权裁决。
+- `Casbin` 作为默认轻量级嵌入式授权引擎，负责应用内 RBAC / ABAC 与工具动作级细粒度授权裁决。
+- `OpenFGA`（CNCF `Apache-2.0` ReBAC）作为条件引入的关系型授权引擎，复用既有 `PostgreSQL`，仅在多部门大规模跨系统 RAG 文档继承树 ACL 预过滤与 `ListObjects` 下推场景启用，与 `Casbin` 分层协同而不互相替代。
 
 ### 6. `APISIX`、`agentgateway`、`LiteLLM` 的关系
 
@@ -159,4 +170,5 @@
 - [LlamaIndex Docs](https://docs.llamaindex.ai/)
 - [Apache APISIX Architecture](https://apisix.apache.org/docs/apisix/3.14/architecture-design/apisix/)
 - [Casbin Docs](https://www.casbin.org/docs)
+- [OpenFGA Docs](https://openfga.dev/docs)
 - [Grafana k6 Overview](https://grafana.com/oss/k6/)

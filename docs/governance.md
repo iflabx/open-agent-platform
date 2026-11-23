@@ -3,7 +3,7 @@
 ::: info 核心摘要
 本页定义企业级智能体平台的**安全控制基线、动作治理机制与发布准入门槛**，与 [方案](/framework)、[总体架构](/architecture)、[协议与标准体系](/protocol-standards) 保持一致。
 
-- **身份与授权分层**：优先复用企业现有 `SSO / IAM`，由 `APISIX` 负责北向入口认证接入，`Casbin` 负责应用内与动作级细粒度裁决。
+- **身份与授权分层**：优先复用企业现有 `SSO / IAM`，由 `APISIX` 负责北向入口认证接入；授权遵循从小到大的演进路径，默认由 `Casbin` 负责轻量级嵌入式 RBAC / ABAC 与工具动作级裁决，大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）。
 - **高风险动作兜底**：涉及写入、外发、权限变更或生产操作的高风险动作，强制引入人工确认与 `Maker-Checker` 复核节点。
 - **执行沙箱硬隔离**：第 4 层不可信代码、脚本与工具执行统一落入第 9 层 [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + 默认 `gVisor` / 裸金属 KVM 强隔离 `Kata Containers`），强制落实独立沙箱节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping）。
 - **双层观测与发布门槛**：结合平台级（`OpenTelemetry` 栈）与 AI 级（`LangFuse`）双层可观测性（Observability），按需引入 `LangSet` 承接可追溯的版本化评测数据集工程与离线回归评测，并以 `k6` 压测作为上线容量门槛。
@@ -25,7 +25,7 @@
 | 治理域 | 重点问题 | 主控能力 | 结果要求 |
 | --- | --- | --- | --- |
 | 身份与组织 | 谁能进入系统、主体身份、所属租户与部门 | 企业现有 `SSO / IAM`、`APISIX` | 入口身份可信、组织属性可传递 |
-| 授权与动作控制 | 谁能看、谁能调、谁能执行高风险动作 | `Casbin`、应用内审批与 `Maker-Checker` 规范 | 最小权限、动作可裁决 |
+| 授权与动作控制 | 谁能看、谁能调、谁能执行高风险动作 | `Casbin`、`OpenFGA`（条件引入，跨系统文档继承树 ReBAC ACL 预过滤）、应用内审批与 `Maker-Checker` 规范 | 最小权限、动作可裁决、文档树权限可继承 |
 | 执行沙箱隔离 | 不可信代码、脚本与工具执行如何防逃逸与防越权 | [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`） | 独立沙箱节点池、默认拒绝出网白名单、凭据隔离（Secret Stripping） |
 | 数据与知识安全 | 哪些数据可入库、可检索、可进入 Prompt | 数据治理链路、权限标签、检索过滤 | 严禁越权数据进入模型上下文 |
 | 模型与 Prompt 治理 | 使用何种模型、何时切换、何时允许升级 | `LiteLLM`、Prompt 版本化、离线评测门槛（按需引入 `LangSet`） | 模型与配置可控、可审计 |
@@ -37,7 +37,8 @@
 | 治理能力 | 主控组件 | 职责说明 |
 | --- | --- | --- |
 | 北向认证接入与流量治理 | `APISIX` + 企业现有 `SSO / IAM` | 负责入口身份接入、路由、限流和审计前置 |
-| 细粒度授权 | `Casbin` | 负责应用内动作级裁决和策略执行 |
+| 细粒度授权（默认） | `Casbin` | 负责应用内轻量级嵌入式 RBAC / ABAC 与工具动作级策略裁决 |
+| 跨系统文档继承树 ReBAC 授权（条件引入） | `OpenFGA`（CNCF `Apache-2.0`，复用既有 `PostgreSQL`） | 负责大规模跨系统 RAG 文档继承树 ACL 预过滤与 `ListObjects` 下推，与 `Casbin` 分层协同 |
 | 不可信代码与工具执行隔离 | [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` / `Kata Containers`） | 为第 4 层不可信代码、脚本与工具执行提供强隔离运行时，强制执行独立节点池、默认拒绝出网白名单与凭据隔离（Secret Stripping） |
 | 知识权限过滤 | `OpenMetadata` + `LlamaIndex` | 负责标签治理、可见范围和检索前过滤 |
 | 模型调用治理 | `LiteLLM` | 负责模型路由、配额、留痕和切换控制 |
@@ -52,24 +53,26 @@
 
 身份认证与授权裁决沿以下主链路贯通：
 
-企业现有 `SSO / IAM` → `APISIX` → 门户 / BFF → `Casbin` → 知识服务 / 工具服务 / 业务服务
+企业现有 `SSO / IAM` → `APISIX` → 门户 / BFF → `Casbin`（应用与工具动作裁决） / `OpenFGA`（条件引入，文档继承树 ACL 预过滤） → 知识服务 / 工具服务 / 业务服务
 
 各节点职责严格分离：
 
 - **企业现有 `SSO / IAM`**：负责身份源管理、统一登录、组织架构与账号生命周期。
 - **`APISIX`**：负责北向入口认证接入、流量治理、审计前置与安全策略前移。
-- **`Casbin`**：负责应用内与动作级的细粒度授权裁决。
+- **`Casbin`**：默认轻量级嵌入式授权引擎，负责应用内 RBAC / ABAC 与工具动作级的细粒度授权裁决。
+- **`OpenFGA`（条件引入）**：CNCF `Apache-2.0` 关系型授权（ReBAC）引擎，复用既有 `PostgreSQL`，在大规模跨系统 RAG 文档继承树 ACL 预过滤场景中执行关系图裁决与 `ListObjects` 下推，不替代 `Casbin` 的应用内与工具动作裁决。
 - **业务应用与 Agent Runtime**：仅消费上游透传的身份与授权上下文，禁止自行重复建设独立权限体系。
 
 若企业尚未建立统一 IAM，应优先补齐兼容 `OIDC / OAuth2 / SCIM` 的身份基础设施，但不改变优先复用企业现有身份体系的架构基线。
 
 ### 授权模型
 
-企业级平台至少组合使用三类授权机制：
+企业级平台按规模从小到大演进授权机制，默认组合前三类机制，大规模跨系统知识场景按需补齐第四类：
 
-- **`RBAC`**：处理岗位、角色、应用菜单与常规功能授权。
-- **`ABAC`**：处理部门、租户、项目、数据安全等级、地域与流程阶段等属性上下文限制。
-- **工具级授权**：处理业务写操作、外部通知、审批提交与数据库执行等高风险动作权限。
+- **`RBAC`**：处理岗位、角色、应用菜单与常规功能授权（默认由 `Casbin` 承接）。
+- **`ABAC`**：处理部门、租户、项目、数据安全等级、地域与流程阶段等属性上下文限制（默认由 `Casbin` 承接）。
+- **工具级授权**：处理业务写操作、外部通知、审批提交与数据库执行等高风险动作权限（默认由 `Casbin` 承接）。
+- **`ReBAC`（条件演进）**：当进入大规模跨系统知识检索阶段，面对“部门 / 群组 / 项目 / 文件夹 / 文档”多级继承权限树时，条件引入 `OpenFGA`（CNCF `Apache-2.0`，复用既有 `PostgreSQL`）承担检索前 ACL 预过滤与关系图裁决。
 
 ### 组织与身份上下文透传
 
@@ -99,7 +102,7 @@
 
 检索环节不能仅关注召回率，还须同步执行四项安全与质量控制：
 
-- 基于角色、租户、部门与安全标签的检索前权限过滤
+- 基于角色、租户、部门与安全标签的检索前权限过滤（大规模跨系统文档继承树场景下，可由条件引入的 `OpenFGA` 执行 ReBAC ACL 预过滤）
 - 对命中来源与引用片段进行可追溯记录
 - 对过期、失效与冲突数据实施抑制或过滤
 - 对注入模型的上下文拼装范围实施最小化控制
@@ -246,4 +249,5 @@ Prompt 组装与模型输出至少须满足以下约束：
 - [RFC 7644: SCIM Protocol](https://www.rfc-editor.org/rfc/rfc7644)
 - [OpenTelemetry GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
 - [Casbin Docs](https://www.casbin.org/docs)
+- [OpenFGA Documentation](https://openfga.dev/docs)
 - [LangSet GitHub Repository](https://github.com/iflabx/langset)

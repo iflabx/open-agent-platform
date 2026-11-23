@@ -168,6 +168,7 @@ export default defineConfig({
             link: '/layers/governance-observability',
             items: [
               { text: 'Casbin', link: '/components/casbin' },
+              { text: 'OpenFGA', link: '/components/openfga' },
               { text: 'LangFuse', link: '/components/langfuse' },
               { text: 'LangSet', link: '/components/langset' },
               { text: 'k6', link: '/components/k6' },

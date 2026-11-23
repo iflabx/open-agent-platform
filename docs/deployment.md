@@ -52,6 +52,7 @@
 - 个人自治型超级智能体扩展能力（如 `OpenClaw`）不纳入下述共享门户单元估算，须按单用户或高信任小组单独规划 Multi-Instance 独立沙箱节点池、容器 / MicroVM 级隔离边界与专属资源配额，并将模型调用与审计统一收敛至 `LiteLLM` 与平台审计链路。
 - **分阶段容器底座与零重写迁移**：2–8 台试点与部门验证档位统一采用 `K3s` 快速交付容器编排环境；进入 10–12+ 台企业级高可用生产档位时，平滑演进至标准 `Kubernetes` / `RKE2`（企业已有成熟标准 `Kubernetes` 集群时**优先复用**，新建全私有化或离线集群时优选 `RKE2`）。三者 100% 共享标准 K8s API、Helm Chart 与 CRD 规范，升级集群底座时所有应用编排、网关路由、观测与沙箱声明式配置均无需重写即可完成迁移。
 - 若团队在阶段二（试点生产）或阶段三（平台化）需要协同构建版本化黄金测试集与持续离线回归评测，可条件引入 [LangSet](/components/langset) 作为可选治理单元；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不引入新的数据库或存储引擎，可共部署于 `K3s` / 标准 `Kubernetes` 集群或观测节点，不改变各档位服务器数量基线。
+- 授权体系遵循从小到大的演进路径：默认采用 `Casbin` 承担轻量级嵌入式 RBAC / ABAC 与工具动作级裁决；当进入阶段三或大规模多部门跨系统 RAG 文档继承树 ACL 预过滤场景时，可条件启用 `OpenFGA`（CNCF `Apache-2.0` ReBAC）。`OpenFGA` 直接复用既有 `PostgreSQL` 存储关系元组，不引入新的数据库引擎，可共部署于 `K3s` / 标准 `Kubernetes` 控制面或应用节点，不改变各档位服务器数量基线。
 - 若业务场景涉及 AI 生成代码、不可信脚本或高敏文件处理工具执行，须独立规划第 9 层 [Agent 执行沙箱](/components/agent-sandbox) 专属节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping），严禁与控制面或核心有状态服务混布。
 
 ### 1. 1 台：最小验证版
@@ -147,6 +148,7 @@
   - 数据治理层：`OpenMetadata` + `SeaTunnel` + `dbt Core` + `Docling`（`Apache Tika` 条件兼容老旧 / 冷门格式与元数据预路由）
   - 更独立的检索与观测部署单元
   - 按需引入核心生产 Agent Runtime `LangGraph`（依托 `PostgreSQL` Checkpointer 持久化状态，按需配合 `LangChain` 生态连接器及 `Mem0` 可插拔长期记忆层）处理复杂流程、人工介入和长链路恢复
+  - 多部门跨系统知识库涉及复杂文档继承树 ACL 预过滤时，可条件启用 `OpenFGA`（CNCF `Apache-2.0` ReBAC，直接复用既有 `PostgreSQL`，不新增数据库引擎）与默认 `Casbin` 分层协同
 - **推荐部署单元**：
   - 3 台 `K3s` 节点：承载网关、门户、主平台、复杂运行时和控制面服务
   - 1 台应用扩展节点：承载高流量门户 / BFF / 编排扩展实例
@@ -182,6 +184,7 @@
   - 关键无状态服务至少双实例部署
   - GPU 推理节点至少双节点部署，消除模型服务单点风险；按负载拆分通用高吞吐池（`vLLM`）与多步 Agent / 代码推理池（[SGLang](/components/sglang)，基于 RadixAttention 复用长前缀 KV-Cache），在大规模集群场景下演进为 PD 分离（Disaggregated Prefill and Decode）架构
   - 有状态服务具备备份、恢复与重建预案
+  - 授权层保持 `Casbin`（默认轻量级嵌入式 RBAC / ABAC 与工具动作裁决）为主；大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件启用高可用 `OpenFGA` 实例（直接复用既有 `PostgreSQL` 集群，不引入新数据库引擎）
   - 面向代码执行与高敏工具场景规划独立的 Agent 沙箱隔离节点池（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离），严格落实污点隔离、默认拒绝出向白名单与凭据剥离（Secret Stripping）
   - `dev` / `staging` / `prod` 严格分离，并建立标准灰度与回滚流程
 - **推荐部署单元**：
@@ -228,7 +231,7 @@
 
 - `LiteLLM` 统一承接上层模型请求。
 - `vLLM` 负责通用高吞吐推理执行，多步 Agent 与代码推理池按需部署 [SGLang](/components/sglang)（基于 RadixAttention 实现自动前缀 KV-Cache 复用），大规模场景可演进为 PD 分离架构。
-- `Casbin` 负责细粒度授权裁决。
+- `Casbin` 默认负责应用内轻量级嵌入式 RBAC / ABAC 与工具动作级授权裁决；大规模跨系统 RAG 文档继承树 ACL 预过滤场景按需条件启用 `OpenFGA`（直接复用既有 `PostgreSQL`，不引入新数据库引擎）。
 - `LangFuse` + `OpenTelemetry` + `Prometheus` + `Grafana` + `Loki` 负责双层观测。
 
 ## 按组件划分的部署单元
@@ -242,7 +245,7 @@
 | 数据治理单元 | `OpenMetadata`、`SeaTunnel`、`dbt Core`、`Docling`（条件兼容 `Apache Tika`） | 负责采集、版面解析、清洗、元数据和资产发布 |
 | 知识检索单元 | `LlamaIndex` + `Weaviate` | 负责索引编排、召回、重排和引用 |
 | 模型服务单元 | `LiteLLM` + `vLLM` / `SGLang` + `Qwen` | 负责模型路由与推理执行；`vLLM` 为通用默认引擎，`SGLang` 面向多步 Agent 与代码负载按需分池部署 |
-| 治理观测单元 | `Casbin`、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，不新增数据库或存储引擎 |
+| 治理观测单元 | `Casbin`、`OpenFGA`（可选，阶段三 / 大规模多部门按需启用）、`LangFuse`、`LangSet`（可选，阶段二 / 三按需引入）、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`、`k6` | 负责授权、观测、版本化离线回归评测和发布验证；`OpenFGA` 直接复用既有 `PostgreSQL` 存储关系元组，`LangSet` 直接复用既有 `PostgreSQL`、`SeaweedFS` / [RustFS](/components/rustfs)（或企业既有 `S3` 兼容对象存储）、`LiteLLM`（`OpenAI 兼容 API`）与 `LangFuse`，均不新增数据库或存储引擎 |
 | Agent 执行沙箱单元 | [Agent 执行沙箱](/components/agent-sandbox)（`Kubernetes agent-sandbox` + `gVisor` 默认 / `Kata Containers` 裸金属 KVM 强隔离） | 专属沙箱隔离节点池，承接 AI 生成代码、不可信脚本与高敏工具的瞬时强隔离执行，落实默认拒绝出向白名单与凭据剥离 |
 | 基础设施单元 | `K3s`（2–8 台试点与部门验证）→ 标准 `Kubernetes` / `RKE2`（10–12+ 台企业级高可用生产；优先复用企业既有 `Kubernetes`，新建私有化或离线集群优选 `RKE2`）、`PostgreSQL`、[Valkey](/components/valkey) / [Redis](/components/redis)、[SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储） | 负责分阶段演进的容器运行底座（100% 共享 K8s API / Helm / CRD 零重写迁移）、缓存会话与持久化能力 |
 
@@ -250,7 +253,7 @@
 
 | 组件 | 保存内容 | 部署要求 |
 | --- | --- | --- |
-| `PostgreSQL` | 平台配置、业务状态、审计元数据 | 必须配备持久卷、定期备份与恢复演练 |
+| `PostgreSQL` | 平台配置、业务状态、审计元数据（条件启用 `OpenFGA` 时同步承载 ReBAC 关系元组） | 必须配备持久卷、定期备份与恢复演练 |
 | [Valkey](/components/valkey) / [Redis](/components/redis) | 会话缓存、任务状态、短期上下文 | 明确持久化策略与失效策略；新建纯开源优先 `Valkey`（Linux Foundation `BSD-3-Clause`，100% 协议兼容），兼容并保留既有 `Redis` |
 | [SeaweedFS](/components/seaweedfs)（轻量 `S3` 平替 [RustFS](/components/rustfs) / 优先复用企业既有 `S3` 兼容对象存储） | 原始文档、附件、知识文件、模型产物 | 配备生命周期管理、分层存储与备份策略 |
 | `Weaviate` / `Milvus` | 向量索引与检索状态 | 与知识发布节奏联动，避免无序重建 |

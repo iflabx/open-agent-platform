@@ -52,6 +52,7 @@
 | `LangSet` | 标准开源 | `Apache-2.0` | 治理与观测层条件引入组件，负责评测数据集工程与离线回归评测 |
 | `k6` | 强 copyleft | `AGPL-3.0` | 可作为压测工具纳入，但需明确 AGPL 影响 |
 | `Casbin` | 标准开源 | `Apache-2.0` | 可直接纳入 |
+| `OpenFGA` | 标准开源 | `Apache-2.0` | 治理与观测层条件引入组件，CNCF 项目，负责大规模跨系统文档继承树与 RAG 文档级 ReBAC 授权演进 |
 | `PostgreSQL` | 标准开源 | `PostgreSQL License` | 可直接纳入 |
 | `Valkey` | 标准开源 | `BSD-3-Clause` | 默认推荐纯开源缓存与会话底座（Linux Foundation 托管），与 `Redis` 协议完全兼容并列 |
 | `Redis` | 需锁版本 / 复合许可证 | `RSALv2 / SSPLv1 / AGPL-3.0` | 兼容并列；企业既有集群复用或按需采用时必须固定大版本，新建纯开源环境优先推荐 `Valkey` |
@@ -129,6 +130,7 @@
 | `LangSet` | [官方仓库](https://github.com/iflabx/langset) | 标准开源，`Apache-2.0`，治理与观测层条件引入组件，负责评测数据集工程与离线回归评测 |
 | `k6` | [官方仓库](https://github.com/grafana/k6) | `AGPL-3.0` |
 | `Casbin` | [官方仓库](https://github.com/apache/casbin) | 标准开源，`Apache-2.0` |
+| `OpenFGA` | [官方仓库](https://github.com/openfga/openfga) | 标准开源，`Apache-2.0`，治理与观测层条件引入组件，CNCF 项目，负责大规模跨系统文档继承树与 RAG 文档级 ReBAC 授权演进 |
 
 ### 7. 基础设施与可观测性
 
@@ -194,6 +196,7 @@
 - [LiteLLM LICENSE](https://github.com/BerriAI/litellm/blob/main/LICENSE)
 - [Langfuse 官方仓库](https://github.com/langfuse/langfuse)
 - [LangSet 官方仓库](https://github.com/iflabx/langset)
+- [OpenFGA 官方仓库](https://github.com/openfga/openfga)
 - [Valkey 官方仓库](https://github.com/valkey-io/valkey)
 - [Redis 官方仓库](https://github.com/redis/redis)
 - [SeaweedFS 官方仓库](https://github.com/seaweedfs/seaweedfs)

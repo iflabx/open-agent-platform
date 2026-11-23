@@ -2,12 +2,13 @@
 
 > 定位：提供细粒度授权、审计、追踪、评测、压测与发布门槛能力。
 >
-> 当前承载组件：`Casbin`、`LangFuse`、`LangSet`（条件组件）、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`。
+> 当前承载组件：`Casbin`、`OpenFGA`（条件组件）、`LangFuse`、`LangSet`（条件组件）、`k6`、`OpenTelemetry`、`Prometheus`、`Grafana`、`Loki`。
 
 相关文档：
 
 - [安全与治理](/governance)
 - [Casbin](/components/casbin)
+- [OpenFGA](/components/openfga)
 - [LangFuse](/components/langfuse)
 - [LangSet](/components/langset)
 - [k6](/components/k6)
@@ -21,7 +22,7 @@
 
 ## 本层功能
 
-- **细粒度授权裁决**：统一执行应用、工具与数据维度的细粒度授权与策略裁决。
+- **细粒度授权裁决**：遵循从小到大的授权演进路径，默认由 `Casbin` 执行应用内轻量级嵌入式 RBAC / ABAC 与工具动作级策略裁决；大规模跨系统 RAG 文档继承树 ACL 预过滤场景条件引入 `OpenFGA`（CNCF `Apache-2.0` ReBAC，复用既有 `PostgreSQL`）。
 - **全链路观测采集**：采集分布式链路追踪、系统与业务指标、结构化日志及调用成本数据。
 - **LLM 评测与回放**：承接 LLM 调用观测、样本回放、版本化评测数据集工程与离线回归评测。
 - **性能与发布门禁**：承接压力测试、性能基线对比与上线前发布门槛验证。
@@ -29,6 +30,7 @@
 ## 当前承载组件
 
 - [Casbin](/components/casbin)
+- [OpenFGA](/components/openfga)（条件组件）
 - [LangFuse](/components/langfuse)
 - [LangSet](/components/langset)（条件组件）
 - [k6](/components/k6)
@@ -68,8 +70,9 @@
 ### 1. 授权链路
 
 1. 上游服务在关键操作节点调用统一授权引擎。
-2. `Casbin` 依据策略规则与请求上下文返回允许或拒绝裁决。
-3. 裁决结果同步写入审计与链路追踪体系。
+2. 默认由 `Casbin` 依据嵌入式 RBAC / ABAC 与工具动作策略返回允许或拒绝裁决。
+3. 在大规模跨系统 RAG 文档继承树检索场景下，按需由条件引入的 `OpenFGA`（复用既有 `PostgreSQL`）执行 ReBAC 关系校验与 `ListObjects` ACL 预过滤。
+4. 裁决结果同步写入审计与链路追踪体系。
 
 ### 2. 观测链路
 
@@ -116,6 +119,7 @@
 ## 参考资料
 
 - [Casbin Documentation](https://casbin.org/docs/overview)
+- [OpenFGA Documentation](https://openfga.dev/docs)
 - [Langfuse Documentation](https://langfuse.com/docs)
 - [LangSet GitHub Repository](https://github.com/iflabx/langset)
 - [Grafana k6 Documentation](https://grafana.com/docs/k6/latest/)
